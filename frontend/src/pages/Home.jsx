@@ -15,6 +15,14 @@ const Home = () => {
     <Products/>
   </div>
   <PopularCategories/>
+  <p className="text-lg font-bold bg-teal-400 text-center py-2 underline underline-offset-8">Recently Launched Products</p>
+  <div className="bg-gradient-to-b from-teal-400 to-transparent grid grid-cols-2 md:grid-cols-3 md:px-3 lg:grid-cols-4 justify-items-center content-evenly py-4">
+    <Products/>
+    <Products/>
+    <Products/>
+    <Products/>
+    <Products/>
+  </div>
   </>)
 }
 

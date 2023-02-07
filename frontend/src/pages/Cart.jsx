@@ -1,9 +1,18 @@
-import React from 'react'
+import React from 'react';
+import SmallProductComp from '../components/products/SmallProductComp';
 
 const Cart = () => {
-  return (
-    <div>Cart</div>
-  )
+  return (<>
+  <div className="flex flex-col justify-evenly items-center bg-gradient-to-bl from-transparent via-teal-400 to-transparent min-h-[calc(100vh-16rem)]">
+    <SmallProductComp/>
+    <SmallProductComp/>
+    <SmallProductComp/>
+    <SmallProductComp/>
+    <SmallProductComp/>
+    <SmallProductComp/>
+    <SmallProductComp/>
+  </div>
+  </>)
 }
 
 export default Cart

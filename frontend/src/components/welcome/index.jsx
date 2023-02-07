@@ -38,14 +38,14 @@ const Welcome = () => {
   };
   return (
     <div className="overflow-x-hidden">
-      <div className="w-screen h-[22rem] md:h-[30rem] bg-teal-200 flex justify-center items-center">
+      <div className="w-screen h-[22rem] md:h-[30rem] bg-gradient-to-t from-teal-400 to-transparent flex justify-center items-center">
         <div className="relative">
           <Scrollindicaters slides={slides} slideNum={slideNum} setSlideNum={setSlideNum}/>
           <LeftRightScroll increaseSlide={increaseSlide} decreaseSlide={decreaseSlide}/>
           <img
             src={slides[slideNum].url}
             alt="products"
-            className="h-80 w-80 md:h-[28rem] md:w-[60vw] object-cover rounded hover:shadow-2xl hover:shadow-black shadow-2xl shadow-gray-900"
+            className="h-80 w-80 md:h-[28rem] md:w-[80vw] object-cover rounded hover:shadow-2xl hover:shadow-black shadow-2xl shadow-gray-900"
           />
         </div>
       </div>

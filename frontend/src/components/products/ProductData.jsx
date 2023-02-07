@@ -8,7 +8,7 @@ const ProductData = () => {
         <p className="font-semibold">Title</p>
         <p
           style={{ WebkitLineClamp: 1 }}
-          className="hidden md:block text-ellipsis whitespace-nowrap overflow-hidden"
+          className="hidden md:block text-ellipsis whitespace-nowrap overflow-hidden text-xs"
         >
           Short Description goes long so long so so long
         </p>

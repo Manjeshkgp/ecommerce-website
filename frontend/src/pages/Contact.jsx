@@ -8,6 +8,7 @@ const Contact = () => {
           src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d21211.24820215282!2d1.4731720728374145!3d49.08268042104413!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47e6cbdd7d3ddcb1%3A0xeb9fd94417956f9a!2sVernon%2C%20France!5e0!3m2!1sen!2sin!4v1675805761961!5m2!1sen!2sin"
           className="h-full w-full rounded-lg"
           loading="lazy"
+          title="French Vernon Map"
         ></iframe>
         <div className="absolute w-full h-full cursor-pointer hover:bg-transparent rounded-lg bg-[rgba(45,43,92,0.4)] top-0"></div>
         </div>

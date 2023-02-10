@@ -5,6 +5,7 @@ import {fileURLToPath} from "url";
 // import path from "path";
 import dotenv from "dotenv";
 import connect from "./database/mongodb.js";
+import userRoute from "./routes/userRoute.js"
 
 dotenv.config();
 const app = express();
@@ -17,6 +18,9 @@ await connect();
 app.get("/",(req,res)=>{
     res.json({"message":"Hello and welcome"});
 })
+
+app.use("/users",userRoute);
+app.use("/*",(req,res)=>res.json({"message":"Wrong URL 404"}));
 
 app.listen(process.env.PORT,()=>{
     console.log(`server is running on http://localhost:${process.env.PORT}`);

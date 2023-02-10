@@ -1,8 +1,6 @@
 import bcrypt from "bcrypt";
 import userSchema from "../models/userSchema.js";
-export const getUser = async (req, res) => {
-  console.log(req.params.id);
-};
+
 
 export const registerUser = async (req, res) => {
   const userExist = await userSchema.findOne({ email: req.body.email });
@@ -29,3 +27,17 @@ export const registerUser = async (req, res) => {
     console.log(error);
   }
 };
+
+export const loginUser = async (req,res) => {
+    const user = await userSchema.findOne({email:req.body.email});
+    if(!user){
+        res.status(408).json({message:"User Not Found"});
+        return;
+    }
+    const matched = await bcrypt.compareSync(req.body.password, user.password);
+    if(!matched){
+        res.status(407).json({message:"Password is Incorrect"});
+        return;
+    }
+    res.status(200).json({message:"Login Successfull"})
+}

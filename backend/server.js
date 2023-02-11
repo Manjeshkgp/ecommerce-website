@@ -5,7 +5,8 @@ import {fileURLToPath} from "url";
 // import path from "path";
 import dotenv from "dotenv";
 import connect from "./database/mongodb.js";
-import userRoute from "./routes/userRoute.js"
+import userRoute from "./routes/userRoute.js";
+import sellerRoute from "./routes/sellerRoute.js"
 
 dotenv.config();
 const app = express();
@@ -20,6 +21,7 @@ app.get("/",(req,res)=>{
 })
 
 app.use("/users",userRoute);
+app.use("/sellers",sellerRoute);
 app.use("/*",(req,res)=>res.json({"message":"Wrong URL 404"}));
 
 app.listen(process.env.PORT,()=>{

@@ -3,34 +3,48 @@ import pkg from "passport-jwt";
 import userSchema from "../models/userSchema.js";
 import * as dotenv from "dotenv";
 import passport from "passport";
+import crypto from "crypto";
 dotenv.config();
 
-passport.use(
+export const GoogleAuth = passport.use(
   new GoogleStrategy(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       callbackURL: "/auth/google/callback",
-      scope:["profile","email"]
+      scope:['https://www.googleapis.com/auth/userinfo.email', 'https://www.googleapis.com/auth/userinfo.profile']
     },
-    async function (accessToken, refreshToken, profile, done) {
-      let userExists = await userSchema.findOne({
-        email: profile.emails[0]
+    function (accessToken, refreshToken, profile, cb) {
+      console.log(profile.displayName)
+      userSchema.findOne({
+        email: profile.emails[0].value
+      },function(err,user){
+        if (err) {
+          return cb(err, false);
+        }
+        if (user) {
+          return cb(null, user);
+        } else {
+          const registerUser = new userSchema({
+            name: profile.displayName,
+            email: profile.emails[0].value,
+            password: crypto.randomUUID().toString(),
+          });
+          const saveUser = registerUser.save();
+          console.log(saveUser);
+          user = saveUser;
+          return cb(null, user);
+        }
       });
-      if (!userExists) {
-        const registerUser = new userSchema({
-          name: profile.name,
-          email: profile.emails[0],
-          password: crypto.randomUUID(),
-        });
-        const saveUser = await registerUser.save();
-        console.log(saveUser);
-        userExists = saveUser;
-      }
-      done(null, userExists);
     }
   )
 );
+passport.serializeUser(function(user,cb){
+  cb(null,user)
+});
+passport.deserializeUser(function(user,cb){
+  cb(null,user)
+});
 
 const JwtStrategy = pkg.Strategy;
 const ExtractJwt = pkg.ExtractJwt;
@@ -42,7 +56,7 @@ opts.secretOrKey = process.env.JWT_SECRET;
 export default (passport) => {
   passport.use(
     new JwtStrategy(opts, function (jwt_payload, done) {
-      userSchema.findOne(jwt_payload.email, function (err, user) {
+      userSchema.findById(jwt_payload._id, function (err, user) {
         if (err) {
           return done(err, false);
         }
@@ -56,3 +70,4 @@ export default (passport) => {
     })
   );
 };
+

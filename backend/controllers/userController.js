@@ -1,7 +1,6 @@
 import bcrypt from "bcrypt";
 import userSchema from "../models/userSchema.js";
-
-
+import jwt from "jsonwebtoken";
 export const registerUser = async (req, res) => {
   const userExist = await userSchema.findOne({ email: req.body.email });
   if (userExist) {
@@ -21,10 +20,11 @@ export const registerUser = async (req, res) => {
   try {
     const registerUser = new userSchema(requiredData);
     const saveUser = await registerUser.save();
-    console.log(saveUser);
-    res.status(200).json({ message: "User Registered Successfully" });
+    const token = jwt.sign(saveUser,process.env.JWT_SECRET,{expiresIn:"24h"});
+    res.status(200).json({ saveUser,token });
   } catch (error) {
     console.log(error);
+    res.status(400).json({message:error})
   }
 };
 
@@ -39,5 +39,6 @@ export const loginUser = async (req,res) => {
         res.status(407).json({message:"Password is Incorrect"});
         return;
     }
-    res.status(200).json({message:"Login Successfull"})
+    const token = jwt.sign(user,process.env.JWT_SECRET,{expiresIn:"24h"});
+    res.status(200).json({user,token})
 }

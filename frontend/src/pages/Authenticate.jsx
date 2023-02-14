@@ -1,8 +1,12 @@
 import React, { useState } from "react";
 import Button from "../components/buttons";
+import {FcGoogle} from "react-icons/fc";
 
 const Authenticate = () => {
   const [login, setLogin] = useState(false);
+  const authGoogle = ()=>{
+    window.open(`${process.env.REACT_APP_API_URL}/auth/google`,"_self")
+  }
   return (
     <>
       <div className="flex relative flex-row justify-center items-center bg-gradient-to-bl from-transparent via-teal-400 to-transparent min-h-screen min-w-[100vw]">
@@ -18,6 +22,7 @@ const Authenticate = () => {
           )}
         </div>
         <form className="flex relative flex-col justify-center gap-8 border-2 border-indigo-500 border-opacity-20 rounded w-80 h-[26rem] items-center">
+          <p onClick={authGoogle} className="absolute top-2 flex items-center h-8 rounded bg-purple-400 px-2 py-1 hover:bg-purple-300 cursor-pointer active:bg-transparent"><span>SignIn with</span><FcGoogle className="h-8 w-8"/></p>
           {!login ? (
             <>
               <input

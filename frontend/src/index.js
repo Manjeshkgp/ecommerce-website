@@ -4,7 +4,7 @@ import { Provider } from "react-redux";
 import store from "./store.js";
 import "./index.css";
 import App from "./App";
-import { Authenticate, Cart, Contact, Home, Orders, Products } from "./pages";
+import { Authenticate, Cart, Contact, Home, Orders, Products, GoogleJwt } from "./pages";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
 const router = createBrowserRouter([
@@ -37,6 +37,10 @@ const router = createBrowserRouter([
   {
     path: "/authenticate",
     element: <Authenticate />,
+  },
+  {
+    path: "/auth-with-google/:jwtToken",
+    element: <GoogleJwt />,
   },
 ]);
 

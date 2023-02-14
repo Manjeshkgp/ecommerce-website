@@ -20,25 +20,29 @@ export const registerUser = async (req, res) => {
   try {
     const registerUser = new userSchema(requiredData);
     const saveUser = await registerUser.save();
-    const token = jwt.sign(saveUser,process.env.JWT_SECRET,{expiresIn:"24h"});
-    res.status(200).json({ saveUser,token });
+    const token = jwt.sign(saveUser.toJSON(), process.env.JWT_SECRET, {
+      expiresIn: "24h",
+    });
+    res.status(200).json({ user: saveUser, token });
   } catch (error) {
     console.log(error);
-    res.status(400).json({message:error})
+    res.status(400).json({ message: error });
   }
 };
 
-export const loginUser = async (req,res) => {
-    const user = await userSchema.findOne({email:req.body.email});
-    if(!user){
-        res.status(408).json({message:"User Not Found"});
-        return;
-    }
-    const matched = await bcrypt.compareSync(req.body.password, user.password);
-    if(!matched){
-        res.status(407).json({message:"Password is Incorrect"});
-        return;
-    }
-    const token = jwt.sign(user,process.env.JWT_SECRET,{expiresIn:"24h"});
-    res.status(200).json({user,token})
-}
+export const loginUser = async (req, res) => {
+  const user = await userSchema.findOne({ email: req.body.email });
+  if (!user) {
+    res.status(408).json({ message: "User Not Found" });
+    return;
+  }
+  const matched = await bcrypt.compareSync(req.body.password, user.password);
+  if (!matched) {
+    res.status(410).json({ message: "Password is Incorrect" });
+    return;
+  }
+  const token = jwt.sign(user.toJSON(), process.env.JWT_SECRET, {
+    expiresIn: "24h",
+  });
+  res.status(200).json({ user, token });
+};

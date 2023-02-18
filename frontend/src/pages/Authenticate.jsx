@@ -6,8 +6,10 @@ import SignupComp from "../components/authenticate/SignupComp";
 import { useDispatch } from "react-redux";
 import { addUser } from "../slices/userSlice";
 import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
 
 const Authenticate = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [login, setLogin] = useState(false);
   const [formData, setFormData] = useState({
@@ -30,7 +32,8 @@ const Authenticate = () => {
       const data = await res.json();
       dispatch(addUser(data?.user));
       Cookies.set("jwt", data?.token);
-      console.log("done");
+      // console.log("done");
+      navigate("/")
       return;
     } else if (res.status == 410) {
       return alert("Password is Incorrect");

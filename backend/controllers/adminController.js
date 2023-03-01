@@ -23,15 +23,43 @@ export const adminLogin = async (req, res) => {
   }
 };
 
-export const getBusinessData = async (req,res) => {
-    const users = await userSchema.find();
-    const sellers = await sellerSchema.find();
-    const totalProducts = sellers.flatMap(seller => seller.products);
-    const totalOrders = sellers.flatMap(seller => seller.customerOrders);
-    res.status(200).json({
-        totalUsers:users.length,
-        totalSellers:sellers.length,
-        totalProducts,
-        totalOrders
-    })
-}
+export const forgetPassword = async (req, res) => {
+    if(!req.body.newPassword || req.body.newPassword === undefined){
+        return res.status(451).json({message:"New Password can't be null or undefined"})
+    }
+    adminSchema.updateOne(
+    // Filter to find the document to update
+    { "email":req.body.email },
+
+    // Update to apply to the document
+    { $set: { password: req.body.newPassword } },
+
+    // Callback function
+    (err, result) => {
+      if (err) {
+        console.log(err);
+        res.status(500).json({err})
+      } else {
+        console.log(result);
+        if(result.modifiedCount!==0){
+            res.status(200).json({message:"Password Changed Successfully"});
+        }else{
+            res.status(330).json({message:"Password Not Changed due to some unknown errors"});
+        }
+      }
+    }
+  );
+};
+
+export const getBusinessData = async (req, res) => {
+  const users = await userSchema.find();
+  const sellers = await sellerSchema.find();
+  const totalProducts = sellers.flatMap((seller) => seller.products);
+  const totalOrders = sellers.flatMap((seller) => seller.customerOrders);
+  res.status(200).json({
+    totalUsers: users.length,
+    totalSellers: sellers.length,
+    totalProducts,
+    totalOrders,
+  });
+};

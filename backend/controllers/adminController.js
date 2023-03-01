@@ -1,4 +1,6 @@
 import adminSchema from "../models/adminSchema.js";
+import userSchema from "../models/userSchema.js";
+import sellerSchema from "../models/sellerSchema.js";
 
 export const adminLogin = async (req, res) => {
   const email = req.body.email;
@@ -20,3 +22,16 @@ export const adminLogin = async (req, res) => {
     });
   }
 };
+
+export const getBusinessData = async (req,res) => {
+    const users = await userSchema.find();
+    const sellers = await sellerSchema.find();
+    const totalProducts = sellers.flatMap(seller => seller.products);
+    const totalOrders = sellers.flatMap(seller => seller.customerOrders);
+    res.status(200).json({
+        totalUsers:users.length,
+        totalSellers:sellers.length,
+        totalProducts,
+        totalOrders
+    })
+}

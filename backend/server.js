@@ -10,6 +10,7 @@ import connect from "./database/mongodb.js";
 import userRoute from "./routes/userRoute.js";
 import sellerRoute from "./routes/sellerRoute.js";
 import authRoute from "./routes/authRoute.js";
+import adminRoute from "./routes/adminRoute.js";
 import passport from "passport";
 import passportSetup, { GoogleAuth } from "./config/passport.js";
 
@@ -42,6 +43,7 @@ app.get("/", (req, res) => {
 app.use("/auth", authRoute);
 app.use("/users", userRoute);
 app.use("/sellers", sellerRoute);
+app.use("/admin", adminRoute);
 app.use("/*", (req, res) => res.json({ message: "Wrong URL 404" }));
 
 app.listen(process.env.PORT, () => {

@@ -1,0 +1,22 @@
+import adminSchema from "../models/adminSchema.js";
+
+export const adminLogin = async (req, res) => {
+  const email = req.body.email;
+  const password = req.body.password;
+  const admin = await adminSchema.findOne({ email: email });
+  if (admin === null || !admin) {
+    return res
+      .status(420)
+      .json({ adminVerified: false, message: "email is wrong" });
+  } else if (admin.password === password) {
+    res.status(200).json({
+      adminVerified: true,
+      message: "Admin Login Success",
+    });
+  } else {
+    res.status(440).json({
+      adminVerified: false,
+      message: "Admin Login Unsuccessful",
+    });
+  }
+};

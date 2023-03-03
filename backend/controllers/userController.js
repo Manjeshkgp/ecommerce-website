@@ -1,6 +1,8 @@
 import bcrypt from "bcrypt";
 import userSchema from "../models/userSchema.js";
 import jwt from "jsonwebtoken";
+import productSchema from "../models/productSchema.js";
+import adminSchema from "../models/adminSchema.js";
 export const registerUser = async (req, res) => {
   const userExist = await userSchema.findOne({ email: req.body.email });
   if (userExist) {
@@ -46,3 +48,23 @@ export const loginUser = async (req, res) => {
   });
   res.status(200).json({ user, token });
 };
+
+export const getProducts = async(req,res) => {
+  const allProducts = await productSchema.find();
+  res.status(200).json({allProducts});
+}
+
+export const buyAProduct = async (req,res) => {
+  const purchaseDetails = {
+    userId:req.body.userId,
+    productId:req.body.productId,
+    date:Date.now()
+  }
+  try {
+  await adminSchema.updateOne({},{$addToSet:{sales:purchaseDetails}})
+  res.status(200).json({message:"Product Purchased Successfully"})
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({error})
+  }
+}

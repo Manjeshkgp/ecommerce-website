@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { addProduct, adminLogin,forgetPassword,getBusinessData } from "../controllers/adminController.js";
+import { addProduct, adminLogin,deleteProduct,forgetPassword,getBusinessData } from "../controllers/adminController.js";
 import multer from "multer";
 
 // Create a disk storage for Multer
@@ -21,7 +21,7 @@ const router = Router();
 router.route('/login').post(adminLogin);
 router.route('/forget-password').post(forgetPassword);
 router.route('/business-data').get(getBusinessData);
-router.route('/add-product').post(upload.fields([{name: 'files', maxCount:10}, {name: 'primaryImage', maxCount: 1}]),addProduct);
-router.route('/delete-product').delete();
+router.route('/add-product').post(upload.fields([{name: 'files', maxCount:5}, {name: 'primaryImage', maxCount: 1}]),addProduct);
+router.route('/delete-product').delete(deleteProduct);
 
 export default router;

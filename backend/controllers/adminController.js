@@ -3,6 +3,7 @@ import userSchema from "../models/userSchema.js";
 import sellerSchema from "../models/sellerSchema.js";
 import mongoose from "mongoose";
 import productSchema from "../models/productSchema.js";
+import fs from "fs";
 
 export const adminLogin = async (req, res) => {
   const email = req.body.email;
@@ -48,11 +49,9 @@ export const forgetPassword = async (req, res) => {
         if (result.modifiedCount !== 0) {
           res.status(200).json({ message: "Password Changed Successfully" });
         } else {
-          res
-            .status(330)
-            .json({
-              message: "Password Not Changed due to some unknown errors",
-            });
+          res.status(330).json({
+            message: "Password Not Changed due to some unknown errors",
+          });
         }
       }
     }
@@ -75,31 +74,54 @@ export const getBusinessData = async (req, res) => {
 export const addProduct = async (req, res) => {
   const files = req.files;
   const primaryImage = req.primaryImage;
-  console.log({files,primaryImage});
+  console.log({ files, primaryImage });
   const product = {
     title: req.body.title,
     description: req.body.description,
     shortDescription: req.body.shortDescription,
-    ram:req.body.ram,
-    processor:req.body.processor || "Unknown",
-    brand:req.body.brand || "Unknown",
+    ram: req.body.ram,
+    processor: req.body.processor || "Unknown",
+    brand: req.body.brand || "Unknown",
     rating: req.body.rating || [],
     price: req.body.price,
     images: files.files.map((file) => file.path) || [],
-    primaryImage:files.primaryImage[0].path,
-    sellerId:"Admin"
-  }; 
+    primaryImage: files.primaryImage[0].path,
+    sellerId: "Admin",
+  };
 
   try {
-  const newProduct = new productSchema(product);
-  const saveProduct = await newProduct.save();
-  res.status(200).json({product:saveProduct,message:"Product Saved Successfully"});
+    const newProduct = new productSchema(product);
+    const saveProduct = await newProduct.save();
+    res
+      .status(200)
+      .json({ product: saveProduct, message: "Product Saved Successfully" });
   } catch (error) {
     console.log(error);
     res.status(400).json({ message: error });
   }
 };
 
-export const deleteProduct = async () => {
-    
-}
+export const deleteProduct = async (req, res) => {
+  const _id = req.body._id;
+  productSchema.findByIdAndDelete(
+    _id,
+    (err, deletedDoc) => {
+      if (err) {
+        // Handle the error
+        console.error(err);
+        res.status(400).json({ message: "Some Error Occured" });
+      } else {
+        // Log the deleted document
+        console.log(deletedDoc);
+        const allImages = [...deletedDoc.images];
+        allImages.push(deletedDoc.primaryImage);
+          allImages.forEach((image) => { // Not used Array.from due to some Symbol.Iterable problems
+            fs.unlink(String(image), (err) => {
+              console.log(err);
+            });
+          })
+        res.status(200).json({message:"Product and All Images Deleted"})
+      }
+    }
+  );
+};

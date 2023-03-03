@@ -2,6 +2,7 @@ import adminSchema from "../models/adminSchema.js";
 import userSchema from "../models/userSchema.js";
 import sellerSchema from "../models/sellerSchema.js";
 import mongoose from "mongoose";
+import productSchema from "../models/productSchema.js";
 
 export const adminLogin = async (req, res) => {
   const email = req.body.email;
@@ -73,9 +74,9 @@ export const getBusinessData = async (req, res) => {
 
 export const addProduct = async (req, res) => {
   const files = req.files;
-  const email = req.body.email;
+  const primaryImage = req.primaryImage;
+  console.log({files,primaryImage});
   const product = {
-    _id: mongoose.Types.ObjectId(),
     title: req.body.title,
     description: req.body.description,
     shortDescription: req.body.shortDescription,
@@ -84,30 +85,21 @@ export const addProduct = async (req, res) => {
     brand:req.body.brand || "Unknown",
     rating: req.body.rating || [],
     price: req.body.price,
-    images: files.map((file) => file.path),
-  };
-  adminSchema.updateOne(
-    { email: email },
-    { $addToSet: { products: product } },
-    (err, result) => {
-      if (err) {
-        console.log(err);
-        res.status(500).json({ err });
-      } else {
-        console.log(result);
-        if (result.modifiedCount !== 0) {
-          res
-            .status(200)
-            .json({ message: "Products and Images added successfully" });
-        } else {
-          res
-            .status(330)
-            .json({
-              message:
-                "Products or Images not added due to some errors we don't know as of now",
-            });
-        }
-      }
-    }
-  );
+    images: files.files.map((file) => file.path) || [],
+    primaryImage:files.primaryImage[0].path,
+    sellerId:"Admin"
+  }; 
+
+  try {
+  const newProduct = new productSchema(product);
+  const saveProduct = await newProduct.save();
+  res.status(200).json({product:saveProduct,message:"Product Saved Successfully"});
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ message: error });
+  }
 };
+
+export const deleteProduct = async () => {
+    
+}

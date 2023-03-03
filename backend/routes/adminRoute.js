@@ -21,6 +21,7 @@ const router = Router();
 router.route('/login').post(adminLogin);
 router.route('/forget-password').post(forgetPassword);
 router.route('/business-data').get(getBusinessData);
-router.route('/add-product').post(upload.array('files', 10),addProduct);
+router.route('/add-product').post(upload.fields([{name: 'files', maxCount:10}, {name: 'primaryImage', maxCount: 1}]),addProduct);
+router.route('/delete-product').delete();
 
 export default router;

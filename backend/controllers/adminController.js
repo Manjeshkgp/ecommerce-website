@@ -61,13 +61,13 @@ export const forgetPassword = async (req, res) => {
 export const getBusinessData = async (req, res) => {
   const users = await userSchema.find();
   const sellers = await sellerSchema.find();
-  const totalProducts = sellers.flatMap((seller) => seller.products);
-  const totalOrders = sellers.flatMap((seller) => seller.customerOrders);
+  const products = await productSchema.find();
+  // const totalProducts = sellers.flatMap((seller) => seller.products);
+  // const totalOrders = sellers.flatMap((seller) => seller.customerOrders);
   res.status(200).json({
-    totalUsers: users.length,
-    totalSellers: sellers.length,
-    totalProducts,
-    totalOrders,
+    totalUsers: users,
+    totalSellers: sellers,
+    totalProducts: products,
   });
 };
 

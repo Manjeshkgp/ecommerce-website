@@ -5,6 +5,7 @@ import { GrWorkshop } from "react-icons/gr";
 import { FcSalesPerformance } from "react-icons/fc";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import Barcharts from "../components/barcharts"
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -63,6 +64,9 @@ const AdminDashboard = () => {
               SALES
             </p>
           </div>
+        </div>
+        <div className="mt-2">
+        <Barcharts/>
         </div>
       </div>
     </>

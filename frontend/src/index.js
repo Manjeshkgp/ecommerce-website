@@ -4,7 +4,7 @@ import { Provider } from "react-redux";
 import store from "./store.js";
 import "./index.css";
 import App from "./App";
-import { Authenticate, Cart, Contact, Home, Orders, Products, GoogleJwt, AdminLogin } from "./pages";
+import { Authenticate, Cart, Contact, Home, Orders, Products, GoogleJwt, AdminLogin, AdminDashboard } from "./pages";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
 const router = createBrowserRouter([
@@ -45,6 +45,10 @@ const router = createBrowserRouter([
   {
     path:"/admin-login",
     element: <AdminLogin/>
+  },
+  {
+    path:"/admin-dashboard",
+    element:<AdminDashboard/>
   }
 ]);
 

@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import Button from "../components/buttons";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { makeAdmin } from "../slices/userSlice";
 
 const AdminLogin = () => {
+  const dispatch = useDispatch()
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -19,7 +22,8 @@ const AdminLogin = () => {
     });
     await res.json();
     if(res.status===200){
-        alert("login successful")
+        dispatch(makeAdmin());
+        alert("login successful");
         navigate("/admin-dashboard",{replace:true});
     }else{
         alert("Login details are incorrect");

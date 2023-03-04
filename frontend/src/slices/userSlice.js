@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit'
 const initialState = {
   user:{},
   authenticated:false,
+  admin:false,
 }
 
 export const userSlice = createSlice({
@@ -16,10 +17,13 @@ export const userSlice = createSlice({
     removeUser:(state,action)=>{
         state.user = initialState.user;
         state.authenticated = false;
+    },
+    makeAdmin:(state,action)=>{
+      state.admin = true;
     }
   },
 })
 
-export const { addUser,removeUser } = userSlice.actions
+export const { addUser,removeUser,makeAdmin } = userSlice.actions
 
 export default userSlice.reducer

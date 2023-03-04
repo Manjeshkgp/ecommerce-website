@@ -62,12 +62,14 @@ export const getBusinessData = async (req, res) => {
   const users = await userSchema.find();
   const sellers = await sellerSchema.find();
   const products = await productSchema.find();
+  const sales = await adminSchema.find({}).sales
   // const totalProducts = sellers.flatMap((seller) => seller.products);
   // const totalOrders = sellers.flatMap((seller) => seller.customerOrders);
   res.status(200).json({
     totalUsers: users,
     totalSellers: sellers,
     totalProducts: products,
+    totalSales: sales
   });
 };
 

@@ -68,3 +68,9 @@ export const buyAProduct = async (req,res) => {
     res.status(400).json({error})
   }
 }
+
+export const getAProduct = async(req,res) => {
+  const _id = req.body._id
+  const product = await productSchema.findById(_id);
+  res.status(200).json(product);
+}

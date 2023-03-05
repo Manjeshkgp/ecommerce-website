@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { addProduct, adminLogin,deleteProduct,forgetPassword,getBusinessData, updateProduct } from "../controllers/adminController.js";
+import { addProduct, adminLogin,deleteProduct,forgetPassword,getBusinessData, getUsers, removeUser, updateProduct } from "../controllers/adminController.js";
 import multer from "multer";
 import { randomUUID } from "crypto";
 
@@ -26,5 +26,7 @@ router.route('/business-data').get(getBusinessData);
 router.route('/add-product').post(upload.fields([{name: 'files', maxCount:5}, {name: 'primaryImage', maxCount: 1}]),addProduct);
 router.route('/delete-product').delete(deleteProduct);
 router.route('/update-product/:_id').patch(updateProduct);
+router.route('/get-users').get(getUsers);
+router.route('/remove-user/:_id').delete(removeUser);
 
 export default router;

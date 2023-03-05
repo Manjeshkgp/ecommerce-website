@@ -141,3 +141,19 @@ export const updateProduct = async(req,res) => {
     res.status(400).json({message:"Some Error Occured"});
   }
 }
+
+export const getUsers = async(req,res) => {
+  const allUsers = await userSchema.find();
+  res.status(200).json(allUsers);
+}
+
+export const removeUser = async(req,res) => {
+  const {_id} = req.params;
+  try {
+  await userSchema.findByIdAndDelete(_id);
+  res.status(200).json({message:"Deleted The User"})
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({message:"Some Error Occured"})
+  }
+}

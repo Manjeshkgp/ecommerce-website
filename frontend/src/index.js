@@ -9,6 +9,7 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import AdminProducts from "./pages/AdminProducts.jsx";
 import AdminSales from "./pages/AdminSales.jsx";
 import AdminSellers from "./pages/AdminSellers.jsx"
+import DeleteProduct from "./pages/DeleteProduct.jsx";
 
 const router = createBrowserRouter([
   {
@@ -65,6 +66,10 @@ const router = createBrowserRouter([
     path:"/admin/sellers",
     element:<AdminSellers/>
   },
+  {
+    path:"/admin/products/delete/:id",
+    element:<DeleteProduct/>
+  }
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById("root"));

@@ -1,7 +1,6 @@
 import adminSchema from "../models/adminSchema.js";
 import userSchema from "../models/userSchema.js";
 import sellerSchema from "../models/sellerSchema.js";
-import mongoose from "mongoose";
 import productSchema from "../models/productSchema.js";
 import fs from "fs";
 
@@ -106,6 +105,15 @@ export const addProduct = async (req, res) => {
 
 export const deleteProduct = async (req, res) => {
   const _id = req.body._id;
+  const theProduct = await productSchema.findById(_id);
+  var allImages = [...theProduct?.images];
+  var primaryImage = theProduct?.primaryImage;
+  allImages.push(primaryImage);
+  allImages.forEach((image) => { // Not used Array.from due to some Symbol.Iterable problems
+      fs.unlink(String(image), (err) => {
+        console.log(err);
+      });
+    })
   productSchema.findByIdAndDelete(
     _id,
     (err, deletedDoc) => {
@@ -116,13 +124,6 @@ export const deleteProduct = async (req, res) => {
       } else {
         // Log the deleted document
         console.log(deletedDoc);
-        const allImages = [...deletedDoc.images];
-        allImages.push(deletedDoc.primaryImage);
-          allImages.forEach((image) => { // Not used Array.from due to some Symbol.Iterable problems
-            fs.unlink(String(image), (err) => {
-              console.log(err);
-            });
-          })
         res.status(200).json({message:"Product and All Images Deleted"})
       }
     }

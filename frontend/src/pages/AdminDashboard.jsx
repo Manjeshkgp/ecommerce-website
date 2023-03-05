@@ -31,7 +31,7 @@ const AdminDashboard = () => {
   useEffect(() => {
     if (user.admin === false) {
       alert("Login first then come here");
-      return navigate("/");
+      return navigate("/admin-login");
     }
     getBusinessData();
   }, []);

@@ -3,6 +3,7 @@ import { AiOutlineHeart } from "react-icons/ai";
 import { useSelector } from "react-redux";
 import ProductData from "./ProductData";
 import { useNavigate } from "react-router-dom";
+import Button from "../buttons";
 
 const Products = ({productDetails}) => {
   const navigate = useNavigate();
@@ -29,8 +30,8 @@ const Products = ({productDetails}) => {
             <AiOutlineHeart className="fill-gray-200 cursor-pointer rounded-full w-8 h-8" />
           </div>:""}
           {admin?<div className="absolute top-2 w-full flex justify-around items-center">
-            <p className="text-gray-200 hover:text-white cursor-pointer" onClick={()=>{navigate(`/admin/products/edit/${productDetails._id}`)}}>Edit</p>
-            <p className="text-gray-200 hover:text-white cursor-pointer" onClick={()=>{if(window.confirm("Are you sure, you wanna delete that product")){navigate(`/admin/products/delete/${productDetails._id}`)}}}>Delete</p>
+            <div onClick={()=>{navigate(`/admin/products/edit/${productDetails._id}`)}}><Button buttonContent="Edit"></Button></div>
+            <div onClick={()=>{if(window.confirm("Are you sure, you wanna delete that product")){navigate(`/admin/products/delete/${productDetails._id}`)}}}><Button buttonContent="Delete" >Delete</Button></div>
           </div>:""}
           <img
             className="w-full rounded-t h-52 object-cover"

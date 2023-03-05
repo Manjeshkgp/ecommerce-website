@@ -33,6 +33,7 @@ GoogleAuth;
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use("/uploads",express.static("uploads"))
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
 await connect();
 

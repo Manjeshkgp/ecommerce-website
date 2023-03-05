@@ -75,7 +75,7 @@ export const getBusinessData = async (req, res) => {
 };
 
 export const addProduct = async (req, res) => {
-  const files = req.files;
+  const files = await req.files;
   const primaryImage = req.primaryImage;
   console.log({ files, primaryImage });
   const product = {

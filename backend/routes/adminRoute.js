@@ -1,15 +1,17 @@
 import { Router } from "express";
 import { addProduct, adminLogin,deleteProduct,forgetPassword,getBusinessData } from "../controllers/adminController.js";
 import multer from "multer";
+import { randomUUID } from "crypto";
 
 // Create a disk storage for Multer
+
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
       cb(null, 'uploads');
     },
     filename: (req, file, cb) => {
       const ext = file.originalname.split('.').pop();
-      cb(null, `${file.fieldname}-${Date.now()}.${ext}`);
+      cb(null, `${file.fieldname}-${randomUUID()}-${Date.now()}.${ext}`);
     }
   });
   

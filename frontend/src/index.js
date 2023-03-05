@@ -10,6 +10,8 @@ import AdminProducts from "./pages/AdminProducts.jsx";
 import AdminSales from "./pages/AdminSales.jsx";
 import AdminSellers from "./pages/AdminSellers.jsx"
 import DeleteProduct from "./pages/DeleteProduct.jsx";
+import EditProduct from "./pages/EditProduct.jsx";
+import AdminUsers from "./pages/AdminUsers.jsx"
 
 const router = createBrowserRouter([
   {
@@ -60,6 +62,10 @@ const router = createBrowserRouter([
   },
   {
     path:"/admin/users",
+    element:<AdminUsers/>
+  },
+  {
+    path:"/admin/sales",
     element:<AdminSales/>
   },
   {
@@ -69,6 +75,10 @@ const router = createBrowserRouter([
   {
     path:"/admin/products/delete/:id",
     element:<DeleteProduct/>
+  },
+  {
+    path:"/admin/products/edit/:id",
+    element:<EditProduct/>
   }
 ]);
 

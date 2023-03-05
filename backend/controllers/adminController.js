@@ -129,3 +129,15 @@ export const deleteProduct = async (req, res) => {
     }
   );
 };
+
+export const updateProduct = async(req,res) => {
+  const _id = req.params._id;
+  const productDetails = req.body;
+  try {
+  await productSchema.findByIdAndUpdate(_id,productDetails);
+  res.status(200).json({message:"Updated the product"});
+  } catch (error) {
+    console.log(error)
+    res.status(400).json({message:"Some Error Occured"});
+  }
+}

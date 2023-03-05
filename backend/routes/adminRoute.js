@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { addProduct, adminLogin,deleteProduct,forgetPassword,getBusinessData, getUsers, removeUser, updateProduct } from "../controllers/adminController.js";
+import { addProduct, adminLogin,deleteProduct,forgetPassword,getBusinessData, getSellers, getUsers, removeSeller, removeUser, updateProduct } from "../controllers/adminController.js";
 import multer from "multer";
 import { randomUUID } from "crypto";
 
@@ -28,5 +28,7 @@ router.route('/delete-product').delete(deleteProduct);
 router.route('/update-product/:_id').patch(updateProduct);
 router.route('/get-users').get(getUsers);
 router.route('/remove-user/:_id').delete(removeUser);
+router.route('/get-sellers').get(getSellers);
+router.route('/remove-seller/:_id').delete(removeSeller);
 
 export default router;

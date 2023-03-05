@@ -157,3 +157,19 @@ export const removeUser = async(req,res) => {
     res.status(400).json({message:"Some Error Occured"})
   }
 }
+
+export const getSellers = async(req,res) => {
+  const allSellers = await sellerSchema.find();
+  res.status(200).json(allSellers);
+}
+
+export const removeSeller = async(req,res) => {
+  const {_id} = req.params;
+  try {
+  await sellerSchema.findByIdAndDelete(_id);
+  res.status(200).json({message:"Deleted The Seller"})
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({message:"Some Error Occured"})
+  }
+}

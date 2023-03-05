@@ -75,8 +75,16 @@ export const getBusinessData = async (req, res) => {
 
 export const addProduct = async (req, res) => {
   const files = await req.files;
-  const primaryImage = req.primaryImage;
-  console.log({ files, primaryImage });
+  let images;
+  let primaryImage;
+  if(files === null || files === undefined){
+    images = [];
+    primaryImage = '';
+  }if(files?.files !== undefined && files?.files !== null){
+  images = files?.files?.map((file) => file.path);
+  }if(files?.primaryImage !== undefined && files?.primaryImage !== null){
+  primaryImage = files?.primaryImage[0]?.path;
+  }
   const product = {
     title: req.body.title,
     description: req.body.description,
@@ -86,8 +94,8 @@ export const addProduct = async (req, res) => {
     brand: req.body.brand || "Unknown",
     rating: req.body.rating || [],
     price: req.body.price,
-    images: files.files.map((file) => file.path) || [],
-    primaryImage: files.primaryImage[0].path,
+    images: images,
+    primaryImage: primaryImage,
     sellerId: "Admin",
   };
 
@@ -106,6 +114,10 @@ export const addProduct = async (req, res) => {
 export const deleteProduct = async (req, res) => {
   const _id = req.body._id;
   const theProduct = await productSchema.findById(_id);
+  if(theProduct === null || theProduct === undefined){
+    res.status(350).json({message:"Product Already Unavailable"});
+    return;
+  }
   var allImages = [...theProduct?.images];
   var primaryImage = theProduct?.primaryImage;
   allImages.push(primaryImage);

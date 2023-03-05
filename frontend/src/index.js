@@ -6,6 +6,9 @@ import "./index.css";
 import App from "./App";
 import { Authenticate, Cart, Contact, Home, Orders, Products, GoogleJwt, AdminLogin, AdminDashboard } from "./pages";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import AdminProducts from "./pages/AdminProducts.jsx";
+import AdminSales from "./pages/AdminSales.jsx";
+import AdminSellers from "./pages/AdminSellers.jsx"
 
 const router = createBrowserRouter([
   {
@@ -49,7 +52,19 @@ const router = createBrowserRouter([
   {
     path:"/admin-dashboard",
     element:<AdminDashboard/>
-  }
+  },
+  {
+    path:"/admin/products",
+    element:<AdminProducts/>
+  },
+  {
+    path:"/admin/users",
+    element:<AdminSales/>
+  },
+  {
+    path:"/admin/sellers",
+    element:<AdminSellers/>
+  },
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById("root"));

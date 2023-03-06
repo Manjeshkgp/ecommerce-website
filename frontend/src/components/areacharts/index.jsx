@@ -1,12 +1,11 @@
 import React from "react";
 import {
-  BarChart,
-  Bar,
+  AreaChart,
+  Area,
   XAxis,
   YAxis,
   CartesianGrid,
-  Tooltip,
-  Legend
+  Tooltip
 } from "recharts";
 
 const data = [
@@ -54,47 +53,41 @@ const data = [
   }
 ];
 
-export default function index({graphData}) {
+export default function Areachart({graphData}) {
   return (
-    <BarChart
-    className="w-full"
+    <AreaChart
       width={350}
-      height={300}
+      height={250}
       data={graphData}
       margin={{
-        top: 5,
+        top: 10,
         right: 30,
-        left: 20,
-        bottom: 5
+        left: 0,
+        bottom: 0
       }}
     >
       <CartesianGrid strokeDasharray="3 3" />
       <XAxis dataKey="date" />
       <YAxis />
       <Tooltip />
-      <Legend />
-      <Bar dataKey="orders" fill="#7b76e0" />
-    </BarChart>
-    // <BarChart
-    // className="w-full"
+      <Area type="monotone" dataKey="orders" stroke="#8884d8" fill="#8884d8" />
+    </AreaChart>
+    // <AreaChart
     //   width={350}
-    //   height={300}
+    //   height={250}
     //   data={data}
     //   margin={{
-    //     top: 5,
+    //     top: 10,
     //     right: 30,
-    //     left: 20,
-    //     bottom: 5
+    //     left: 0,
+    //     bottom: 0
     //   }}
     // >
     //   <CartesianGrid strokeDasharray="3 3" />
     //   <XAxis dataKey="name" />
     //   <YAxis />
     //   <Tooltip />
-    //   <Legend />
-    //   <Bar dataKey="pv" fill="#8884d8" />
-    //   <Bar dataKey="uv" fill="#82ca9d" />
-    //   <Bar dataKey="amt" fill="#861212" />
-    // </BarChart>
+    //   <Area type="monotone" dataKey="uv" stroke="#8884d8" fill="#8884d8" />
+    // </AreaChart>
   );
 }

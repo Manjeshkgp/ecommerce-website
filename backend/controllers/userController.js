@@ -58,7 +58,7 @@ export const buyAProduct = async (req,res) => {
   const purchaseDetails = {
     userId:req.body.userId,
     productId:req.body.productId,
-    date:Date.now()
+    date: new Date()
   }
   try {
   await adminSchema.updateOne({},{$addToSet:{sales:purchaseDetails}})

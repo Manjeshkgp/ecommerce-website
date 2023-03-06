@@ -33,7 +33,7 @@ export const forgetPassword = async (req, res) => {
   }
   adminSchema.updateOne(
     // Removed filtration since only one admin is there, single vendor
-    { },
+    {},
 
     // Update to apply to the document
     { $set: { password: req.body.newPassword } },
@@ -69,7 +69,7 @@ export const getBusinessData = async (req, res) => {
     totalUsers: users,
     totalSellers: sellers,
     totalProducts: products,
-    totalSales: sales
+    totalSales: sales,
   });
 };
 
@@ -77,13 +77,15 @@ export const addProduct = async (req, res) => {
   const files = await req.files;
   let images;
   let primaryImage;
-  if(files === null || files === undefined){
+  if (files === null || files === undefined) {
     images = [];
-    primaryImage = '';
-  }if(files?.files !== undefined && files?.files !== null){
-  images = files?.files?.map((file) => file.path);
-  }if(files?.primaryImage !== undefined && files?.primaryImage !== null){
-  primaryImage = files?.primaryImage[0]?.path;
+    primaryImage = "";
+  }
+  if (files?.files !== undefined && files?.files !== null) {
+    images = files?.files?.map((file) => file.path);
+  }
+  if (files?.primaryImage !== undefined && files?.primaryImage !== null) {
+    primaryImage = files?.primaryImage[0]?.path;
   }
   const product = {
     title: req.body.title,
@@ -114,74 +116,131 @@ export const addProduct = async (req, res) => {
 export const deleteProduct = async (req, res) => {
   const _id = req.body._id;
   const theProduct = await productSchema.findById(_id);
-  if(theProduct === null || theProduct === undefined){
-    res.status(350).json({message:"Product Already Unavailable"});
+  if (theProduct === null || theProduct === undefined) {
+    res.status(350).json({ message: "Product Already Unavailable" });
     return;
   }
   var allImages = [...theProduct?.images];
   var primaryImage = theProduct?.primaryImage;
   allImages.push(primaryImage);
-  allImages.forEach((image) => { // Not used Array.from due to some Symbol.Iterable problems
-      fs.unlink(String(image), (err) => {
-        console.log(err);
-      });
-    })
-  productSchema.findByIdAndDelete(
-    _id,
-    (err, deletedDoc) => {
-      if (err) {
-        // Handle the error
-        console.error(err);
-        res.status(400).json({ message: "Some Error Occured" });
-      } else {
-        // Log the deleted document
-        console.log(deletedDoc);
-        res.status(200).json({message:"Product and All Images Deleted"})
-      }
+  allImages.forEach((image) => {
+    // Not used Array.from due to some Symbol.Iterable problems
+    fs.unlink(String(image), (err) => {
+      console.log(err);
+    });
+  });
+  productSchema.findByIdAndDelete(_id, (err, deletedDoc) => {
+    if (err) {
+      // Handle the error
+      console.error(err);
+      res.status(400).json({ message: "Some Error Occured" });
+    } else {
+      // Log the deleted document
+      console.log(deletedDoc);
+      res.status(200).json({ message: "Product and All Images Deleted" });
     }
-  );
+  });
 };
 
-export const updateProduct = async(req,res) => {
+export const updateProduct = async (req, res) => {
   const _id = req.params._id;
   const productDetails = req.body;
   try {
-  await productSchema.findByIdAndUpdate(_id,productDetails);
-  res.status(200).json({message:"Updated the product"});
+    await productSchema.findByIdAndUpdate(_id, productDetails);
+    res.status(200).json({ message: "Updated the product" });
   } catch (error) {
-    console.log(error)
-    res.status(400).json({message:"Some Error Occured"});
+    console.log(error);
+    res.status(400).json({ message: "Some Error Occured" });
   }
-}
+};
 
-export const getUsers = async(req,res) => {
+export const getUsers = async (req, res) => {
   const allUsers = await userSchema.find();
   res.status(200).json(allUsers);
-}
+};
 
-export const removeUser = async(req,res) => {
-  const {_id} = req.params;
+export const removeUser = async (req, res) => {
+  const { _id } = req.params;
   try {
-  await userSchema.findByIdAndDelete(_id);
-  res.status(200).json({message:"Deleted The User"})
+    await userSchema.findByIdAndDelete(_id);
+    res.status(200).json({ message: "Deleted The User" });
   } catch (error) {
     console.log(error);
-    res.status(400).json({message:"Some Error Occured"})
+    res.status(400).json({ message: "Some Error Occured" });
   }
-}
+};
 
-export const getSellers = async(req,res) => {
+export const getSellers = async (req, res) => {
   const allSellers = await sellerSchema.find();
   res.status(200).json(allSellers);
-}
+};
 
-export const removeSeller = async(req,res) => {
-  const {_id} = req.params;
+export const removeSeller = async (req, res) => {
+  const { _id } = req.params;
   try {
-  await sellerSchema.findByIdAndDelete(_id);
-  res.status(200).json({message:"Deleted The Seller"})
+    await sellerSchema.findByIdAndDelete(_id);
+    res.status(200).json({ message: "Deleted The Seller" });
   } catch (error) {
     console.log(error);
-    res.status(400).json({message:"Some Error Occured"})
+    res.status(400).json({ message: "Some Error Occured" });
   }
-}
+};
+
+export const salesGraph = async (req, res) => {
+  let days;
+  if (
+    isNaN(Number(req.params.days)) ||
+    req.params.days === undefined ||
+    req.params.days === null
+  ) {
+    days = 7;
+  } else if (Number(req.params.days) <= 0) {
+    days = 7;
+  } else {
+    days = req.params.days;
+  }
+  const daysNumber = days - 1;
+  const lastXDays = []; // IF daysNumber = 6, THEN last7Days LIST
+  let ordersByDate = {};
+  const admin = await adminSchema.findOne({});
+  const sales = admin.sales;
+  // FIRST GETTING THE ARRAY OF DATES OF LAST X NUMBER OF DAYS IF X = 6, THEN 7 DAYS DATA, IF 30 THEN 31 DAYS DATA
+  for (let i = daysNumber; i >= 0; i--) {
+    const date = new Date();
+    date.setDate(date.getDate() - i);
+    lastXDays.push(date.toISOString().substr(0, 10));
+  }
+  // CREATING OBJECT FOR NUMBER OF ORDERS BY DATE AS KEYS AND NUMBER OF ORDERS AS VALUES
+  sales.forEach((order) => {
+    const orderDate = order.date.toISOString().substr(0, 10);
+    if (lastXDays.includes(orderDate)) {
+      if (ordersByDate[orderDate]) {
+        ordersByDate[orderDate]++;
+      } else {
+        ordersByDate[orderDate] = 1;
+      }
+    }
+  });
+  // CONVERTING THE OBJECT INTO ARRAY
+  const graphData = Object.keys(ordersByDate).map((date) => {
+    return { date, orders: ordersByDate[date] };
+  });
+  // IF NO ORDERS HAPPENED ON A PARTICULAR DATE THEN NO OBJECT IS MADE, SO MAKING OBJECT FOR 0 ORDERS ON A DATE
+  // AND ADDING THOSE OBJECTS INTO THE graphData ARRAY
+  lastXDays.forEach((date) => {
+    if (!graphData.some((order) => order.date === date)) {
+      graphData.push({ date: date, orders: 0 });
+    }
+  });
+  // NOW SORTING THE ARRAY BY DATES
+  graphData.sort((a, b) => {
+    if (a.date < b.date) {
+      return -1;
+    }
+    if (a.date > b.date) {
+      return 1;
+    }
+    return 0;
+  });
+  res.status(200).json(graphData);
+};

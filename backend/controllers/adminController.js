@@ -32,8 +32,8 @@ export const forgetPassword = async (req, res) => {
       .json({ message: "New Password can't be null or undefined" });
   }
   adminSchema.updateOne(
-    // Filter to find the document to update
-    { email: req.body.email },
+    // Removed filtration since only one admin is there, single vendor
+    { },
 
     // Update to apply to the document
     { $set: { password: req.body.newPassword } },

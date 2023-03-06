@@ -5,7 +5,6 @@ import { GrWorkshop } from "react-icons/gr";
 import { FcSalesPerformance } from "react-icons/fc";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import Barcharts from "../components/barcharts";
 import { Link } from "react-router-dom";
 import Button from "../components/buttons";
 
@@ -15,6 +14,31 @@ const AdminDashboard = () => {
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
   const [businessData, setBusinessData] = useState({});
+  const [newPass,setNewPass] = useState({password:"",retypePassword:""});
+  const forgetPasswordRequest = async() => {
+    console.log(newPass)
+    let newPassword;
+    if(newPass.password===newPass.retypePassword){
+      newPassword=newPass.password
+    }else{
+     alert("Both passwords that you'd written are not same");
+     return;
+    }
+    const res = await fetch(`${process.env.REACT_APP_API_URL}/admin/forget-password`,{
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json",
+      },
+      body:JSON.stringify({
+        newPassword:newPassword,
+      })
+    })
+    await res.json();
+    if(res.status===200){
+      alert(`Password Changed to, ${newPass.password}`);
+      return;
+    }
+  }
   const getBusinessData = async () => {
     const res = await fetch(
       `${process.env.REACT_APP_API_URL}/admin/business-data`,
@@ -112,6 +136,25 @@ const AdminDashboard = () => {
               </p>
             </Link>
           </div>
+        </div>
+        <div className="flex flex-col lg:flex-row justify-evenly items-center bg-green-300 w-[96%] h-40 lg:h-12 mt-2">
+        <input
+              type="password"
+              name="password"
+              value={newPass.password}
+              onChange={(e)=>{setNewPass({...newPass,[e.target.name]:e.target.value})}}
+              placeholder="New Password"
+              className="w-[96%] lg:w-[30%] p-1 rounded focus:outline-none"
+            />
+            <input
+              type="password"
+              name="retypePassword"
+              value={newPass.retypePassword}
+              onChange={(e)=>{setNewPass({...newPass,[e.target.name]:e.target.value})}}
+              placeholder="Write the Password Again"
+              className="w-[96%] lg:w-[30%] p-1 rounded focus:outline-none"
+            />
+          <div onClick={()=>{forgetPasswordRequest()}}><Button buttonContent="Change Password"></Button></div>
         </div>
         <form
           ref={productRef}

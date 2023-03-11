@@ -38,7 +38,7 @@ const Welcome = () => {
   };
   return (
     <div className="overflow-x-hidden">
-      <div className="w-screen h-[22rem] md:h-[30rem] bg-gradient-to-t from-teal-400 to-transparent flex justify-center items-center">
+      <div className="w-screen h-[22rem] md:h-[30rem] bg-gray-900 flex justify-center items-center">
         <div className="relative">
           <Scrollindicaters slides={slides} slideNum={slideNum} setSlideNum={setSlideNum}/>
           <LeftRightScroll increaseSlide={increaseSlide} decreaseSlide={decreaseSlide}/>

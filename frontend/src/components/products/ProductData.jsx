@@ -1,26 +1,21 @@
 import React from "react";
-import Button from "../buttons";
-import { useSelector } from "react-redux";
+import {AiTwotoneStar} from "react-icons/ai";
 
 const ProductData = ({productDetails}) => {
-  const user = useSelector((state)=>state.user);
-  const admin = user.admin;
   return (
     <>
-      <div className="flex flex-col md:max-w-[70%]">
-        <p className="font-semibold">{productDetails?.title||"Title"}</p>
+      <div className="flex flex-col items-start w-full cursor-pointer">
+        <p
+          className="hidden md:block font-semibold text-gray-300">{productDetails?.shortDescription||"shortDescription -> Category"}</p>
         <p
           style={{ WebkitLineClamp: 1 }}
-          className="hidden md:block text-ellipsis whitespace-nowrap overflow-hidden text-xs"
+          className="text-ellipsis whitespace-nowrap overflow-hidden text-gray-100 font-bold"
         >
-          {productDetails?.shortDescription||"Short Description goes long so long so so long"}
+          {productDetails?.title||"Title"}
         </p>
-        <p>Rating</p>
-        <div className="rounded-3xl">
-          {!admin?<Button buttonContent="Add to Cart" />:""}
-        </div>
+        <p className="flex rounded bg-green-500 items-center justify-center font-semibold text-gray-900 px-1 text-base">{"4.2"}<AiTwotoneStar className="text-yellow-400 w-4 h-4"/></p>
+      <p className="font-bold text-gray-100">${productDetails?.price||"39.99"}</p>
       </div>
-      <p className="font-bold text-lg">${productDetails?.price||"39.99"}</p>
     </>
   );
 };

@@ -9,6 +9,13 @@ export const cartSlice = createSlice({
   initialState,
   reducers: {
     increment: (state,action) => {
+      if(state.products.some((obj)=>obj._id===action.payload._id)){
+        let itemToUpdate = action.payload;
+        let indexOfObj = state.products.findIndex(obj => obj._id === itemToUpdate._id);
+        let updatedObj = state.products[indexOfObj];
+        updatedObj.numberOfProducts += 1;
+        return;
+      }
       state.products.push(action.payload)
     },
     decrement: (state,action) => {
@@ -20,10 +27,6 @@ export const cartSlice = createSlice({
         }
     },
     incrementByOne: (state, action) => {
-        let itemToUpdate = action.payload;
-        let indexOfObj = state.products.findIndex(obj => obj._id === itemToUpdate._id);
-        let updatedObj = state.products[indexOfObj];
-        updatedObj.numberOfProducts += 1;
     },
     decrementByOne: (state, action) => {
         let itemToUpdate = action.payload;

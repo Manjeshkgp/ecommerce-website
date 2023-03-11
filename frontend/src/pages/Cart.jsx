@@ -3,7 +3,7 @@ import SmallProductComp from '../components/products/SmallProductComp';
 
 const Cart = () => {
   return (<>
-  <div className="flex flex-col justify-evenly items-center bg-gradient-to-bl from-transparent via-teal-400 to-transparent min-h-[calc(100vh-16rem)]">
+  <div className="flex flex-col justify-evenly items-center bg-gray-900 text-gray-200 min-h-[calc(100vh-16rem)]">
     <SmallProductComp/>
     <SmallProductComp/>
     <SmallProductComp/>

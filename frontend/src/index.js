@@ -12,6 +12,7 @@ import AdminSellers from "./pages/AdminSellers.jsx"
 import DeleteProduct from "./pages/DeleteProduct.jsx";
 import EditProduct from "./pages/EditProduct.jsx";
 import AdminUsers from "./pages/AdminUsers.jsx"
+import SingleProduct from "./pages/SingleProduct.jsx";
 
 const router = createBrowserRouter([
   {
@@ -38,6 +39,10 @@ const router = createBrowserRouter([
         path: "/contact",
         element: <Contact />,
       },
+      {
+        path:"/products/:id",
+        element: <SingleProduct />
+      }
     ],
   },
   {

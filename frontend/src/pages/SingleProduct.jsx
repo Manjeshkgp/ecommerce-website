@@ -4,8 +4,13 @@ import { useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { increment } from '../slices/cartSlice';
 import {FacebookShareButton,FacebookIcon,TwitterShareButton,TwitterIcon,WhatsappShareButton,WhatsappIcon} from "react-share";
+import {ToastContainer,toast} from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const SingleProduct = () => {
+  const addedToCart = () => {
+    toast("Product added to Cart")
+  }
   const dispatch = useDispatch();
   const {id} = useParams();
   const [mainImg,setMainImg] = useState("");
@@ -28,6 +33,7 @@ const SingleProduct = () => {
   }
   useEffect(()=>{getProduct()},[])
   return (<>
+  <ToastContainer/>
   <section className="text-gray-400 bg-gray-900 body-font overflow-hidden">
   <div className="container px-5 py-24 mx-auto">
     <div className="lg:w-4/5 mx-auto flex flex-wrap">
@@ -73,7 +79,7 @@ const SingleProduct = () => {
         <div className="flex">
           <span className="title-font font-medium text-2xl text-white">${productData?.price}</span>
           <button className="flex ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded">Buy Now</button>
-          <button onClick={()=>{dispatch(increment({...productData,numberOfProducts:1}))}} className="rounded-full active:bg-indigo-500 active:text-white w-10 h-10 bg-gray-800 p-0 border-0 inline-flex items-center justify-center text-gray-500 ml-4">
+          <button onClick={()=>{dispatch(increment({...productData,numberOfProducts:1}));addedToCart();}} className="rounded-full active:bg-indigo-500 active:text-white w-10 h-10 bg-gray-800 p-0 border-0 inline-flex items-center justify-center text-gray-500 ml-4">
             <BiCartAdd className='w-7 h-7'/>
           </button>
         </div>

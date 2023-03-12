@@ -7,17 +7,17 @@ import Button from "../buttons";
 import { useDispatch } from "react-redux";
 import { increment } from "../../slices/cartSlice";
 
-const Products = ({productDetails}) => {
+const Products = ({productDetails,setAlert}) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((state)=>state.user);
   const admin = user.admin;
   return (
     <>
-      <div className="w-[94%] border border-gray-700 hover:scale-105 duration-300  transition-all hover:shadow-xl hover:shadow-gray-500 mt-3 rounded h-80 flex flex-col justify-start items-center">
+      <div className="w-[94%] work-sans border border-gray-700 hover:scale-105 duration-300  transition-all hover:shadow-xl hover:shadow-gray-500 mt-3 rounded h-80 flex flex-col justify-start items-center">
         <div className="w-full relative">
           <div className="absolute top-0 w-full h-full hover:bg-transparent bg-[rgba(21,20,35,0.35)]"></div>
-          {!admin?<div onClick={()=>{dispatch(increment({...productDetails,numberOfProducts:1}))}} className="absolute top-2 right-2">
+          {!admin?<div onClick={()=>{dispatch(increment({...productDetails,numberOfProducts:1}));setAlert(true);}} className="absolute top-2 right-2">
             <BiCartAdd className="fill-gray-100 active:bg-green-400 active:transition-all active:duration-500 cursor-pointer rounded-full w-8 h-8" />
           </div>:""}
           {admin?<div className="absolute top-2 w-full flex justify-around items-center">

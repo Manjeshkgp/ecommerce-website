@@ -1,19 +1,22 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Welcome from '../components/welcome';
 import Button from '../components/buttons';
 import Products from '../components/products';
 import PopularCategories from '../components/categories/PopularCategories';
 
 const Home = () => {
+  const [recent,setRecent] = useState([]);
+  const fetchRecent = async () => {
+    const res = await fetch(`${process.env.REACT_APP_API_URL}/users/recent-products`);
+    const data = await res.json();
+    setRecent(data);
+  }
+  useEffect(()=>{fetchRecent()},[])
   return (<>
   <Welcome/>
     <p className="text-lg text-gray-200 font-bold bg-gray-900 text-center py-2 underline underline-offset-8">Recently Launched Products</p>
   <div className="bg-gray-900 grid grid-cols-2 md:grid-cols-3 md:px-3 lg:grid-cols-4 justify-items-center content-evenly">
-    <Products/>
-    <Products/>
-    <Products/>
-    <Products/>
-    <Products/>
+    {recent?.map((singleProduct)=>(<Products key={singleProduct?._id} productDetails={singleProduct}/>))}
   </div>
   <PopularCategories/>
   <div

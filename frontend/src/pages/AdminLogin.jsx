@@ -3,6 +3,7 @@ import Button from "../components/buttons";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { makeAdmin } from "../slices/userSlice";
+import cookies from "js-cookie"
 
 const AdminLogin = () => {
   const dispatch = useDispatch()
@@ -20,8 +21,9 @@ const AdminLogin = () => {
         headers:{ 'Content-Type': 'application/json' },
         body:JSON.stringify(requiredBody),
     });
-    await res.json();
+    const data = await res.json();
     if(res.status===200){
+        cookies.set("adminToken",data.token);
         dispatch(makeAdmin());
         alert("login successful");
         navigate("/admin-dashboard",{replace:true});

@@ -31,7 +31,7 @@ const Products = ({productDetails,setAlert}) => {
             alt=""
           />
         </div>
-        <div onClick={()=>{navigate(`/products/${productDetails?._id}`)}} className="flex w-[98%] justify-between items-start">
+        <div onClick={()=>{if(admin){return;}navigate(`/products/${productDetails?._id}`)}} className="flex w-[98%] justify-between items-start">
           <ProductData productDetails={productDetails}/>
         </div>
       </div>

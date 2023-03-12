@@ -74,3 +74,8 @@ export const getAProduct = async(req,res) => {
   const product = await productSchema.findById(_id);
   res.status(200).json(product);
 }
+
+export const recentProducts = async (req,res) => {
+  const products = await productSchema.find().sort({date:-1}).limit(8);
+  res.status(200).json(products);
+}

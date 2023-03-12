@@ -3,6 +3,8 @@ import userSchema from "../models/userSchema.js";
 import sellerSchema from "../models/sellerSchema.js";
 import productSchema from "../models/productSchema.js";
 import fs from "fs";
+import jwt from "jsonwebtoken";
+import auth from "../middlewares/auth.js";
 
 export const adminLogin = async (req, res) => {
   const email = req.body.email;
@@ -13,9 +15,13 @@ export const adminLogin = async (req, res) => {
       .status(420)
       .json({ adminVerified: false, message: "email is wrong" });
   } else if (admin.password === password) {
+    const token = jwt.sign(admin.toJSON(), process.env.JWT_SECRET, {
+      expiresIn: "24h",
+    });
     res.status(200).json({
       adminVerified: true,
       message: "Admin Login Success",
+      token
     });
   } else {
     res.status(440).json({
@@ -91,8 +97,6 @@ export const addProduct = async (req, res) => {
     title: req.body.title,
     description: req.body.description,
     shortDescription: req.body.shortDescription,
-    ram: req.body.ram,
-    processor: req.body.processor || "Unknown",
     brand: req.body.brand || "Unknown",
     rating: req.body.rating || [],
     price: req.body.price,

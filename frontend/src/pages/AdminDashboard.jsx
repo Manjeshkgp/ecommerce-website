@@ -73,8 +73,6 @@ const AdminDashboard = () => {
     formdata.append("description", productRef.current.description.value);
     formdata.append("shortDescription",productRef.current.shortDescription.value);
     formdata.append("price", productRef.current.price.value);
-    formdata.append("ram", productRef.current.ram.value);
-    formdata.append("processor", productRef.current.processor.value);
     formdata.append("brand", productRef.current.brand.value);
     Array.from(productRef.current.files.files).forEach(file => { // loop through each selected file using map function
       formdata.append('files', file); // append each file to the form data object with a key 'files'
@@ -207,18 +205,6 @@ const AdminDashboard = () => {
             />
           </div>
           <div className="w-[96%] md:w-[48%] lg:w-[24%] h-80 bg-gradient-to-bl from-blue-500 to-purple-500 rounded-md my-2 flex flex-col items-center justify-evenly cursor-pointer">
-            <input
-              type="number"
-              name="ram"
-              placeholder="Ram e.g 4 -> 4 GB"
-              className="w-[96%] p-1 rounded focus:outline-none"
-            />
-            <input
-              type="text"
-              name="processor"
-              placeholder="Processor e.g Intel, AMD, Apple"
-              className="w-[96%] p-1 rounded focus:outline-none"
-            />
             <input
               type="text"
               name="brand"

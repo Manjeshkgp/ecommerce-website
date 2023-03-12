@@ -2,6 +2,7 @@ import { Router } from "express";
 import { addProduct, adminLogin,deleteProduct,forgetPassword,getBusinessData, getSellers, getUsers, removeSeller, removeUser, salesGraph, updateProduct } from "../controllers/adminController.js";
 import multer from "multer";
 import { randomUUID } from "crypto";
+import auth from "../middlewares/auth.js";
 
 // Create a disk storage for Multer
 
@@ -26,7 +27,7 @@ router.route('/business-data').get(getBusinessData);
 router.route('/add-product').post(upload.fields([{name: 'files', maxCount:5}, {name: 'primaryImage', maxCount: 1}]),addProduct);
 router.route('/delete-product').delete(deleteProduct);
 router.route('/update-product/:_id').patch(updateProduct);
-router.route('/get-users').get(getUsers);
+router.route('/get-users').get(auth,getUsers);
 router.route('/remove-user/:_id').delete(removeUser);
 router.route('/get-sellers').get(getSellers);
 router.route('/remove-seller/:_id').delete(removeSeller);

@@ -4,6 +4,7 @@ import userSchema from "../models/userSchema.js";
 import * as dotenv from "dotenv";
 import passport from "passport";
 import crypto from "crypto";
+import adminSchema from "../models/adminSchema.js";
 dotenv.config();
 
 export const GoogleAuth = passport.use(
@@ -63,7 +64,17 @@ export default (passport) => {
         if (user) {
           return done(null, user);
         } else {
-          return done(null, false);
+          adminSchema.findById(jwt_payload._id,function(err,admin){
+            if(err){
+              return done (err, false);
+            }
+            if(admin){
+              return done (null,admin)
+            }
+            else {
+              return done (null, false)
+            }
+          })
           // or you could create a new account
         }
       });

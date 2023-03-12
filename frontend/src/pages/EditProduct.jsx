@@ -9,8 +9,6 @@ const EditProduct = () => {
     description:"",
     shortDescription:"",
     price:"",
-    ram:"",
-    processor:"",
     brand:"",
     images:[],
     rating:[],
@@ -95,22 +93,6 @@ const EditProduct = () => {
       />
     </div>
     <div className="w-[96%] md:w-[48%] lg:w-[24%] h-80 bg-gradient-to-bl from-blue-500 to-purple-500 rounded-md my-2 flex flex-col items-center justify-evenly cursor-pointer">
-      <input
-        type="number"
-        name="ram"
-        value={productData.ram}
-        onChange={(e)=>{setProductData({...productData,[e.target.name]:e.target.value})}}
-        placeholder="Ram e.g 4 -> 4 GB"
-        className="w-[96%] p-1 rounded focus:outline-none"
-      />
-      <input
-        type="text"
-        name="processor"
-        value={productData.processor}
-        onChange={(e)=>{setProductData({...productData,[e.target.name]:e.target.value})}}
-        placeholder="Processor e.g Intel, AMD, Apple"
-        className="w-[96%] p-1 rounded focus:outline-none"
-      />
       <input
         type="text"
         name="brand"

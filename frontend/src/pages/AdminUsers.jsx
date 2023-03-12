@@ -1,10 +1,15 @@
+import Cookies from "js-cookie";
 import React, { useEffect, useState } from "react";
 import { FiDelete } from "react-icons/fi";
 
 const AdminUsers = () => {
   const [allUsers, setAllUsers] = useState([]);
   const getUsers = async () => {
-    const res = await fetch(`${process.env.REACT_APP_API_URL}/admin/get-users`);
+    const res = await fetch(`${process.env.REACT_APP_API_URL}/admin/get-users`,{
+      headers:{
+        Authorization:`Bearer ${Cookies.get("adminToken")}`
+      }
+    });
     const totalUsers = await res.json();
     setAllUsers(totalUsers);
   };

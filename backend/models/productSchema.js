@@ -6,8 +6,6 @@ const productSchema = new Schema({
     shortDescription:String,
     price:Number,
     rating:[Object],
-    ram:Number,
-    processor:String,
     brand:String,
     images:Array,
     primaryImage:String,

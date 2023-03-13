@@ -27,11 +27,19 @@ export const cartSlice = createSlice({
         }
     },
     incrementByOne: (state, action) => {
+      let itemToUpdate = action.payload;
+        let indexOfObj = state.products.findIndex(obj => obj._id === itemToUpdate._id);
+        let updatedObj = state.products[indexOfObj];
+        updatedObj.numberOfProducts += 1;
     },
     decrementByOne: (state, action) => {
         let itemToUpdate = action.payload;
         let indexOfObj = state.products.findIndex(obj => obj._id === itemToUpdate._id);
         let updatedObj = state.products[indexOfObj];
+        if(updatedObj.numberOfProducts===1){
+          state.products.splice(updatedObj,1)
+          return;
+        }
         updatedObj.numberOfProducts -= 1;
     },
   },

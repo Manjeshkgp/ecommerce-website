@@ -32,6 +32,7 @@ const Authenticate = () => {
       const data = await res.json();
       dispatch(addUser(data?.user));
       Cookies.set("jwt", data?.token);
+      Cookies.set("email",formData?.email);
       // console.log("done");
       navigate("/")
       return;
@@ -48,7 +49,7 @@ const Authenticate = () => {
   };
   return (
     <>
-      <div className="flex relative flex-row justify-center items-center bg-gradient-to-bl from-transparent via-teal-400 to-transparent min-h-screen min-w-[100vw]">
+      <div className="flex relative flex-row justify-center items-center bg-gray-900 min-h-screen min-w-[100vw]">
         <div className="absolute top-4 flex justify-center gap-4 items-center w-screen h-12">
           {!login ? (
             <div onClick={() => setLogin(true)}>
@@ -66,7 +67,7 @@ const Authenticate = () => {
         >
           <p
             onClick={authGoogle}
-            className="absolute top-2 flex items-center h-8 rounded bg-purple-400 px-2 py-1 hover:bg-purple-300 cursor-pointer active:bg-transparent"
+            className="absolute top-2 flex items-center h-8 rounded bg-indigo-300 px-2 py-1 hover:bg-indigo-200 cursor-pointer active:bg-transparent"
           >
             <span>SignIn with</span>
             <FcGoogle className="h-8 w-8" />
@@ -84,8 +85,8 @@ const Authenticate = () => {
               sendForm={sendForm}
             />
           )}
-          <p className="absolute bottom-2 w-[96%] right-[2%] left-[2%]">
-            By logging in OR registering into our store You allows us to use
+          <p className="absolute text-sm text-center text-gray-400 bottom-2 w-[96%] right-[2%] left-[2%]">
+            By logging in OR registering into our store, You allows us to use
             cookies and some other technologies to improve this website
           </p>
         </form>

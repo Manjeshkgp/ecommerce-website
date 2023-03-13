@@ -49,33 +49,52 @@ export const loginUser = async (req, res) => {
   res.status(200).json({ user, token });
 };
 
-export const getProducts = async(req,res) => {
+export const getProducts = async (req, res) => {
   const allProducts = await productSchema.find();
-  res.status(200).json({allProducts});
-}
+  res.status(200).json({ allProducts });
+};
 
-export const buyAProduct = async (req,res) => {
+export const buyAProduct = async (req, res) => {
   const purchaseDetails = {
-    email:req.body.email,
-    productId:req.body.productId,
-    date: new Date()
-  }
+    email: req.body.email,
+    productId: req.body.productId,
+    date: new Date(),
+  };
   try {
-  await adminSchema.updateOne({},{$addToSet:{sales:purchaseDetails}})
-  res.status(200).json({message:"Product Purchased Successfully"})
+    await adminSchema.updateOne({}, { $addToSet: { sales: purchaseDetails } });
+    res.status(200).json({ message: "Product Purchased Successfully" });
   } catch (error) {
     console.log(error);
-    res.status(400).json({error})
+    res.status(400).json({ error });
   }
-}
+};
 
-export const getAProduct = async(req,res) => {
-  const _id = req.body._id
+export const getAProduct = async (req, res) => {
+  const _id = req.body._id;
   const product = await productSchema.findById(_id);
   res.status(200).json(product);
-}
+};
 
-export const recentProducts = async (req,res) => {
-  const products = await productSchema.find().sort({date:-1}).limit(8);
+export const recentProducts = async (req, res) => {
+  const products = await productSchema.find().sort({ date: -1 }).limit(8);
   res.status(200).json(products);
-}
+};
+
+export const rateAProduct = async (req, res) => {
+  if(req.body.rate>5 || req.body.rate<1){
+    res.status(432).json({message:"Rating must be between 1 to 5"});
+    return;
+  }
+  productSchema.findByIdAndUpdate(
+    req.params.productId,
+    { $addToSet: { rating: { email: req.body.email, rate: req.body.rate } } },
+    (err) => {
+      if (err) {
+        console.log(err);
+        res.status(405).json({message:"Some Error Occured"});
+      } else {
+        res.status(200).json({message:"Rating Added Successfully"})
+      }
+    }
+  );
+};

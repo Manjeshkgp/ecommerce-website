@@ -16,7 +16,7 @@ const AdminSales = () => {
   useEffect(()=>{graphRequest()},[])
   return (
     <>
-      <div className="w-full h-full min-h-screen pt-28 relative flex flex-col lg:flex-row justify-evenly items-center bg-gradient-to-bl from-transparent via-teal-400 to to-transparent">
+      <div className="w-full h-full min-h-screen pt-28 relative flex flex-col lg:flex-row justify-evenly items-center bg-gray-900">
         <div className="absolute w-full bg-black h-14 top-0 flex flex-wrap justify-center items-center">
           <p className="text-xl text-bold text-white">
             Choose a Number to get Graph for the past Number of Days you chosen

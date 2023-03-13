@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { removeUser } from "../../slices/userSlice.js";
 import { useNavigate } from "react-router-dom";
 
-const Nav = ({ openNav }) => {
+const Nav = ({ openNav, setOpenNav }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const isAuthenticated = useSelector((state) => state.user.authenticated);
@@ -14,45 +14,51 @@ const Nav = ({ openNav }) => {
       <nav
         className={
           openNav
-            ? "flex mr-4 flex-col justify-around items-center w-screen absolute h-screen top-0 bg-[#1e57889a] backdrop-blur-sm"
+            ? "flex mr-4 flex-col justify-around items-center w-screen absolute h-screen top-0 bg-[#0a1926ed] backdrop-blur-sm"
             : "hidden md:flex mr-4 flex-row md:w-[60vw] lg:w-[50vw] justify-around items-center static"
         }
       >
         <Link
+          onClick={()=>setOpenNav(false)}
           className="text-gray-300 hover:text-gray-100 active:text-white"
           to="/"
         >
           Home
         </Link>
         <Link
+          onClick={()=>setOpenNav(false)}
           className="text-gray-300 hover:text-gray-100 active:text-white"
           to="/products"
         >
           Products
         </Link>
         <Link
-          className="text-gray-300 hover:text-gray-100 active:text-white"
-          to="/orders"
-        >
-          Orders
-        </Link>
-        <Link
+          onClick={()=>setOpenNav(false)}
           className="text-gray-300 hover:text-gray-100 active:text-white"
           to="/cart"
         >
           Cart
         </Link>
         <Link
+          onClick={()=>setOpenNav(false)}
+          className="text-gray-300 hover:text-gray-100 active:text-white"
+          to="/about"
+        >
+          About
+        </Link>
+        <Link
+          onClick={()=>setOpenNav(false)}
           className="text-gray-300 hover:text-gray-100 active:text-white"
           to="/contact"
         >
           Contact
         </Link>
         {!isAuthenticated ? (
-          <Link to="authenticate">
+          <Link
+          onClick={()=>setOpenNav(false)} to="authenticate">
             <Button buttonContent="Login/Signup"></Button>
           </Link>
-        ) : (<div onClick={() => {dispatch(removeUser());navigate("/",{replace:true})}}>
+        ) : (<div onClick={() => {dispatch(removeUser());setOpenNav(false);navigate("/",{replace:true})}}>
           <Button buttonContent="Logout"></Button>
         </div>)}
       </nav>

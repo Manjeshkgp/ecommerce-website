@@ -4,7 +4,7 @@ import { Provider } from "react-redux";
 import store from "./store.js";
 import "./index.css";
 import App from "./App";
-import { Authenticate, Cart, Contact, Home, Orders, Products, GoogleJwt, AdminLogin, AdminDashboard } from "./pages";
+import { Authenticate, Cart, Contact, Home, Products, GoogleJwt, AdminLogin, AdminDashboard } from "./pages";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import AdminProducts from "./pages/AdminProducts.jsx";
 import AdminSales from "./pages/AdminSales.jsx";
@@ -13,6 +13,7 @@ import DeleteProduct from "./pages/DeleteProduct.jsx";
 import EditProduct from "./pages/EditProduct.jsx";
 import AdminUsers from "./pages/AdminUsers.jsx"
 import SingleProduct from "./pages/SingleProduct.jsx";
+import About from "./pages/About.jsx";
 
 const router = createBrowserRouter([
   {
@@ -28,8 +29,8 @@ const router = createBrowserRouter([
         element: <Products />,
       },
       {
-        path: "/orders",
-        element: <Orders />,
+        path: "/about",
+        element: <About />,
       },
       {
         path: "/cart",

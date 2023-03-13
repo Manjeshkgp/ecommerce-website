@@ -56,7 +56,7 @@ export const getProducts = async(req,res) => {
 
 export const buyAProduct = async (req,res) => {
   const purchaseDetails = {
-    userId:req.body.userId,
+    email:req.body.email,
     productId:req.body.productId,
     date: new Date()
   }

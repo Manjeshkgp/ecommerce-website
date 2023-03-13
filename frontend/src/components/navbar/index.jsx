@@ -9,7 +9,7 @@ const Navbar = () => {
     <>
       <div className="bg-indigo-500 z-10 w-screen h-12 flex justify-between items-center relative">
         <Logo/>
-        <Nav openNav={openNav}/>
+        <Nav openNav={openNav} setOpenNav={setOpenNav}/>
         <HamButton openNav={openNav} setOpenNav={setOpenNav}/>
       </div>
     </>

@@ -6,16 +6,21 @@ import { increment } from '../slices/cartSlice';
 import {FacebookShareButton,FacebookIcon,TwitterShareButton,TwitterIcon,WhatsappShareButton,WhatsappIcon} from "react-share";
 import {ToastContainer,toast} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Cookies from 'js-cookie';
 
 const SingleProduct = () => {
   const addedToCart = () => {
     toast("Product added to Cart")
+  }
+  const productPurchased = () => {
+    toast("Product Purchased, You'll get a Call or email soon")
   }
   const dispatch = useDispatch();
   const {id} = useParams();
   const [mainImg,setMainImg] = useState("");
   const [imgArray,setImgArray] = useState([]);
   const [productData,setProductData] = useState({});
+  const [averageRate,setAverageRate] = useState(0);
   const getProduct = async () => {
     const res = await fetch(`${process.env.REACT_APP_API_URL}/users/get-a-product`,{
       method:"POST",
@@ -31,7 +36,38 @@ const SingleProduct = () => {
     setImgArray([data?.primaryImage,...data?.images]);
     setProductData(data);
   }
-  useEffect(()=>{getProduct()},[])
+  useEffect(()=>{getProduct()},[]);
+
+  const buyProduct = async() => {
+    const res = await fetch (`${process.env.REACT_APP_API_URL}/users/buy-a-product`,{
+      method:"POST",
+      body:{
+        email:Cookies.get("email"),
+        productId:id
+      },
+      headers:{
+        Authorization:`Bearer ${Cookies.get("jwt")}`
+      }
+    })
+    await res.json();
+    if(res.status===200){productPurchased()};
+    if(res.status===401){alert("Login First Then Purchase")};
+  }
+  function averageRating(ratings) {
+    let totalRating = 0;
+    let average;
+    if(ratings?.length===0){
+      return setAverageRate(0);
+    }
+    for (let i = 0; i < ratings?.length; i++) {
+      totalRating += ratings[i]?.rate;
+    }
+  
+    average = totalRating / ratings?.length;
+    return setAverageRate(average);
+  }
+  useEffect(()=>{averageRating(productData?.rating)},[]) 
+
   return (<>
   <ToastContainer/>
   <section className="text-gray-400 bg-gray-900 body-font overflow-hidden">
@@ -78,7 +114,7 @@ const SingleProduct = () => {
         </div>
         <div className="flex">
           <span className="title-font font-medium text-2xl text-white">${productData?.price}</span>
-          <button className="flex ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded">Buy Now</button>
+          <button onClick={()=>{buyProduct()}} className="flex ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded">Buy Now</button>
           <button onClick={()=>{dispatch(increment({...productData,numberOfProducts:1}));addedToCart();}} className="rounded-full active:bg-indigo-500 active:text-white w-10 h-10 bg-gray-800 p-0 border-0 inline-flex items-center justify-center text-gray-500 ml-4">
             <BiCartAdd className='w-7 h-7'/>
           </button>

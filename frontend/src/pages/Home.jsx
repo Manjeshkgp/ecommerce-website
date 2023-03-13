@@ -15,7 +15,7 @@ const Home = () => {
   return (<>
   <Welcome/>
     <p className="text-lg text-gray-200 font-bold bg-gray-900 text-center py-2 underline underline-offset-8">Recently Launched Products</p>
-  <div className="bg-gray-900 grid grid-cols-2 md:grid-cols-3 md:px-3 lg:grid-cols-4 justify-items-center content-evenly">
+  <div className="bg-gray-900 grid grid-cols-1 md:grid-cols-2 md:px-3 lg:grid-cols-4 justify-items-center content-evenly">
     {recent?.map((singleProduct)=>(<Products key={singleProduct?._id} productDetails={singleProduct}/>))}
   </div>
   <PopularCategories/>
@@ -30,24 +30,6 @@ const Home = () => {
     </div>
     </div>
     </div>
-  {/* <Welcome/>
-    <p className="text-lg font-bold bg-teal-400 text-center py-2 underline underline-offset-8">Products You May Like</p>
-  <div className="bg-gradient-to-b from-teal-400 to-transparent grid grid-cols-2 md:grid-cols-3 md:px-3 lg:grid-cols-4 justify-items-center content-evenly">
-    <Products/>
-    <Products/>
-    <Products/>
-    <Products/>
-    <Products/>
-  </div>
-  <PopularCategories/>
-  <p className="text-lg font-bold bg-teal-400 text-center py-2 underline underline-offset-8">Recently Launched Products</p>
-  <div className="bg-gradient-to-b from-teal-400 to-transparent grid grid-cols-2 md:grid-cols-3 md:px-3 lg:grid-cols-4 justify-items-center content-evenly py-4">
-    <Products/>
-    <Products/>
-    <Products/>
-    <Products/>
-    <Products/>
-  </div> */}
   </>)
 }
 

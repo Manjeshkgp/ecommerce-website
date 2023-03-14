@@ -4,6 +4,7 @@ import Button from "../buttons";
 import { useSelector, useDispatch } from "react-redux";
 import { removeUser } from "../../slices/userSlice.js";
 import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 
 const Nav = ({ openNav, setOpenNav }) => {
   const dispatch = useDispatch();
@@ -19,48 +20,57 @@ const Nav = ({ openNav, setOpenNav }) => {
         }
       >
         <Link
-          onClick={()=>setOpenNav(false)}
+          onClick={() => setOpenNav(false)}
           className="text-gray-300 hover:text-gray-100 active:text-white"
           to="/"
         >
           Home
         </Link>
         <Link
-          onClick={()=>setOpenNav(false)}
+          onClick={() => setOpenNav(false)}
           className="text-gray-300 hover:text-gray-100 active:text-white"
           to="/products"
         >
           Products
         </Link>
         <Link
-          onClick={()=>setOpenNav(false)}
+          onClick={() => setOpenNav(false)}
           className="text-gray-300 hover:text-gray-100 active:text-white"
           to="/cart"
         >
           Cart
         </Link>
         <Link
-          onClick={()=>setOpenNav(false)}
+          onClick={() => setOpenNav(false)}
           className="text-gray-300 hover:text-gray-100 active:text-white"
           to="/about"
         >
           About
         </Link>
         <Link
-          onClick={()=>setOpenNav(false)}
+          onClick={() => setOpenNav(false)}
           className="text-gray-300 hover:text-gray-100 active:text-white"
           to="/contact"
         >
           Contact
         </Link>
         {!isAuthenticated ? (
-          <Link
-          onClick={()=>setOpenNav(false)} to="authenticate">
+          <Link onClick={() => setOpenNav(false)} to="authenticate">
             <Button buttonContent="Login/Signup"></Button>
           </Link>
-        ) : (<div onClick={() => {dispatch(removeUser());setOpenNav(false);navigate("/",{replace:true})}}>
-          <Button buttonContent="Logout"></Button>
-        </div>)}
+        ) : (
+          <div
+            onClick={() => {
+              dispatch(removeUser());
+              Cookies.remove("jwt");
+              Cookies.remove("email");
+              setOpenNav(false);
+              navigate("/", { replace: true });
+            }}
+          >
+            <Button buttonContent="Logout"></Button>
+          </div>
+        )}
       </nav>
     </>
   );

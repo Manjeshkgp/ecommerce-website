@@ -98,3 +98,18 @@ export const rateAProduct = async (req, res) => {
     }
   );
 };
+
+export const getUserData = async(req,res) => {
+  const email = req.params.email;
+  userSchema.findOne({email:email},(err,user)=>{
+    if(err){
+      console.log(err);
+      res.status(440).json({message:"Some Error Occured"})
+    }
+    else if(!user){
+      res.status(441).json({message:"User Not Found"})
+    }else{
+      res.status(200).json(user);
+    }
+  });
+}

@@ -31,10 +31,9 @@ const Authenticate = () => {
     if (res.ok) {
       const data = await res.json();
       dispatch(addUser(data?.user));
-      Cookies.set("jwt", data?.token);
-      Cookies.set("email",formData?.email);
-      // console.log("done");
-      navigate("/")
+      Cookies.set("jwt", data?.token, { expires: 1 });
+      Cookies.set("email", formData?.email, { expires: 1 });
+      navigate("/");
       return;
     } else if (res.status == 410) {
       return alert("Password is Incorrect");

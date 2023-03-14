@@ -113,3 +113,19 @@ export const getUserData = async(req,res) => {
     }
   });
 }
+
+export const updateCart = async(req,res) => {
+  const email = req.params.email;
+  const cart = req.body.cart;
+  userSchema.findOneAndUpdate({email:email},{$set:{"cart":cart}},(err,user)=>{
+    if(err){
+      console.log(err)
+      res.status(444).json({message:"Error"})
+    }
+    else if(!user){
+      res.status(445).json({message:"User Not Found"})
+    }else{
+      res.status(200).json({message:"Cart Updated"})
+    }
+  })
+}

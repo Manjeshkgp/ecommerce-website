@@ -14,6 +14,7 @@ import EditProduct from "./pages/EditProduct.jsx";
 import AdminUsers from "./pages/AdminUsers.jsx"
 import SingleProduct from "./pages/SingleProduct.jsx";
 import About from "./pages/About.jsx";
+import Placements from "./pages/Placements.jsx";
 
 const router = createBrowserRouter([
   {
@@ -39,6 +40,10 @@ const router = createBrowserRouter([
       {
         path: "/contact",
         element: <Contact />,
+      },
+      {
+        path: "/placements",
+        element: <Placements />,
       },
       {
         path:"/products/:id",

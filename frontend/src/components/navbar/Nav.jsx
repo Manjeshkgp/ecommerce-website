@@ -16,7 +16,7 @@ const Nav = ({ openNav, setOpenNav }) => {
         className={
           openNav
             ? "flex mr-4 flex-col justify-around items-center w-screen absolute h-screen top-0 bg-[#0a1926ed] backdrop-blur-sm"
-            : "hidden md:flex mr-4 flex-row md:w-[60vw] lg:w-[50vw] justify-around items-center static"
+            : "hidden md:flex mr-4 flex-row md:w-[70vw] lg:w-[60vw] justify-around items-center static"
         }
       >
         <Link
@@ -53,6 +53,13 @@ const Nav = ({ openNav, setOpenNav }) => {
           to="/contact"
         >
           Contact
+        </Link>
+        <Link
+          onClick={() => setOpenNav(false)}
+          className="text-gray-300 hover:text-gray-100 active:text-white"
+          to="/placements"
+        >
+          Placements
         </Link>
         {!isAuthenticated ? (
           <Link onClick={() => setOpenNav(false)} to="authenticate">

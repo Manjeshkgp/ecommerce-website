@@ -3,6 +3,7 @@ import Welcome from '../components/welcome';
 import Button from '../components/buttons';
 import Products from '../components/products';
 import PopularCategories from '../components/categories/PopularCategories';
+import BlogSection from '../components/blogHero/BlogSection';
 
 const Home = () => {
   const [recent,setRecent] = useState([]);
@@ -19,6 +20,7 @@ const Home = () => {
     {recent?.map((singleProduct)=>(<Products key={singleProduct?._id} productDetails={singleProduct}/>))}
   </div>
   <PopularCategories/>
+  <BlogSection/>
   <div
   style={{backgroundImage:"url('https://images.unsplash.com/photo-1661961112951-f2bfd1f253ce?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2672&q=80')"}}
    className="bg-cover bg-fixed w-full h-screen">

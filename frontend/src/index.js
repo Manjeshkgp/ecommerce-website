@@ -4,17 +4,28 @@ import { Provider } from "react-redux";
 import store from "./store.js";
 import "./index.css";
 import App from "./App";
-import { Authenticate, Cart, Contact, Home, Products, GoogleJwt, AdminLogin, AdminDashboard } from "./pages";
+import {
+  Authenticate,
+  Cart,
+  Contact,
+  Home,
+  Products,
+  GoogleJwt,
+  AdminLogin,
+  AdminDashboard,
+} from "./pages";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import AdminProducts from "./pages/AdminProducts.jsx";
 import AdminSales from "./pages/AdminSales.jsx";
-import AdminSellers from "./pages/AdminSellers.jsx"
+import AdminSellers from "./pages/AdminSellers.jsx";
 import DeleteProduct from "./pages/DeleteProduct.jsx";
 import EditProduct from "./pages/EditProduct.jsx";
-import AdminUsers from "./pages/AdminUsers.jsx"
+import AdminUsers from "./pages/AdminUsers.jsx";
 import SingleProduct from "./pages/SingleProduct.jsx";
 import About from "./pages/About.jsx";
 import Placements from "./pages/Placements.jsx";
+import Admin from "./pages/Admin.jsx";
+import AddProduct from "./pages/AddProduct.jsx";
 
 const router = createBrowserRouter([
   {
@@ -46,9 +57,9 @@ const router = createBrowserRouter([
         element: <Placements />,
       },
       {
-        path:"/products/:id",
-        element: <SingleProduct />
-      }
+        path: "/products/:id",
+        element: <SingleProduct />,
+      },
     ],
   },
   {
@@ -60,42 +71,53 @@ const router = createBrowserRouter([
     element: <GoogleJwt />,
   },
   {
-    path:"/admin-login",
-    element: <AdminLogin/>
+    path: "/admin-login",
+    element: <AdminLogin />,
   },
+
   {
-    path:"/admin-dashboard",
-    element:<AdminDashboard/>
+    path: "/admin",
+    element: <Admin />,
+    children: [
+      {
+        path: "/admin/dashboard",
+        element: <AdminDashboard />,
+      },
+      {
+        path: "/admin/products",
+        element: <AdminProducts />,
+      },
+      {
+        path: "/admin/users",
+        element: <AdminUsers />,
+      },
+      {
+        path: "/admin/sales",
+        element: <AdminSales />,
+      },
+      {
+        path: "/admin/sellers",
+        element: <AdminSellers />,
+      },
+      {
+        path: "/admin/products/delete/:id",
+        element: <DeleteProduct />,
+      },
+      {
+        path: "/admin/products/edit/:id",
+        element: <EditProduct />,
+      },
+      {
+        path: "/admin/products/add",
+        element: <AddProduct />,
+      },
+    ],
   },
-  {
-    path:"/admin/products",
-    element:<AdminProducts/>
-  },
-  {
-    path:"/admin/users",
-    element:<AdminUsers/>
-  },
-  {
-    path:"/admin/sales",
-    element:<AdminSales/>
-  },
-  {
-    path:"/admin/sellers",
-    element:<AdminSellers/>
-  },
-  {
-    path:"/admin/products/delete/:id",
-    element:<DeleteProduct/>
-  },
-  {
-    path:"/admin/products/edit/:id",
-    element:<EditProduct/>
-  }
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-    <Provider store={store}>
-      <RouterProvider router={router} />
-    </Provider>
+  <Provider store={store}>
+    <RouterProvider router={router} />
+  </Provider>
 );

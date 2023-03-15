@@ -26,7 +26,7 @@ const AdminLogin = () => {
         cookies.set("adminToken",data.token);
         dispatch(makeAdmin());
         alert("login successful");
-        navigate("/admin-dashboard",{replace:true});
+        navigate("/admin/dashboard",{replace:true});
     }else{
         alert("Login details are incorrect");
     }

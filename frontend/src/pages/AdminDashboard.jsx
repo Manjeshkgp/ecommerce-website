@@ -1,44 +1,45 @@
 import React, { useEffect, useState, useRef } from "react";
-import { BsFillInboxesFill } from "react-icons/bs";
-import { BiUserCircle } from "react-icons/bi";
-import { GrWorkshop } from "react-icons/gr";
-import { FcSalesPerformance } from "react-icons/fc";
+import { FiUsers } from "react-icons/fi";
+import { SlOrganization } from "react-icons/sl";
+import { AiOutlinePlus } from "react-icons/ai";
+import { GiCash } from "react-icons/gi";
+import { BsCartCheck } from "react-icons/bs";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
-import Button from "../components/buttons";
 
 const AdminDashboard = () => {
-  const productRef = useRef(null);
-  // console.log(productRef.current.title.value)
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
   const [businessData, setBusinessData] = useState({});
-  const [newPass,setNewPass] = useState({password:"",retypePassword:""});
-  const forgetPasswordRequest = async() => {
-    console.log(newPass)
+  const [newPass, setNewPass] = useState({ password: "", retypePassword: "" });
+  const forgetPasswordRequest = async () => {
+    console.log(newPass);
     let newPassword;
-    if(newPass.password===newPass.retypePassword){
-      newPassword=newPass.password
-    }else{
-     alert("Both passwords that you'd written are not same");
-     return;
+    if (newPass.password === newPass.retypePassword) {
+      newPassword = newPass.password;
+    } else {
+      alert("Both passwords that you'd written are not same");
+      return;
     }
-    const res = await fetch(`${process.env.REACT_APP_API_URL}/admin/forget-password`,{
-      method:"POST",
-      headers:{
-        "Content-Type":"application/json",
-      },
-      body:JSON.stringify({
-        newPassword:newPassword,
-      })
-    })
+    const res = await fetch(
+      `${process.env.REACT_APP_API_URL}/admin/forget-password`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          newPassword: newPassword,
+        }),
+      }
+    );
     await res.json();
-    if(res.status===200){
+    if (res.status === 200) {
       alert(`Password Changed to, ${newPass.password}`);
       return;
     }
-  }
+  };
   const getBusinessData = async () => {
     const res = await fetch(
       `${process.env.REACT_APP_API_URL}/admin/business-data`,
@@ -60,164 +61,124 @@ const AdminDashboard = () => {
     getBusinessData();
   }, []);
 
-  const fileLimit = (e) => {
-    if (Array.from(e.target.files).length > 5) {
-      e.preventDefault();
-      alert("Can't select more than 5 files");
-    }
-  };
-
-  const addProduct = async () => {
-    let formdata = new FormData();
-    formdata.append("title", productRef.current.title.value);
-    formdata.append("description", productRef.current.description.value);
-    formdata.append("shortDescription",productRef.current.shortDescription.value);
-    formdata.append("price", productRef.current.price.value);
-    formdata.append("brand", productRef.current.brand.value);
-    Array.from(productRef.current.files.files).forEach(file => { // loop through each selected file using map function
-      formdata.append('files', file); // append each file to the form data object with a key 'files'
-    })
-    formdata.append("primaryImage", productRef.current.primaryImage.files[0]);
-    const requestOptions = {
-      method: 'POST',
-      body: formdata,
-      headers:{enctype: "multipart/form-data; boundary=???"},
-      redirect: 'follow'
-    };
-    const res = await fetch(`${process.env.REACT_APP_API_URL}/admin/add-product`,requestOptions);
-    await res.json();
-    if(res.status===200){
-      alert("Product Added successfully")
-    }
-    else if(res.status === 400){
-      alert("Some error occured")
-    }
-  };
-
   return (
     <>
-      <div className="w-full h-full min-h-screen bg-gradient-to-bl from-transparent via-teal-400 to-transparent flex flex-col items-center">
-        <div className="flex flex-col md:flex-row w-[96%] justify-around items-center flex-wrap bg-green-300 h-full min-h-[10rem] mt-2">
-          <div className="w-[96%] md:w-[48%] lg:w-[24%] h-36 bg-gradient-to-bl from-blue-500 to-purple-500 rounded-md my-2 flex items-center justify-center cursor-pointer">
-            <Link to="/admin/users">
-              <p className="text-lg ml-1 flex items-center">
-                {businessData?.totalUsers?.length}
-                <BiUserCircle />
-                USERS
+      <div className="w-full h-full min-h-screen bg-gray-900 flex flex-col items-center">
+        <section class="text-gray-400 w-full bg-gray-900 body-font">
+          <div class="container px-5 py-24 mx-auto">
+            <div className="flex flex-col items-center mb-20 text-center">
+              <p className="text-3xl text-gray-200 mb-4 font-medium">
+                Some Basic Data
               </p>
-            </Link>
-          </div>
-          <div className="w-[96%] md:w-[48%] lg:w-[24%] h-36 bg-gradient-to-bl from-red-500 to-purple-500 rounded-md my-2 flex items-center justify-center cursor-pointer">
-            <Link to="/admin/sellers">
-              <p className="text-lg ml-1 flex items-center">
-                {businessData?.totalSellers?.length}
-                <GrWorkshop />
-                SELLERS
+              <p className="w-2/3 text-lg">
+                See the data of your users, products, handle orders
+                and sales as well. Check some graphical data for better
+                analysis and prediction
               </p>
-            </Link>
-          </div>
-          <div className="w-[96%] md:w-[48%] lg:w-[24%] h-36 bg-gradient-to-bl from-pink-500 to-purple-500 rounded-md my-2 flex items-center justify-center cursor-pointer">
-            <Link to="/admin/products">
-              <p className="text-lg ml-1 flex items-center">
-                {businessData?.totalProducts?.length}
-                <BsFillInboxesFill />
-                PRODUCTS
-              </p>
-            </Link>
-          </div>
-          <div className="w-[96%] md:w-[48%] lg:w-[24%] h-36 bg-gradient-to-bl from-orange-500 to-purple-500 rounded-md my-2 flex items-center justify-center cursor-pointer">
-            <Link to="/admin/sales">
-              <p className="text-lg ml-1 flex items-center">
-                {businessData?.totalSales?.length}
-                <FcSalesPerformance />
-                SALES
-              </p>
-            </Link>
-          </div>
-        </div>
-        <div className="flex flex-col lg:flex-row justify-evenly items-center bg-green-300 w-[96%] h-40 lg:h-12 mt-2">
-        <input
-              type="password"
-              name="password"
-              value={newPass.password}
-              onChange={(e)=>{setNewPass({...newPass,[e.target.name]:e.target.value})}}
-              placeholder="New Password"
-              className="w-[96%] lg:w-[30%] p-1 rounded focus:outline-none"
-            />
-            <input
-              type="password"
-              name="retypePassword"
-              value={newPass.retypePassword}
-              onChange={(e)=>{setNewPass({...newPass,[e.target.name]:e.target.value})}}
-              placeholder="Write the Password Again"
-              className="w-[96%] lg:w-[30%] p-1 rounded focus:outline-none"
-            />
-          <div onClick={()=>{forgetPasswordRequest()}}><Button buttonContent="Change Password"></Button></div>
-        </div>
-        <form
-          ref={productRef}
-          onSubmit={(e) => {
-            e.preventDefault();
-            addProduct();
-          }}
-          className="flex flex-col md:flex-row w-[96%] justify-around items-center flex-wrap bg-green-300 h-full min-h-[20rem] mt-2"
-        >
-          <div className="w-[96%] md:w-[48%] lg:w-[24%] h-40 md:h-60 lg:h-80 bg-gradient-to-bl from-blue-500 to-purple-500 rounded-md my-2 flex flex-col items-center justify-evenly cursor-pointer">
-            <input
-              type="text"
-              name="title"
-              placeholder="Title"
-              className="w-[96%] p-1 rounded focus:outline-none"
-            />
-            <input
-              type="text"
-              name="description"
-              placeholder="Description"
-              className="w-[96%] p-1 rounded focus:outline-none"
-            />
-            <input
-              type="text"
-              name="shortDescription"
-              placeholder="Short Description"
-              className="w-[96%] p-1 rounded focus:outline-none"
-            />
-          </div>
-          <div className="w-[96%] md:w-[48%] lg:w-[24%] h-80 bg-gradient-to-bl from-blue-500 to-purple-500 rounded-md my-2 flex flex-col items-center justify-evenly cursor-pointer">
-            <input
-              type="number"
-              name="price"
-              placeholder="Price e.g 10 -> $10"
-              className="w-[96%] p-1 rounded focus:outline-none"
-            />
-            <input
-              type="file"
-              name="primaryImage"
-              className="w-[96%] p-1 rounded focus:outline-none"
-            />
-            <input
-              type="file"
-              name="files"
-              multiple
-              onChange={(e) => {
-                fileLimit(e);
-              }}
-              className="w-[96%] p-1 rounded focus:outline-none"
-            />
-          </div>
-          <div className="w-[96%] md:w-[48%] lg:w-[24%] h-80 bg-gradient-to-bl from-blue-500 to-purple-500 rounded-md my-2 flex flex-col items-center justify-evenly cursor-pointer">
-            <input
-              type="text"
-              name="brand"
-              placeholder="Laptop Brand"
-              className="w-[96%] p-1 rounded focus:outline-none"
-            />
-          </div>
-          <div className="w-[96%] md:w-[48%] lg:w-[24%] h-80 bg-gradient-to-bl from-blue-500 to-purple-500 rounded-md my-2 flex flex-col items-center justify-evenly cursor-pointer">
-            <div htmlFor="submit">
-              <Button buttonContent="Add Product"></Button>
+            </div>
+            <div class="flex flex-wrap -m-4 text-center">
+              <div class="p-4 md:w-1/4 sm:w-1/2 w-full">
+                <div class="border-2 border-gray-800 px-4 py-6 rounded-lg">
+                  <FiUsers className="text-center w-full h-14 my-1 pb-1 text-indigo-400" />
+                  <h2 class="title-font font-medium text-3xl text-white">
+                    {businessData?.totalUsers}
+                  </h2>
+                  <p class="leading-relaxed">Users</p>
+                </div>
+              </div>
+              <div class="p-4 md:w-1/4 sm:w-1/2 w-full">
+                <div class="border-2 border-gray-800 px-4 py-6 rounded-lg">
+                  <SlOrganization className="text-center w-full h-14 my-1 pb-1 text-indigo-400" />
+                  <h2 class="title-font font-medium text-3xl text-white">
+                    {businessData?.totalProducts}
+                  </h2>
+                  <p class="leading-relaxed">Products</p>
+                </div>
+              </div>
+              <div class="p-4 md:w-1/4 sm:w-1/2 w-full">
+                <div class="border-2 border-gray-800 px-4 py-6 rounded-lg">
+                  <BsCartCheck className="text-center w-full h-14 my-1 pb-1 text-indigo-400" />
+                  <h2 class="title-font font-medium text-3xl text-white">
+                    {businessData?.totalOrders}
+                  </h2>
+                  <p class="leading-relaxed">Orders</p>
+                </div>
+              </div>
+              <div class="p-4 md:w-1/4 sm:w-1/2 w-full">
+                <div class="border-2 border-gray-800 px-4 py-6 rounded-lg">
+                  <GiCash className="text-center w-full h-14 my-1 pb-1 text-indigo-400" />
+                  <h2 class="title-font font-medium text-3xl text-white">
+                    {businessData?.totalSales}
+                  </h2>
+                  <p class="leading-relaxed">Sales</p>
+                </div>
+              </div>
             </div>
           </div>
-        </form>
+        </section>
+        <Link to="/admin/products/add" className="w-full h-40 flex justify-center items-center">
+          <div className="w-72 group hover:scale-110 transition-all duration-300 cursor-pointer rounded-md border-2 flex flex-col items-center justify-center border-gray-800 h-40">
+            <p className="text-gray-300 text-xl group-hover:text-green-300 text-center">Add Product</p>
+            <AiOutlinePlus className="w-20 h-20 group-hover:text-green-300 text-gray-300"/>
+          </div>
+        </Link>
+        <div className="flex justify-around items-center flex-wrap w-full min-h-[16rem] bg-gray-900 text-gray-400">
+          <p className="text-3xl text-center underline font-medium">
+            Add Graphs Here
+          </p>
+        </div>
+        <section class="text-gray-400 bg-gray-900 body-font">
+          <div class="container px-5 py-24 mx-auto">
+            <div class="flex flex-col text-center w-full mb-12">
+              <h1 class="sm:text-3xl text-2xl font-medium title-font mb-4 text-white">
+                Update Your Password in a Single Click
+              </h1>
+              <p class="lg:w-2/3 mx-auto leading-relaxed text-base">
+                Whatever cardigan tote bag tumblr hexagon brooklyn asymmetrical
+                gentrify, subway tile poke farm-to-table. Franzen you probably
+                haven't heard of them man bun deep.
+              </p>
+            </div>
+            <div class="flex lg:w-2/3 w-full sm:flex-row flex-col mx-auto px-8 sm:px-0 items-end sm:space-x-4 sm:space-y-0 space-y-4">
+              <div class="relative sm:mb-0 flex-grow w-full">
+                <label class="leading-7 text-sm text-gray-400">
+                  New Password
+                </label>
+                <input
+                  type="text"
+                  name="password"
+                  value={newPass.password}
+                  onChange={(e) => {
+                    setNewPass({ ...newPass, [e.target.name]: e.target.value });
+                  }}
+                  class="w-full bg-gray-800 bg-opacity-40 rounded border border-gray-700 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-900 focus:bg-transparent text-base outline-none text-gray-100 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                />
+              </div>
+              <div class="relative sm:mb-0 flex-grow w-full">
+                <label class="leading-7 text-sm text-gray-400">
+                  Retype Password
+                </label>
+                <input
+                  type="text"
+                  name="retypePassword"
+                  value={newPass.retypePassword}
+                  onChange={(e) => {
+                    setNewPass({ ...newPass, [e.target.name]: e.target.value });
+                  }}
+                  class="w-full bg-gray-800 bg-opacity-40 rounded border border-gray-700 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-900 focus:bg-transparent text-base outline-none text-gray-100 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                />
+              </div>
+              <button
+                onClick={() => {
+                  forgetPasswordRequest();
+                }}
+                class="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg"
+              >
+                Update
+              </button>
+            </div>
+          </div>
+        </section>
       </div>
     </>
   );

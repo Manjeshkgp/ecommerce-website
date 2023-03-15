@@ -7,6 +7,8 @@ import { useNavigate } from "react-router-dom";
 import Button from "../buttons";
 import { useDispatch } from "react-redux";
 import { increment } from "../../slices/cartSlice";
+import {BiEdit} from "react-icons/bi";
+import {MdDeleteOutline} from "react-icons/md";
 
 const Products = ({ productDetails, setAlert }) => {
   const [averageRate,setAverageRate] = useState(0);
@@ -58,13 +60,13 @@ const Products = ({ productDetails, setAlert }) => {
             ""
           )}
           {admin ? (
-            <div className="absolute top-2 w-full flex justify-around items-center">
+            <div className="absolute top-2 right-2 w-8 h-16 hidden group-hover:flex flex-col rounded justify-around items-center">
               <div
                 onClick={() => {
                   navigate(`/admin/products/edit/${productDetails._id}`);
                 }}
               >
-                <Button buttonContent="Edit"></Button>
+                <BiEdit className="w-7 h-7 cursor-pointer active:bg-indigo-800 bg-[rgba(0,0,0,0.5)] hover:bg-indigo-500 rounded-sm text-gray-300"/>
               </div>
               <div
                 onClick={() => {
@@ -77,7 +79,7 @@ const Products = ({ productDetails, setAlert }) => {
                   }
                 }}
               >
-                <Button buttonContent="Delete">Delete</Button>
+                <MdDeleteOutline className="w-7 h-7 cursor-pointer active:bg-red-800 bg-[rgba(0,0,0,0.5)] hover:bg-red-500 rounded-sm text-gray-300"/>
               </div>
             </div>
           ) : (

@@ -22,7 +22,7 @@ const Products = () => {
   }
   return (<>
   <ToastContainer/>
-  <SmallFilter/>
+  {/* <SmallFilter allProducts={allProducts} setAllProducts={setAllProducts}/> */}
   <div className="flex bg-gray-900">
   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 w-full ml-4 mb-4">
     {allProducts.map((singleProduct)=>(

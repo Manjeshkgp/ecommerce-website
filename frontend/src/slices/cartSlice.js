@@ -69,10 +69,14 @@ export const cartSlice = createSlice({
     },
     setCart: (state,action)=>{
       state.products = action.payload;
+    },
+    removeAllandUpdate: (state,action) => {
+      state.products = initialState.products
+      updateCart(initialState.products);
     }
   },
 })
 
-export const { increment, decrement, incrementByOne, decrementByOne, setCart } = cartSlice.actions
+export const { increment, decrement, incrementByOne, decrementByOne, setCart, removeAllandUpdate } = cartSlice.actions
 
 export default cartSlice.reducer

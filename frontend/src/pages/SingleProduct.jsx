@@ -7,6 +7,7 @@ import {FacebookShareButton,FacebookIcon,TwitterShareButton,TwitterIcon,Whatsapp
 import {ToastContainer,toast} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Cookies from 'js-cookie';
+import {AiTwotoneStar} from "react-icons/ai"
 
 const SingleProduct = () => {
   const addedToCart = () => {
@@ -39,14 +40,15 @@ const SingleProduct = () => {
   useEffect(()=>{getProduct()},[]);
 
   const buyProduct = async() => {
-    const res = await fetch (`${process.env.REACT_APP_API_URL}/users/buy-a-product`,{
+    const res = await fetch (`${process.env.REACT_APP_API_URL}/users/buy-product`,{
       method:"POST",
-      body:{
-        email:Cookies.get("email"),
-        productId:id
-      },
+      body:JSON.stringify({
+        buyer:Cookies.get("email"),
+        products:[{...productData,numberOfProducts:1}]
+      }),
       headers:{
-        Authorization:`Bearer ${Cookies.get("jwt")}`
+        Authorization:`Bearer ${Cookies.get("jwt")}`,
+        "Content-Type":"application/json"
       }
     })
     await res.json();
@@ -57,16 +59,18 @@ const SingleProduct = () => {
     let totalRating = 0;
     let average;
     if(ratings?.length===0){
-      return setAverageRate(0);
+      setAverageRate(0);
+      return;
     }
     for (let i = 0; i < ratings?.length; i++) {
       totalRating += ratings[i]?.rate;
     }
   
     average = totalRating / ratings?.length;
-    return setAverageRate(average);
+    setAverageRate(average);
+    return;
   }
-  useEffect(()=>{averageRating(productData?.rating)},[]) 
+  useEffect(()=>{averageRating(productData?.rating)},[productData]) 
 
   return (<>
   <ToastContainer/>
@@ -79,21 +83,7 @@ const SingleProduct = () => {
         <h1 className="text-white text-3xl title-font font-medium mb-1">{productData?.title}</h1>
         <div className="flex mb-4">
           <span className="flex items-center">
-            <svg fill="currentColor" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-4 h-4 text-indigo-400" viewBox="0 0 24 24">
-              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
-            </svg>
-            <svg fill="currentColor" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-4 h-4 text-indigo-400" viewBox="0 0 24 24">
-              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
-            </svg>
-            <svg fill="currentColor" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-4 h-4 text-indigo-400" viewBox="0 0 24 24">
-              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
-            </svg>
-            <svg fill="currentColor" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-4 h-4 text-indigo-400" viewBox="0 0 24 24">
-              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
-            </svg>
-            <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-4 h-4 text-indigo-400" viewBox="0 0 24 24">
-              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
-            </svg>
+          <p className="flex rounded bg-indigo-500 items-center justify-center font-semibold text-gray-100 px-1 text-sm">{averageRate}<AiTwotoneStar className="text-yellow-400 w-[0.875rem] h-[0.875rem]"/></p>
             <span className="ml-3">{productData?.rating?.length} Ratings</span>
           </span>
           <span className="flex ml-3 pl-3 py-2 border-l-2 border-gray-800 text-gray-500 space-x-2">

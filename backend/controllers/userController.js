@@ -3,6 +3,8 @@ import userSchema from "../models/userSchema.js";
 import jwt from "jsonwebtoken";
 import productSchema from "../models/productSchema.js";
 import adminSchema from "../models/adminSchema.js";
+import orderSchema from "../models/orderSchema.js";
+
 export const registerUser = async (req, res) => {
   const userExist = await userSchema.findOne({ email: req.body.email });
   if (userExist) {
@@ -54,14 +56,15 @@ export const getProducts = async (req, res) => {
   res.status(200).json({ allProducts });
 };
 
-export const buyAProduct = async (req, res) => {
+export const buyProduct = async (req, res) => {
   const purchaseDetails = {
-    email: req.body.email,
-    productId: req.body.productId,
+    products: req.body.products,
+    buyer: req.body.buyer,
     date: new Date(),
   };
   try {
-    await adminSchema.updateOne({}, { $addToSet: { sales: purchaseDetails } });
+    const addOrder = new orderSchema(purchaseDetails);
+    await addOrder.save();
     res.status(200).json({ message: "Product Purchased Successfully" });
   } catch (error) {
     console.log(error);

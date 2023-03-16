@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { addProduct, adminLogin,deleteProduct,forgetPassword,getBusinessData, getSellers, getUsers, removeSeller, removeUser, salesGraph, updateProduct } from "../controllers/adminController.js";
+import { addProduct, adminLogin,deleteProduct,forgetPassword,getBusinessData, getOrders, getSellers, getUsers, orderCancel, orderToSale, removeSeller, removeUser, salesGraph, updateProduct } from "../controllers/adminController.js";
 import multer from "multer";
 import { randomUUID } from "crypto";
 import auth from "../middlewares/auth.js";
@@ -33,5 +33,8 @@ router.route('/get-sellers').get(getSellers);
 router.route('/remove-seller/:_id').delete(removeSeller);
 router.route('/get-sales/:days').get(salesGraph);
 router.route('/get-sales').get(salesGraph);
+router.route('/orders').get(getOrders);
+router.route('/order-to-sale/:_id').patch(orderToSale);
+router.route('/order-cancel/:_id').patch(orderCancel);
 
 export default router;

@@ -4,7 +4,8 @@ import sellerSchema from "../models/sellerSchema.js";
 import productSchema from "../models/productSchema.js";
 import fs from "fs";
 import jwt from "jsonwebtoken";
-import auth from "../middlewares/auth.js";
+import orderSchema from "../models/orderSchema.js";
+import salesSchema from "../models/salesSchema.js";
 
 export const adminLogin = async (req, res) => {
   const email = req.body.email;
@@ -64,18 +65,17 @@ export const forgetPassword = async (req, res) => {
 };
 
 export const getBusinessData = async (req, res) => {
-  const users = await userSchema.find();
-  const sellers = await sellerSchema.find();
-  const products = await productSchema.find();
-  const admin = await adminSchema.findOne({});
-  const sales = admin.sales;
+  const users = await userSchema.countDocuments({});
+  const sales = await salesSchema.countDocuments({});
+  const products = await productSchema.countDocuments({});
+  const orders = await orderSchema.countDocuments({});
   // const totalProducts = sellers.flatMap((seller) => seller.products);
   // const totalOrders = sellers.flatMap((seller) => seller.customerOrders);
   res.status(200).json({
     totalUsers: users,
-    totalSellers: sellers,
-    totalProducts: products,
     totalSales: sales,
+    totalProducts: products,
+    totalOrders: orders,
   });
 };
 
@@ -204,47 +204,85 @@ export const salesGraph = async (req, res) => {
     days = req.params.days;
   }
   const daysNumber = days - 1;
-  const lastXDays = []; // IF daysNumber = 6, THEN last7Days LIST
-  let ordersByDate = {};
-  const admin = await adminSchema.findOne({});
-  const sales = admin.sales;
+  const lastXDaysDate = [];
+  let lastXDays = []; // IF daysNumber = 6, THEN last7Days LIST
+  let salesByDate = {};
   // FIRST GETTING THE ARRAY OF DATES OF LAST X NUMBER OF DAYS IF X = 6, THEN 7 DAYS DATA, IF 30 THEN 31 DAYS DATA
   for (let i = daysNumber; i >= 0; i--) {
     const date = new Date();
     date.setDate(date.getDate() - i);
-    lastXDays.push(date.toISOString().substr(0, 10));
+    lastXDaysDate.push(date.toISOString());
   }
-  // CREATING OBJECT FOR NUMBER OF ORDERS BY DATE AS KEYS AND NUMBER OF ORDERS AS VALUES
-  sales.forEach((order) => {
-    const orderDate = order.date.toISOString().substr(0, 10);
-    if (lastXDays.includes(orderDate)) {
-      if (ordersByDate[orderDate]) {
-        ordersByDate[orderDate]++;
-      } else {
-        ordersByDate[orderDate] = 1;
+  const firstDay = lastXDaysDate[0];
+  const lastDay = lastXDaysDate[lastXDaysDate.length-1];
+  const sales = await salesSchema.find({$and:[
+    {saleDate:{$gte:firstDay}},{saleDate:{$lte:lastDay}}
+  ]})
+  lastXDays = lastXDaysDate.map((date)=>(date.substr(0,10)))
+  const salesDateArr = sales.map((sale)=>(sale.saleDate.toISOString().substr(0,10)))
+  salesDateArr.forEach((date)=>{
+    if(lastXDays.includes(date)){
+      if(!salesByDate[date]||salesByDate[date]===null||salesByDate[date]===undefined){
+        salesByDate[date] = 1
+      }
+      else{
+        salesByDate[date]++
       }
     }
-  });
-  // CONVERTING THE OBJECT INTO ARRAY
-  const graphData = Object.keys(ordersByDate).map((date) => {
-    return { date, orders: ordersByDate[date] };
-  });
-  // IF NO ORDERS HAPPENED ON A PARTICULAR DATE THEN NO OBJECT IS MADE, SO MAKING OBJECT FOR 0 ORDERS ON A DATE
-  // AND ADDING THOSE OBJECTS INTO THE graphData ARRAY
-  lastXDays.forEach((date) => {
-    if (!graphData.some((order) => order.date === date)) {
-      graphData.push({ date: date, orders: 0 });
+  })
+  lastXDays.forEach((date)=>{
+    if(salesDateArr.includes(date)){
+      return;
+    }else{
+      salesByDate[date] = 0
     }
-  });
-  // NOW SORTING THE ARRAY BY DATES
-  graphData.sort((a, b) => {
-    if (a.date < b.date) {
-      return -1;
-    }
-    if (a.date > b.date) {
-      return 1;
-    }
-    return 0;
-  });
-  res.status(200).json(graphData);
+  })
+  const arrOfSalesObj = Object.entries(salesByDate).map((entry)=>({date:entry[0],sales:entry[1]}));
+  arrOfSalesObj.sort((a, b) => {
+      if (a.date < b.date) {
+        return -1;
+      }
+      if (a.date > b.date) {
+        return 1;
+      }
+      return 0;
+    });
+  res.status(200).json(arrOfSalesObj);
 };
+
+export const getOrders = async(req,res) => {
+  const orders = await orderSchema.find();
+  res.status(200).json(orders);
+}
+
+export const orderToSale = async (req,res) => {
+  const _id = req.params._id;
+  // the lean method is converting the mongodb document to a javascript object, even the _id i.e. ObjectId("something-something") is also converted into normal string
+  const order = await orderSchema.findById(_id).lean();
+  if(!order||order===null||order===undefined){
+    res.status(434).json({message:"No Order Found, may be already converted"});
+    return;
+  }
+  let saleObj = order;
+  saleObj["saleDate"] = new Date();
+  const newSale = new salesSchema(saleObj);
+  try {
+  await newSale.save();
+  await orderSchema.findByIdAndDelete(_id);
+  res.status(200).json({message:"The Order Converted to Sale"})
+  } catch (error) {
+    console.log(error);
+    res.status(444).json({message:"Some Error Occured"})
+  }
+}
+
+export const orderCancel = async (req,res) => {
+  const _id = req.params._id;
+  try {
+  await orderSchema.findByIdAndDelete(_id);
+    res.status(200).json({message:"Order Canceled"});
+  } catch (error) {
+    console.log(error);
+    res.status(420).json({message:"Some error occured"})
+  }
+}

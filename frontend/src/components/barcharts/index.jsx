@@ -73,7 +73,7 @@ export default function index({graphData}) {
       <YAxis />
       <Tooltip />
       <Legend />
-      <Bar dataKey="orders" fill="#7b76e0" />
+      <Bar dataKey="sales" fill="#7b76e0" />
     </BarChart>
     // <BarChart
     // className="w-full"

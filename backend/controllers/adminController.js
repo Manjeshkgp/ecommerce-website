@@ -286,3 +286,67 @@ export const orderCancel = async (req,res) => {
     res.status(420).json({message:"Some error occured"})
   }
 }
+
+export const allOrdersGraph = async (req, res) => {
+  let days;
+  if (
+    isNaN(Number(req.params.days)) ||
+    req.params.days === undefined ||
+    req.params.days === null
+  ) {
+    days = 7;
+  } else if (Number(req.params.days) <= 0) {
+    days = 7;
+  } else {
+    days = req.params.days;
+  }
+  const daysNumber = days - 1;
+  const lastXDaysDate = [];
+  let lastXDays = []; // IF daysNumber = 6, THEN last7Days LIST
+  let ordersByDate = {};
+  // FIRST GETTING THE ARRAY OF DATES OF LAST X NUMBER OF DAYS IF X = 6, THEN 7 DAYS DATA, IF 30 THEN 31 DAYS DATA
+  for (let i = daysNumber; i >= 0; i--) {
+    const date = new Date();
+    date.setDate(date.getDate() - i);
+    lastXDaysDate.push(date.toISOString());
+  }
+  const firstDay = lastXDaysDate[0];
+  const lastDay = lastXDaysDate[lastXDaysDate.length-1];
+  const OrderInsales = await salesSchema.find({$and:[
+    {date:{$gte:firstDay}},{date:{$lte:lastDay}}
+  ]})
+  const orders = await orderSchema.find({$and:[
+    {date:{$gte:firstDay}},{date:{$lte:lastDay}}
+  ]})
+  const TotalOrders = orders.concat(OrderInsales)
+  lastXDays = lastXDaysDate.map((date)=>(date.substr(0,10)))
+  const ordersDateArr = TotalOrders.map((order)=>(order.date.toISOString().substr(0,10)))
+  ordersDateArr.forEach((date)=>{
+    if(lastXDays.includes(date)){
+      if(!ordersByDate[date]||ordersByDate[date]===null||ordersByDate[date]===undefined){
+        ordersByDate[date] = 1
+      }
+      else{
+        ordersByDate[date]++
+      }
+    }
+  })
+  lastXDays.forEach((date)=>{
+    if(ordersDateArr.includes(date)){
+      return;
+    }else{
+      ordersByDate[date] = 0
+    }
+  })
+  const arrOfOrdersObj = Object.entries(ordersByDate).map((entry)=>({date:entry[0],sales:entry[1]}));
+  arrOfOrdersObj.sort((a, b) => {
+      if (a.date < b.date) {
+        return -1;
+      }
+      if (a.date > b.date) {
+        return 1;
+      }
+      return 0;
+    });
+  res.status(200).json(arrOfOrdersObj);
+};

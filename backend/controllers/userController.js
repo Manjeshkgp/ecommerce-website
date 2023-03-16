@@ -2,7 +2,6 @@ import bcrypt from "bcrypt";
 import userSchema from "../models/userSchema.js";
 import jwt from "jsonwebtoken";
 import productSchema from "../models/productSchema.js";
-import adminSchema from "../models/adminSchema.js";
 import orderSchema from "../models/orderSchema.js";
 
 export const registerUser = async (req, res) => {
@@ -65,6 +64,7 @@ export const buyProduct = async (req, res) => {
   try {
     const addOrder = new orderSchema(purchaseDetails);
     await addOrder.save();
+    await userSchema.findOneAndUpdate({email:req.body.buyer},{$addToSet:{orders:purchaseDetails}})
     res.status(200).json({ message: "Product Purchased Successfully" });
   } catch (error) {
     console.log(error);

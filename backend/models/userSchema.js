@@ -6,7 +6,7 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true },
   cart: [Object],
   orders: [Object],
-  wishlist: [Object],
+  purchased: [Object],
 });
 
 export default mongoose.model("Users",userSchema)

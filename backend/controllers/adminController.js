@@ -6,6 +6,7 @@ import fs from "fs";
 import jwt from "jsonwebtoken";
 import orderSchema from "../models/orderSchema.js";
 import salesSchema from "../models/salesSchema.js";
+import mongoose from "mongoose";
 
 export const adminLogin = async (req, res) => {
   const email = req.body.email;
@@ -267,7 +268,11 @@ export const orderToSale = async (req,res) => {
   saleObj["saleDate"] = new Date();
   const newSale = new salesSchema(saleObj);
   try {
-  await newSale.save();
+  let saveNewSale = await newSale.save();
+  await userSchema.findOneAndUpdate({email:order.buyer},{
+    $pull: { orders: {_id:mongoose.Types.ObjectId(order._id)} },
+    $addToSet: { purchased: saveNewSale }
+  },)
   await orderSchema.findByIdAndDelete(_id);
   res.status(200).json({message:"The Order Converted to Sale"})
   } catch (error) {
@@ -278,8 +283,12 @@ export const orderToSale = async (req,res) => {
 
 export const orderCancel = async (req,res) => {
   const _id = req.params._id;
+  const order = await orderSchema.findById(_id);
   try {
   await orderSchema.findByIdAndDelete(_id);
+  await userSchema.findOneAndUpdate({email:order.buyer},{
+    $pull: { orders: {_id:mongoose.Types.ObjectId(order._id)} }
+  })
     res.status(200).json({message:"Order Canceled"});
   } catch (error) {
     console.log(error);

@@ -2,7 +2,7 @@ import React from 'react'
 
 const Placements = () => {
   return (<>
-  <section className="text-gray-400 bg-gray-900 body-font">
+  <section className="text-gray-400 min-h-[calc(100vh-10rem)] bg-gray-900 body-font">
   <div className="container px-5 py-24 mx-auto">
     <h1 className="text-3xl font-medium title-font text-white mb-12 text-center">Placements</h1>
     <div className="flex flex-wrap -m-4">

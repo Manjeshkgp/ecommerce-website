@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import cookie from "js-cookie";
 import { useDispatch } from "react-redux";
 import { addUser } from "../slices/userSlice";
+import "./DeleteProduct.css"
 
 const GoogleJwt = () => {
   const dispatch = useDispatch();
@@ -32,7 +33,10 @@ const GoogleJwt = () => {
   }, [getJwt]);
   return (
     <>
-      <div className="w-full h-[100vh] bg-gradient-to-bl from-transparent via-teal-400 to-transparent"></div>
+      <div className="flex flex-col justify-evenly items-center w-full h-screen bg-gray-900">
+        <div className="load"></div>
+        <div className="text-center text-gray-200">Logging in...</div>
+      </div>
     </>
   );
 };

@@ -59,6 +59,7 @@ export const buyProduct = async (req, res) => {
   const purchaseDetails = {
     products: req.body.products,
     buyer: req.body.buyer,
+    totalPrice: req.body.totalPrice,
     date: new Date(),
   };
   try {

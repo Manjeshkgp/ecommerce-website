@@ -26,6 +26,7 @@ const buyProduct = async() => {
     body:JSON.stringify({
       buyer:Cookies.get("email"),
       products:cart,
+      totalPrice:totalPrice,
     }),
     headers:{
       Authorization:`Bearer ${Cookies.get("jwt")}`,

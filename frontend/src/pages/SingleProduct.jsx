@@ -44,7 +44,8 @@ const SingleProduct = () => {
       method:"POST",
       body:JSON.stringify({
         buyer:Cookies.get("email"),
-        products:[{...productData,numberOfProducts:1}]
+        products:[{...productData,numberOfProducts:1}],
+        totalPrice:productData?.price
       }),
       headers:{
         Authorization:`Bearer ${Cookies.get("jwt")}`,

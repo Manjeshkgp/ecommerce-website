@@ -30,9 +30,9 @@ const Authenticate = () => {
     );
     if (res.ok) {
       const data = await res.json();
-      dispatch(addUser(data?.user));
-      Cookies.set("jwt", data?.token, { expires: 1 });
-      Cookies.set("email", formData?.email, { expires: 1 });
+      dispatch(addUser(data.user));
+      Cookies.set("jwt", data.token, { expires: 1 });
+      Cookies.set("email", data.user.email, { expires: 1 });
       navigate("/");
       return;
     } else if (res.status == 410) {

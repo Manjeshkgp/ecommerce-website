@@ -51,6 +51,9 @@ const AdminUsers = () => {
                 Orders
               </th>
               <th scope="col" className="px-6 py-3">
+                Purchased
+              </th>
+              <th scope="col" className="px-6 py-3">
                 Removal
               </th>
             </tr>
@@ -66,6 +69,7 @@ const AdminUsers = () => {
                 </th>
                 <td className="px-6 py-4">{singleUser?.email}</td>
                 <td className="px-6 py-4">{singleUser?.orders?.length}</td>
+                <td className="px-6 py-4">{singleUser?.purchased?.length}</td>
                 <td className="px-6 py-4">
                   <FiDelete
                     onClick={() => {

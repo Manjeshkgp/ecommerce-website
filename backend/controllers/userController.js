@@ -63,8 +63,8 @@ export const buyProduct = async (req, res) => {
   };
   try {
     const addOrder = new orderSchema(purchaseDetails);
-    await addOrder.save();
-    await userSchema.findOneAndUpdate({email:req.body.buyer},{$addToSet:{orders:purchaseDetails}})
+    const OrderSave =await addOrder.save();
+    await userSchema.findOneAndUpdate({email:req.body.buyer},{$addToSet:{orders:OrderSave}})
     res.status(200).json({ message: "Product Purchased Successfully" });
   } catch (error) {
     console.log(error);

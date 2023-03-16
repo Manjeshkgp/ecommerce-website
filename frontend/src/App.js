@@ -1,13 +1,15 @@
 import Navbar from "./components/navbar";
 import { Outlet } from "react-router-dom";
 import Footer from "./components/footer";
-import { useDispatch } from "react-redux";
+import { useDispatch,useSelector } from "react-redux";
 import { addUser } from "./slices/userSlice";
 import { setCart } from "./slices/cartSlice";
 import Cookies from "js-cookie";
 import { useEffect } from "react";
 
 function App() {
+  const user = useSelector((state)=>state.user)
+  const isAuthenticated = user.authenticated;
   const dispatch = useDispatch();
   const email = Cookies.get("email");
   const jwt = Cookies.get("jwt");
@@ -19,7 +21,9 @@ function App() {
       jwt === null
     ) {
       console.log("Login Rquired");
-    } else {
+    } else if(isAuthenticated===true){
+      console.log("Already Verified, may be via google")
+    }else {
       const res = await fetch(
         `${process.env.REACT_APP_API_URL}/users/${email}`,
         {

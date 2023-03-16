@@ -29,6 +29,10 @@ import AddProduct from "./pages/AddProduct.jsx";
 
 const router = createBrowserRouter([
   {
+    path: "/auth-with-google/:jwtToken",
+    element: <GoogleJwt />,
+  },
+  {
     path: "/",
     element: <App />,
     children: [
@@ -65,10 +69,6 @@ const router = createBrowserRouter([
   {
     path: "/authenticate",
     element: <Authenticate />,
-  },
-  {
-    path: "/auth-with-google/:jwtToken",
-    element: <GoogleJwt />,
   },
   {
     path: "/admin-login",

@@ -8,26 +8,27 @@ const GoogleJwt = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { jwtToken } = useParams();
-  cookie.set("jwt", jwtToken, { expires: 1 });
   const authenticateAndGetUser = async () => {
     const res = await fetch(
       `${process.env.REACT_APP_API_URL}/auth/google/get-user-data`,
       {
-        method:"GET",
-        headers:{
-          Authorization:`Bearer ${jwtToken}`
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
         },
       }
     );
-    if(res.ok){
+    if (res.ok) {
       const data = await res.json();
+      cookie.set("email", data.email);
+      cookie.set("jwt", jwtToken, { expires: 1 });
       dispatch(addUser(data));
+    navigate("/", { relative: false });
     }
   };
   const getJwt = cookie.get("jwt");
   useEffect(() => {
     authenticateAndGetUser();
-    navigate("/", { relative: false });
   }, [getJwt]);
   return (
     <>

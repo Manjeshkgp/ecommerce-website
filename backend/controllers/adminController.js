@@ -23,7 +23,7 @@ export const adminLogin = async (req, res) => {
     res.status(200).json({
       adminVerified: true,
       message: "Admin Login Success",
-      token
+      token,
     });
   } else {
     res.status(440).json({
@@ -33,18 +33,18 @@ export const adminLogin = async (req, res) => {
   }
 };
 
-export const verifyMe = async (req,res) => {
-  adminSchema.findOne({email:req.body.email},(err,admin)=>{
-    if(err){
+export const verifyMe = async (req, res) => {
+  adminSchema.findOne({ email: req.body.email }, (err, admin) => {
+    if (err) {
       console.log(err);
-      res.status(430).json({message:"Some Error Occurred"})
-    }else if(admin){
+      res.status(430).json({ message: "Some Error Occurred" });
+    } else if (admin) {
       res.status(200).json(admin);
-    }else{
-      res.status(440).json({message:"May be admin not found"})
+    } else {
+      res.status(440).json({ message: "May be admin not found" });
     }
-  })
-}
+  });
+};
 
 export const forgetPassword = async (req, res) => {
   if (!req.body.newPassword || req.body.newPassword === undefined) {
@@ -228,86 +228,102 @@ export const salesGraph = async (req, res) => {
     lastXDaysDate.push(date.toISOString());
   }
   const firstDay = lastXDaysDate[0];
-  const lastDay = lastXDaysDate[lastXDaysDate.length-1];
-  const sales = await salesSchema.find({$and:[
-    {saleDate:{$gte:firstDay}},{saleDate:{$lte:lastDay}}
-  ]})
-  lastXDays = lastXDaysDate.map((date)=>(date.substr(0,10)))
-  const salesDateArr = sales.map((sale)=>(sale.saleDate.toISOString().substr(0,10)))
-  salesDateArr.forEach((date)=>{
-    if(lastXDays.includes(date)){
-      if(!salesByDate[date]||salesByDate[date]===null||salesByDate[date]===undefined){
-        salesByDate[date] = 1
-      }
-      else{
-        salesByDate[date]++
+  const lastDay = lastXDaysDate[lastXDaysDate.length - 1];
+  const sales = await salesSchema.find({
+    $and: [{ saleDate: { $gte: firstDay } }, { saleDate: { $lte: lastDay } }],
+  });
+  lastXDays = lastXDaysDate.map((date) => date.substr(0, 10));
+  const salesDateArr = sales.map((sale) =>
+    sale.saleDate.toISOString().substr(0, 10)
+  );
+  salesDateArr.forEach((date) => {
+    if (lastXDays.includes(date)) {
+      if (
+        !salesByDate[date] ||
+        salesByDate[date] === null ||
+        salesByDate[date] === undefined
+      ) {
+        salesByDate[date] = 1;
+      } else {
+        salesByDate[date]++;
       }
     }
-  })
-  lastXDays.forEach((date)=>{
-    if(salesDateArr.includes(date)){
+  });
+  lastXDays.forEach((date) => {
+    if (salesDateArr.includes(date)) {
       return;
-    }else{
-      salesByDate[date] = 0
+    } else {
+      salesByDate[date] = 0;
     }
-  })
-  const arrOfSalesObj = Object.entries(salesByDate).map((entry)=>({date:entry[0],sales:entry[1]}));
+  });
+  const arrOfSalesObj = Object.entries(salesByDate).map((entry) => ({
+    date: entry[0],
+    sales: entry[1],
+  }));
   arrOfSalesObj.sort((a, b) => {
-      if (a.date < b.date) {
-        return -1;
-      }
-      if (a.date > b.date) {
-        return 1;
-      }
-      return 0;
-    });
+    if (a.date < b.date) {
+      return -1;
+    }
+    if (a.date > b.date) {
+      return 1;
+    }
+    return 0;
+  });
   res.status(200).json(arrOfSalesObj);
 };
 
-export const getOrders = async(req,res) => {
+export const getOrders = async (req, res) => {
   const orders = await orderSchema.find();
   res.status(200).json(orders);
-}
+};
 
-export const orderToSale = async (req,res) => {
+export const orderToSale = async (req, res) => {
   const _id = req.params._id;
   // the lean method is converting the mongodb document to a javascript object, even the _id i.e. ObjectId("something-something") is also converted into normal string
   const order = await orderSchema.findById(_id).lean();
-  if(!order||order===null||order===undefined){
-    res.status(434).json({message:"No Order Found, may be already converted"});
+  if (!order || order === null || order === undefined) {
+    res
+      .status(434)
+      .json({ message: "No Order Found, may be already converted" });
     return;
   }
   let saleObj = order;
   saleObj["saleDate"] = new Date();
   const newSale = new salesSchema(saleObj);
   try {
-  let saveNewSale = await newSale.save();
-  await userSchema.findOneAndUpdate({email:order.buyer},{
-    $pull: { orders: {_id:mongoose.Types.ObjectId(order._id)} },
-    $addToSet: { purchased: saveNewSale }
-  },)
-  await orderSchema.findByIdAndDelete(_id);
-  res.status(200).json({message:"The Order Converted to Sale"})
+    let saveNewSale = await newSale.save();
+    await userSchema.findOneAndUpdate(
+      { email: order.buyer },
+      {
+        $pull: { orders: { _id: mongoose.Types.ObjectId(order._id) } },
+        $addToSet: { purchased: saveNewSale },
+      }
+    );
+    await orderSchema.findByIdAndDelete(_id);
+    res.status(200).json({ message: "The Order Converted to Sale" });
   } catch (error) {
     console.log(error);
-    res.status(444).json({message:"Some Error Occured"})
+    res.status(444).json({ message: "Some Error Occured" });
   }
-}
+};
 
-export const orderCancel = async (req,res) => {
+export const orderCancel = async (req, res) => {
   const _id = req.params._id;
   const order = await orderSchema.findById(_id);
   try {
-  await orderSchema.findByIdAndDelete(_id);
-  await userSchema.findOneAndUpdate({email:order.buyer},{
-    $pull: { orders: {_id:mongoose.Types.ObjectId(order._id)} }
-  })
-    res.status(200).json({message:"Order Canceled"});
+    await orderSchema.findByIdAndDelete(_id);
+    await userSchema.findOneAndUpdate(
+      { email: order.buyer },
+      {
+        $pull: { orders: { _id: mongoose.Types.ObjectId(order._id) } },
+      }
+    );
+    res.status(200).json({ message: "Order Canceled" });
   } catch (error) {
     console.log(error);
-    res.status(420).json({message:"Some error occured"})
+    res.status(420).json({ message: "Some error occured" });
   }
-}
+};
 
 export const allOrdersGraph = async (req, res) => {
   let days;
@@ -333,42 +349,139 @@ export const allOrdersGraph = async (req, res) => {
     lastXDaysDate.push(date.toISOString());
   }
   const firstDay = lastXDaysDate[0];
-  const lastDay = lastXDaysDate[lastXDaysDate.length-1];
-  const OrderInsales = await salesSchema.find({$and:[
-    {date:{$gte:firstDay}},{date:{$lte:lastDay}}
-  ]})
-  const orders = await orderSchema.find({$and:[
-    {date:{$gte:firstDay}},{date:{$lte:lastDay}}
-  ]})
-  const TotalOrders = orders.concat(OrderInsales)
-  lastXDays = lastXDaysDate.map((date)=>(date.substr(0,10)))
-  const ordersDateArr = TotalOrders.map((order)=>(order.date.toISOString().substr(0,10)))
-  ordersDateArr.forEach((date)=>{
-    if(lastXDays.includes(date)){
-      if(!ordersByDate[date]||ordersByDate[date]===null||ordersByDate[date]===undefined){
-        ordersByDate[date] = 1
-      }
-      else{
-        ordersByDate[date]++
+  const lastDay = lastXDaysDate[lastXDaysDate.length - 1];
+  const OrderInsales = await salesSchema.find({
+    $and: [{ date: { $gte: firstDay } }, { date: { $lte: lastDay } }],
+  });
+  const orders = await orderSchema.find({
+    $and: [{ date: { $gte: firstDay } }, { date: { $lte: lastDay } }],
+  });
+  const TotalOrders = orders.concat(OrderInsales);
+  lastXDays = lastXDaysDate.map((date) => date.substr(0, 10));
+  const ordersDateArr = TotalOrders.map((order) =>
+    order.date.toISOString().substr(0, 10)
+  );
+  ordersDateArr.forEach((date) => {
+    if (lastXDays.includes(date)) {
+      if (
+        !ordersByDate[date] ||
+        ordersByDate[date] === null ||
+        ordersByDate[date] === undefined
+      ) {
+        ordersByDate[date] = 1;
+      } else {
+        ordersByDate[date]++;
       }
     }
-  })
-  lastXDays.forEach((date)=>{
-    if(ordersDateArr.includes(date)){
+  });
+  lastXDays.forEach((date) => {
+    if (ordersDateArr.includes(date)) {
       return;
-    }else{
-      ordersByDate[date] = 0
+    } else {
+      ordersByDate[date] = 0;
     }
-  })
-  const arrOfOrdersObj = Object.entries(ordersByDate).map((entry)=>({date:entry[0],orders:entry[1]}));
+  });
+  const arrOfOrdersObj = Object.entries(ordersByDate).map((entry) => ({
+    date: entry[0],
+    orders: entry[1],
+  }));
   arrOfOrdersObj.sort((a, b) => {
-      if (a.date < b.date) {
-        return -1;
-      }
-      if (a.date > b.date) {
-        return 1;
-      }
-      return 0;
-    });
+    if (a.date < b.date) {
+      return -1;
+    }
+    if (a.date > b.date) {
+      return 1;
+    }
+    return 0;
+  });
   res.status(200).json(arrOfOrdersObj);
 };
+
+export const getTotalRevenue = async (req, res) => {
+  salesSchema
+    .aggregate([
+      {
+        $group: {
+          _id: null,
+          totalRevenue: { $sum: "$totalPrice" },
+        },
+      },
+    ])
+    .exec((err, result) => {
+      if (err) {
+        console.log(err);
+        res.status(449).json({ message: "Some Error Occured" });
+      } else {
+        console.log(result);
+        res.status(200).json({ totalRevenue: result[0].totalRevenue });
+      }
+    });
+};
+
+export const totalRevenueAccordingToDate = async (req, res) => {
+  const { date1, date2 } = req.params;
+  let Date1 = new Date(date1);
+  let Date2 = new Date(date2);
+  let startDate;
+  let endDate;
+  if (Date1 > Date2) {
+    startDate = Date2;
+    endDate = Date1;
+  } else {
+    startDate = Date1;
+    endDate = Date2;
+  }
+  salesSchema
+    .aggregate([
+      {
+        $match: {
+          saleDate: { $gte: startDate, $lte: endDate },
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          totalRevenue: { $sum: "$totalPrice" },
+        },
+      },
+    ])
+    .exec((err, result) => {
+      if (err) {
+        console.log(err);
+        res.status(449).json({ message: "Some Error Occured" });
+      } else {
+        console.log(result);
+        res.status(200).json({ totalRevenue: result[0].totalRevenue });
+      }
+    });
+};
+
+export const getRevenueByMonth = async(req,res)=> { // This is Under Construction for later
+  const {year} = req.params; 
+  const startDate = new Date(year, 0, 1); // start of the year
+  const endDate = new Date(year, 11, 31); // end of the year
+
+  const result = await salesSchema.aggregate([
+    {
+      $match: {
+        saleDate: { $gte: startDate, $lte: endDate },
+      },
+    },
+    {
+      $group: {
+        _id: {
+          year: { $year: '$saleDate' },
+          month: { $month: '$saleDate' },
+        },
+        totalRevenue: { $sum: '$totalPrice' },
+      },
+    },
+    {
+      $sort: {
+        '_id.month': 1,
+      },
+    },
+  ]);
+  console.log(result)
+  return;
+}

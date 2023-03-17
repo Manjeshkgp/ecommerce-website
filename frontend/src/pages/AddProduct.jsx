@@ -1,3 +1,4 @@
+import Cookies from "js-cookie";
 import React, { useRef } from "react";
 
 const AddProduct = () => {
@@ -27,7 +28,7 @@ const AddProduct = () => {
     const requestOptions = {
       method: "POST",
       body: formdata,
-      headers: { enctype: "multipart/form-data; boundary=???" },
+      headers: { enctype: "multipart/form-data; boundary=???", Authorization:`Bearer ${Cookies.get("adminToken")}` },
       redirect: "follow",
     };
     const res = await fetch(

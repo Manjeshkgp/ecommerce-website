@@ -21,6 +21,7 @@ const EditProduct = () => {
         method:"POST",
         headers:{
             "Content-Type":"application/json",
+            Authorization:`Bearer ${Cookies.get("adminToken")}`
         },
         body:JSON.stringify({
             _id:id,

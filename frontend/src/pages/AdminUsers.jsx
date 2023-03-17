@@ -25,6 +25,7 @@ const AdminUsers = () => {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
+            Authorization:`Bearer ${Cookies.get("adminToken")}`
           },
         }
       );

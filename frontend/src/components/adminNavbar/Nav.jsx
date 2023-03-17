@@ -56,7 +56,7 @@ const Nav = ({ openNav, setOpenNav }) => {
           <div
             onClick={() => {
               dispatch(removeUser());
-              Cookies.remove("jwt");
+              Cookies.remove("adminToken");
               Cookies.remove("email");
               setOpenNav(false);
               navigate("/", { replace: true });

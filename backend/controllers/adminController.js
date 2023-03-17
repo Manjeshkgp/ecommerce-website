@@ -33,6 +33,19 @@ export const adminLogin = async (req, res) => {
   }
 };
 
+export const verifyMe = async (req,res) => {
+  adminSchema.findOne({email:req.body.email},(err,admin)=>{
+    if(err){
+      console.log(err);
+      res.status(430).json({message:"Some Error Occurred"})
+    }else if(admin){
+      res.status(200).json(admin);
+    }else{
+      res.status(440).json({message:"May be admin not found"})
+    }
+  })
+}
+
 export const forgetPassword = async (req, res) => {
   if (!req.body.newPassword || req.body.newPassword === undefined) {
     return res

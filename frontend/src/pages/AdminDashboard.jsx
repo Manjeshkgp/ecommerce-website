@@ -1,20 +1,15 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { FiUsers } from "react-icons/fi";
 import { SlOrganization } from "react-icons/sl";
 import { AiOutlinePlus } from "react-icons/ai";
 import { GiCash } from "react-icons/gi";
 import { BsCartCheck } from "react-icons/bs";
-import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
 const AdminDashboard = () => {
-  const navigate = useNavigate();
-  const user = useSelector((state) => state.user);
   const [businessData, setBusinessData] = useState({});
   const [newPass, setNewPass] = useState({ password: "", retypePassword: "" });
   const forgetPasswordRequest = async () => {
-    console.log(newPass);
     let newPassword;
     if (newPass.password === newPass.retypePassword) {
       newPassword = newPass.password;
@@ -54,10 +49,6 @@ const AdminDashboard = () => {
     setBusinessData(data);
   };
   useEffect(() => {
-    if (user.admin === false) {
-      alert("Login first then come here");
-      return navigate("/admin-login");
-    }
     getBusinessData();
   }, []);
 

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { addProduct, adminLogin,allOrdersGraph,deleteProduct,forgetPassword,getBusinessData, getOrders, getSellers, getUsers, orderCancel, orderToSale, removeSeller, removeUser, salesGraph, updateProduct } from "../controllers/adminController.js";
+import { addProduct, adminLogin,allOrdersGraph,deleteProduct,forgetPassword,getBusinessData, getOrders, getSellers, getUsers, orderCancel, orderToSale, removeSeller, removeUser, salesGraph, updateProduct, verifyMe } from "../controllers/adminController.js";
 import multer from "multer";
 import { randomUUID } from "crypto";
 import auth from "../middlewares/auth.js";
@@ -22,6 +22,7 @@ const storage = multer.diskStorage({
 const router = Router();
 
 router.route('/login').post(adminLogin);
+router.route('/verify').post(auth,verifyMe);
 router.route('/forget-password').post(forgetPassword);
 router.route('/business-data').get(getBusinessData);
 router.route('/add-product').post(upload.fields([{name: 'files', maxCount:5}, {name: 'primaryImage', maxCount: 1}]),addProduct);

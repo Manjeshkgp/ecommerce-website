@@ -24,6 +24,7 @@ const AdminLogin = () => {
     const data = await res.json();
     if(res.status===200){
         cookies.set("adminToken",data.token);
+        cookies.set("email",requiredBody.email)
         dispatch(makeAdmin());
         alert("login successful");
         navigate("/admin/dashboard",{replace:true});

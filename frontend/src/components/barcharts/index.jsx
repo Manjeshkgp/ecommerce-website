@@ -54,7 +54,7 @@ const data = [
   }
 ];
 
-export default function index({graphData}) {
+export default function index({graphData,barDataKey}) {
   return (
     <BarChart
     className="w-full"
@@ -73,7 +73,7 @@ export default function index({graphData}) {
       <YAxis />
       <Tooltip />
       <Legend />
-      <Bar dataKey="sales" fill="#7b76e0" />
+      <Bar dataKey={barDataKey} fill="#7b76e0" />
     </BarChart>
     // <BarChart
     // className="w-full"

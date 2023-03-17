@@ -35,8 +35,8 @@ const AdminSales = () => {
             <Button buttonContent="Apply" />
           </div>
         </div>
-        <BarChart graphData={graphData}/>
-        <Areachart graphData={graphData}/>
+        <BarChart graphData={graphData} barDataKey={"sales"}/>
+        <Areachart graphData={graphData} areaDataKey={"sales"}/>
       </div>
     </>
   );

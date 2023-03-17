@@ -5,9 +5,13 @@ import { AiOutlinePlus } from "react-icons/ai";
 import { GiCash } from "react-icons/gi";
 import { BsCartCheck } from "react-icons/bs";
 import { Link } from "react-router-dom";
+import Cookies from "js-cookie";
+import Barchart from "../components/barcharts";
+import Areachart from "../components/areacharts";
 
 const AdminDashboard = () => {
   const [businessData, setBusinessData] = useState({});
+  const [allOrdersArray,setAllOrdersArray] = useState([]);
   const [newPass, setNewPass] = useState({ password: "", retypePassword: "" });
   const forgetPasswordRequest = async () => {
     let newPassword;
@@ -48,8 +52,25 @@ const AdminDashboard = () => {
     const data = await res.json();
     setBusinessData(data);
   };
+  const allOrdersGraph = async() => {
+    const res = await fetch(`${process.env.REACT_APP_API_URL}/admin/all-orders-graph/`,{
+      method:"GET",
+      headers:{
+        Authorization:`Bearer ${Cookies.get("adminToken")}`
+      }
+    })
+    const data = await res.json();
+    if(res.status===200){
+      setAllOrdersArray(data);
+      // const testArrKeys = data.map(obj => Object.values(obj)[1]);
+      // const testArrValues = data.map(obj => Object.values(obj)[0]);
+      // console.log(testArrKeys);
+      // console.log(testArrValues)
+    }
+  }
   useEffect(() => {
     getBusinessData();
+    allOrdersGraph()
   }, []);
 
   return (
@@ -92,7 +113,7 @@ const AdminDashboard = () => {
                   <h2 className="title-font font-medium text-3xl text-white">
                     {businessData?.totalOrders}
                   </h2>
-                  <p className="leading-relaxed">Orders</p>
+                  <p className="leading-relaxed">Active Orders</p>
                 </div>
               </div>
               <div className="p-4 md:w-1/4 sm:w-1/2 w-full">
@@ -113,10 +134,9 @@ const AdminDashboard = () => {
             <AiOutlinePlus className="w-20 h-20 group-hover:text-green-300 text-gray-300"/>
           </Link>
         </div>
-        <div className="flex justify-around items-center flex-wrap w-full min-h-[16rem] bg-gray-900 text-gray-400">
-          <p className="text-3xl text-center underline font-medium">
-            Add Graphs Here
-          </p>
+        <div className="flex justify-around items-center flex-wrap w-full min-h-[16rem] pt-20 bg-gray-900 text-gray-400">
+          <Barchart graphData={allOrdersArray} barDataKey={"orders"}/>
+          <Areachart graphData={allOrdersArray} areaDataKey={"orders"}/>
         </div>
         <section className="text-gray-400 bg-gray-900 body-font">
           <div className="container px-5 py-24 mx-auto">

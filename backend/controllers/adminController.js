@@ -360,7 +360,7 @@ export const allOrdersGraph = async (req, res) => {
       ordersByDate[date] = 0
     }
   })
-  const arrOfOrdersObj = Object.entries(ordersByDate).map((entry)=>({date:entry[0],sales:entry[1]}));
+  const arrOfOrdersObj = Object.entries(ordersByDate).map((entry)=>({date:entry[0],orders:entry[1]}));
   arrOfOrdersObj.sort((a, b) => {
       if (a.date < b.date) {
         return -1;

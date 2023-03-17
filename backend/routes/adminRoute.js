@@ -37,7 +37,7 @@ router.route('/get-sales').get(salesGraph);
 router.route('/orders').get(getOrders);
 router.route('/order-to-sale/:_id').patch(orderToSale);
 router.route('/order-cancel/:_id').patch(orderCancel);
-router.route('/all-orders-graph/:days').get(allOrdersGraph);
-router.route('/all-orders-graph/').get(allOrdersGraph);
+router.route('/all-orders-graph/:days').get(auth,allOrdersGraph);
+router.route('/all-orders-graph/').get(auth,allOrdersGraph);
 
 export default router;

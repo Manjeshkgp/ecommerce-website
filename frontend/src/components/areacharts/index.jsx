@@ -53,7 +53,7 @@ const data = [
   }
 ];
 
-export default function Areachart({graphData}) {
+export default function Areachart({graphData,areaDataKey}) {
   return (
     <AreaChart
       width={350}
@@ -70,7 +70,7 @@ export default function Areachart({graphData}) {
       <XAxis dataKey="date" />
       <YAxis />
       <Tooltip />
-      <Area type="monotone" dataKey="sales" stroke="#8884d8" fill="#8884d8" />
+      <Area type="monotone" dataKey={areaDataKey} stroke="#8884d8" fill="#8884d8" />
     </AreaChart>
     // <AreaChart
     //   width={350}

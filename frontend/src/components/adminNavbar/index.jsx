@@ -7,7 +7,7 @@ const Navbar = () => {
   const [openNav, setOpenNav] = useState(false);
   return (
     <>
-      <div className="bg-indigo-500 z-10 w-screen h-12 flex justify-between items-center relative">
+      <div className="bg-indigo-500 fixed top-0 z-10 w-screen h-12 flex justify-between items-center">
         <Logo/>
         <Nav openNav={openNav} setOpenNav={setOpenNav}/>
         <HamButton openNav={openNav} setOpenNav={setOpenNav}/>

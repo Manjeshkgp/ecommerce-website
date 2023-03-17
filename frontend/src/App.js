@@ -45,7 +45,7 @@ function App() {
   }, []);
   return (
     <div className="overflow-x-hidden">
-      <Navbar />
+      <div className="mb-12"><Navbar /></div>
       <Outlet />
       <Footer />
     </div>

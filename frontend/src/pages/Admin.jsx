@@ -44,7 +44,7 @@ const Admin = () => {
 
   return (<>
   <div className='overflow-x-hidden'>
-  <AdminNavbar/>
+  <div className='mb-12'><AdminNavbar/></div>
   <Outlet/>
   <Footer/>
   </div>

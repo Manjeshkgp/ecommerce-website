@@ -56,6 +56,10 @@ export const getProducts = async (req, res) => {
 };
 
 export const buyProduct = async (req, res) => {
+  if(req.body.products.length===0){
+    res.status(406).json({message:"No Products Chosen"});
+    return;
+  }
   const purchaseDetails = {
     products: req.body.products,
     buyer: req.body.buyer,

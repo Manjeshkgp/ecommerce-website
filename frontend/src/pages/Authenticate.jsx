@@ -35,11 +35,11 @@ const Authenticate = () => {
       Cookies.set("email", data.user.email, { expires: 1 });
       navigate("/");
       return;
-    } else if (res.status == 410) {
+    } else if (res.status === 410) {
       return alert("Password is Incorrect");
-    } else if (res.status == 408) {
+    } else if (res.status === 408) {
       return alert("User Not Found");
-    } else if (res.status == 409) {
+    } else if (res.status === 409) {
       return alert("User already exists");
     }
   };

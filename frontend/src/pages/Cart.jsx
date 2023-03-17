@@ -9,11 +9,12 @@ import Cookies from 'js-cookie';
 
 const Cart = () => {
   const dispatch = useDispatch();
-  const cart = useSelector((state)=>state.cart).products;
+  const cart = useSelector((state)=>state.cart);
+  const products = cart.products;
   let totalPrice = 0;
 
-for (let i = 0; i < cart.length; i++) {
-  const product = cart[i];
+for (let i = 0; i < products.length; i++) {
+  const product = products[i];
   totalPrice += product.price * product.numberOfProducts;
 }
 
@@ -21,11 +22,15 @@ const productPurchased = ()=> {
   toast("Products Purchased Successfully");
 }
 const buyProduct = async() => {
+  if(products.length===0){
+    alert("Nothing In Cart, atleast add something")
+    return;
+  }
   const res = await fetch (`${process.env.REACT_APP_API_URL}/users/buy-product`,{
     method:"POST",
     body:JSON.stringify({
       buyer:Cookies.get("email"),
-      products:cart,
+      products:products,
       totalPrice:totalPrice,
     }),
     headers:{
@@ -41,7 +46,7 @@ const buyProduct = async() => {
   return (<>
   <ToastContainer/>
   <div className="flex flex-col lg:flex-row justify-evenly items-center bg-gray-900 text-gray-200 min-h-[calc(100vh-16rem)]">
-   <div className='w-80 flex justify-evenly flex-col items-center'> {cart?.map((product)=>(<SmallProductComp key={product?._id} productDetails={product}/>))}</div>
+   <div className='w-80 flex justify-evenly flex-col items-center'> {products?.map((product)=>(<SmallProductComp key={product?._id} productDetails={product}/>))}</div>
    <div className="h-80 w-80 bg-[rgba(129,141,248,0.08)] rounded-md my-4 flex-col">
     <div className="h-40 w-full flex flex-col border-b">
       <p className='text-lg mt-4 font-semibold flex justify-start items-center ml-2'><IoCheckmarkDoneCircle className='w-6 h-6 fill-green-400'/>Home Delivery</p>

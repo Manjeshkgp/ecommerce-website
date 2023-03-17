@@ -37,7 +37,7 @@ const AdminUsers = () => {
 
   return (
     <>
-      <div className="relative overflow-x-auto">
+      <div className="relative bg-gray-900 min-h-[calc(100vh-12rem)] overflow-x-auto">
         <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
             <tr>
@@ -47,13 +47,13 @@ const AdminUsers = () => {
               <th scope="col" className="px-6 py-3">
                 Email
               </th>
-              <th scope="col" className="px-6 py-3">
+              <th scope="col" className="px-6 py-3 text-center">
                 Orders
               </th>
-              <th scope="col" className="px-6 py-3">
+              <th scope="col" className="px-6 py-3 text-center">
                 Purchased
               </th>
-              <th scope="col" className="px-6 py-3">
+              <th scope="col" className="px-6 py-3 text-center">
                 Removal
               </th>
             </tr>
@@ -68,14 +68,14 @@ const AdminUsers = () => {
                   {singleUser?.name}
                 </th>
                 <td className="px-6 py-4">{singleUser?.email}</td>
-                <td className="px-6 py-4">{singleUser?.orders?.length}</td>
-                <td className="px-6 py-4">{singleUser?.purchased?.length}</td>
+                <td className="px-6 py-4 text-center">{singleUser?.orders?.length}</td>
+                <td className="px-6 py-4 text-center">{singleUser?.purchased?.length}</td>
                 <td className="px-6 py-4">
                   <FiDelete
                     onClick={() => {
                       removeUser(singleUser?._id);
                     }}
-                    className="text-gray-300 w-6 h-6 cursor-pointer hover:text-white"
+                    className="text-gray-300 w-full text-center h-6 cursor-pointer hover:text-white"
                   />
                 </td>
               </tr>

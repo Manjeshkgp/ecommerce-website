@@ -48,66 +48,67 @@ const EditProduct = () => {
   }
 
   return (
-    <div className="w-full h-full min-h-screen bg-gradient-to-bl from-transparent via-teal-400 to-transparent flex flex-col items-center"><form
-    onSubmit={(e) => {
-      e.preventDefault();
-      console.log(productData);
-      updateProduct();
-    }}
-    className="flex flex-col md:flex-row w-[96%] justify-around items-center flex-wrap bg-green-300 h-full min-h-[20rem] mt-2"
-  >
-    <div className="w-[96%] md:w-[48%] lg:w-[24%] h-40 md:h-60 lg:h-80 bg-gradient-to-bl from-blue-500 to-purple-500 rounded-md my-2 flex flex-col items-center justify-evenly cursor-pointer">
-      <input
-        type="text"
-        name="title"
-        value={productData.title}
-        onChange={(e)=>{setProductData({...productData,[e.target.name]:e.target.value})}}
-        placeholder="Title"
-        className="w-[96%] p-1 rounded focus:outline-none"
-      />
-      <input
-        type="text"
-        name="description"
-        value={productData.description}
-        onChange={(e)=>{setProductData({...productData,[e.target.name]:e.target.value})}}
-        placeholder="Description"
-        className="w-[96%] p-1 rounded focus:outline-none"
-      />
-      <input
-        type="text"
-        name="shortDescription"
-        value={productData.shortDescription}
-        onChange={(e)=>{setProductData({...productData,[e.target.name]:e.target.value})}}
-        placeholder="Short Description"
-        className="w-[96%] p-1 rounded focus:outline-none"
-      />
-    </div>
-    <div className="w-[96%] md:w-[48%] lg:w-[24%] h-80 bg-gradient-to-bl from-blue-500 to-purple-500 rounded-md my-2 flex flex-col items-center justify-evenly cursor-pointer">
-      <input
-        type="number"
-        name="price"
-        value={productData.price}
-        onChange={(e)=>{setProductData({...productData,[e.target.name]:e.target.value})}}
-        placeholder="Price e.g 10 -> $10"
-        className="w-[96%] p-1 rounded focus:outline-none"
-      />
-    </div>
-    <div className="w-[96%] md:w-[48%] lg:w-[24%] h-80 bg-gradient-to-bl from-blue-500 to-purple-500 rounded-md my-2 flex flex-col items-center justify-evenly cursor-pointer">
-      <input
-        type="text"
-        name="brand"
-        value={productData.brand}
-        onChange={(e)=>{setProductData({...productData,[e.target.name]:e.target.value})}}
-        placeholder="Laptop Brand"
-        className="w-[96%] p-1 rounded focus:outline-none"
-      />
-    </div>
-    <div className="w-[96%] md:w-[48%] lg:w-[24%] h-80 bg-gradient-to-bl from-blue-500 to-purple-500 rounded-md my-2 flex flex-col items-center justify-evenly cursor-pointer">
-      <div htmlFor="submit">
-        <Button buttonContent="Update Product"></Button>
-      </div>
-    </div>
-  </form></div>
+    <div className="w-full h-full bg-gray-900 lg:min-h-[calc(100vh-12rem)] flex justify-center items-center">
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          console.log(productData);
+          updateProduct();
+        }}
+        className="flex flex-col lg:flex-row w-[96%] justify-around items-center flex-wraph-full min-h-[20rem]"
+      >
+        <div className="w-[96%] md:w-[48%] lg:w-[24%] h-40 md:h-60 lg:h-80 bg-gradient-to-bl from-blue-500 to-purple-500 bg-opacity-30 rounded-md my-2 flex flex-col items-center justify-evenly cursor-pointer">
+          <input
+            type="text"
+            name="title"
+            value={productData.title}
+            onChange={(e)=>{setProductData({...productData,[e.target.name]:e.target.value})}}
+            placeholder="Title"
+            className="w-[96%] bg-gray-800 rounded border border-gray-700 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-900 text-base outline-none text-gray-100 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+          />
+          <input
+            type="text"
+            name="brand"
+            value={productData.brand}
+            onChange={(e)=>{setProductData({...productData,[e.target.name]:e.target.value})}}
+            placeholder="Laptop Brand"
+            className="w-[96%] bg-gray-800 rounded border border-gray-700 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-900 text-base outline-none text-gray-100 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+          />
+          <input
+            type="number"
+            name="price"
+            value={productData.price}
+            onChange={(e)=>{setProductData({...productData,[e.target.name]:e.target.value})}}
+            placeholder="Price e.g 10 -> $10"
+            className="w-[96%] bg-gray-800 rounded border border-gray-700 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-900 text-base outline-none text-gray-100 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+          />
+        </div>
+        <div className="w-[96%] md:w-[48%] lg:w-[24%] h-80 bg-gradient-to-bl from-blue-500 to-purple-500 bg-opacity-30 rounded-md my-2 flex flex-col items-center justify-evenly cursor-pointer">
+          <textarea
+            type="text"
+            name="description"
+            value={productData.description}
+            onChange={(e)=>{setProductData({...productData,[e.target.name]:e.target.value})}}
+            placeholder="Description"
+            className="w-[96%] p-1 h-[60%] rounded bg-gray-800 text-gray-100 caret-gray-200 resize-x-none focus:outline-none"
+          />
+          <textarea
+            type="text"
+            name="shortDescription"
+            value={productData.shortDescription}
+            onChange={(e)=>{setProductData({...productData,[e.target.name]:e.target.value})}}
+            placeholder="Short Description"
+            className="w-[96%] p-1 rounded h-[20%] bg-gray-800 text-gray-100 caret-gray-200 resize-none focus:outline-none"
+          />
+        </div>
+        <div className="w-[96%] md:w-[48%] lg:w-[24%] h-80 bg-gradient-to-bl from-blue-500 to-purple-500 bg-opacity-30 rounded-md my-2 flex flex-col items-center justify-evenly cursor-pointer">
+          <div htmlFor="submit">
+            <button className="flex ml-auto text-white bg-indigo-900 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded">
+              Update Now
+            </button>
+          </div>
+        </div>
+      </form></div>
   )
 }
 

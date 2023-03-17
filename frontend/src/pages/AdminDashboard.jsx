@@ -64,8 +64,8 @@ const AdminDashboard = () => {
   return (
     <>
       <div className="w-full h-full min-h-screen bg-gray-900 flex flex-col items-center">
-        <section class="text-gray-400 w-full bg-gray-900 body-font">
-          <div class="container px-5 py-24 mx-auto">
+        <section className="text-gray-400 w-full bg-gray-900 body-font">
+          <div className="container px-5 py-24 mx-auto">
             <div className="flex flex-col items-center mb-20 text-center">
               <p className="text-3xl text-gray-200 mb-4 font-medium">
                 Some Basic Data
@@ -76,72 +76,72 @@ const AdminDashboard = () => {
                 analysis and prediction
               </p>
             </div>
-            <div class="flex flex-wrap -m-4 text-center">
-              <div class="p-4 md:w-1/4 sm:w-1/2 w-full">
-                <div class="border-2 border-gray-800 px-4 py-6 rounded-lg">
+            <div className="flex flex-wrap -m-4 text-center">
+              <div className="p-4 md:w-1/4 sm:w-1/2 w-full">
+                <div className="border-2 border-gray-800 px-4 py-6 rounded-lg">
                   <FiUsers className="text-center w-full h-14 my-1 pb-1 text-indigo-400" />
-                  <h2 class="title-font font-medium text-3xl text-white">
+                  <h2 className="title-font font-medium text-3xl text-white">
                     {businessData?.totalUsers}
                   </h2>
-                  <p class="leading-relaxed">Users</p>
+                  <p className="leading-relaxed">Users</p>
                 </div>
               </div>
-              <div class="p-4 md:w-1/4 sm:w-1/2 w-full">
-                <div class="border-2 border-gray-800 px-4 py-6 rounded-lg">
+              <div className="p-4 md:w-1/4 sm:w-1/2 w-full">
+                <div className="border-2 border-gray-800 px-4 py-6 rounded-lg">
                   <SlOrganization className="text-center w-full h-14 my-1 pb-1 text-indigo-400" />
-                  <h2 class="title-font font-medium text-3xl text-white">
+                  <h2 className="title-font font-medium text-3xl text-white">
                     {businessData?.totalProducts}
                   </h2>
-                  <p class="leading-relaxed">Products</p>
+                  <p className="leading-relaxed">Products</p>
                 </div>
               </div>
-              <div class="p-4 md:w-1/4 sm:w-1/2 w-full">
-                <div class="border-2 border-gray-800 px-4 py-6 rounded-lg">
+              <div className="p-4 md:w-1/4 sm:w-1/2 w-full">
+                <div className="border-2 border-gray-800 px-4 py-6 rounded-lg">
                   <BsCartCheck className="text-center w-full h-14 my-1 pb-1 text-indigo-400" />
-                  <h2 class="title-font font-medium text-3xl text-white">
+                  <h2 className="title-font font-medium text-3xl text-white">
                     {businessData?.totalOrders}
                   </h2>
-                  <p class="leading-relaxed">Orders</p>
+                  <p className="leading-relaxed">Orders</p>
                 </div>
               </div>
-              <div class="p-4 md:w-1/4 sm:w-1/2 w-full">
-                <div class="border-2 border-gray-800 px-4 py-6 rounded-lg">
+              <div className="p-4 md:w-1/4 sm:w-1/2 w-full">
+                <div className="border-2 border-gray-800 px-4 py-6 rounded-lg">
                   <GiCash className="text-center w-full h-14 my-1 pb-1 text-indigo-400" />
-                  <h2 class="title-font font-medium text-3xl text-white">
+                  <h2 className="title-font font-medium text-3xl text-white">
                     {businessData?.totalSales}
                   </h2>
-                  <p class="leading-relaxed">Sales</p>
+                  <p className="leading-relaxed">Sales</p>
                 </div>
               </div>
             </div>
           </div>
         </section>
-        <Link to="/admin/products/add" className="w-full h-40 flex justify-center items-center">
-          <div className="w-72 group hover:scale-110 transition-all duration-300 cursor-pointer rounded-md border-2 flex flex-col items-center justify-center border-gray-800 h-40">
+        <div className="w-full h-40 flex justify-center items-center">
+          <Link to="/admin/products/add" className="w-72 group hover:scale-110 transition-all duration-300 cursor-pointer rounded-md border-2 flex flex-col items-center justify-center border-gray-800 h-40">
             <p className="text-gray-300 text-xl group-hover:text-green-300 text-center">Add Product</p>
             <AiOutlinePlus className="w-20 h-20 group-hover:text-green-300 text-gray-300"/>
-          </div>
-        </Link>
+          </Link>
+        </div>
         <div className="flex justify-around items-center flex-wrap w-full min-h-[16rem] bg-gray-900 text-gray-400">
           <p className="text-3xl text-center underline font-medium">
             Add Graphs Here
           </p>
         </div>
-        <section class="text-gray-400 bg-gray-900 body-font">
-          <div class="container px-5 py-24 mx-auto">
-            <div class="flex flex-col text-center w-full mb-12">
-              <h1 class="sm:text-3xl text-2xl font-medium title-font mb-4 text-white">
+        <section className="text-gray-400 bg-gray-900 body-font">
+          <div className="container px-5 py-24 mx-auto">
+            <div className="flex flex-col text-center w-full mb-12">
+              <h1 className="sm:text-3xl text-2xl font-medium title-font mb-4 text-white">
                 Update Your Password in a Single Click
               </h1>
-              <p class="lg:w-2/3 mx-auto leading-relaxed text-base">
+              <p className="lg:w-2/3 mx-auto leading-relaxed text-base">
                 Whatever cardigan tote bag tumblr hexagon brooklyn asymmetrical
                 gentrify, subway tile poke farm-to-table. Franzen you probably
                 haven't heard of them man bun deep.
               </p>
             </div>
-            <div class="flex lg:w-2/3 w-full sm:flex-row flex-col mx-auto px-8 sm:px-0 items-end sm:space-x-4 sm:space-y-0 space-y-4">
-              <div class="relative sm:mb-0 flex-grow w-full">
-                <label class="leading-7 text-sm text-gray-400">
+            <div className="flex lg:w-2/3 w-full sm:flex-row flex-col mx-auto px-8 sm:px-0 items-end sm:space-x-4 sm:space-y-0 space-y-4">
+              <div className="relative sm:mb-0 flex-grow w-full">
+                <label className="leading-7 text-sm text-gray-400">
                   New Password
                 </label>
                 <input
@@ -151,11 +151,11 @@ const AdminDashboard = () => {
                   onChange={(e) => {
                     setNewPass({ ...newPass, [e.target.name]: e.target.value });
                   }}
-                  class="w-full bg-gray-800 bg-opacity-40 rounded border border-gray-700 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-900 focus:bg-transparent text-base outline-none text-gray-100 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                  className="w-full bg-gray-800 bg-opacity-40 rounded border border-gray-700 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-900 focus:bg-transparent text-base outline-none text-gray-100 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                 />
               </div>
-              <div class="relative sm:mb-0 flex-grow w-full">
-                <label class="leading-7 text-sm text-gray-400">
+              <div className="relative sm:mb-0 flex-grow w-full">
+                <label className="leading-7 text-sm text-gray-400">
                   Retype Password
                 </label>
                 <input
@@ -165,14 +165,14 @@ const AdminDashboard = () => {
                   onChange={(e) => {
                     setNewPass({ ...newPass, [e.target.name]: e.target.value });
                   }}
-                  class="w-full bg-gray-800 bg-opacity-40 rounded border border-gray-700 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-900 focus:bg-transparent text-base outline-none text-gray-100 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+                  className="w-full bg-gray-800 bg-opacity-40 rounded border border-gray-700 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-900 focus:bg-transparent text-base outline-none text-gray-100 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                 />
               </div>
               <button
                 onClick={() => {
                   forgetPasswordRequest();
                 }}
-                class="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg"
+                className="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg"
               >
                 Update
               </button>

@@ -50,7 +50,7 @@ const AddProduct = () => {
           e.preventDefault();
           addProduct();
         }}
-        className="flex flex-col md:flex-row w-[96%] justify-around items-center flex-wraph-full min-h-[20rem]"
+        className="flex flex-col lg:flex-row w-[96%] justify-around items-center flex-wraph-full min-h-[20rem]"
       >
         <div className="w-[96%] md:w-[48%] lg:w-[24%] h-40 md:h-60 lg:h-80 bg-gradient-to-bl from-blue-500 to-purple-500 bg-opacity-30 rounded-md my-2 flex flex-col items-center justify-evenly cursor-pointer">
           <input

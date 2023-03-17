@@ -1,3 +1,4 @@
+import Cookies from "js-cookie";
 import React,{useEffect,useState} from "react";
 import Product from "../components/products";
 
@@ -7,7 +8,8 @@ const AdminProducts = () => {
         const res = await fetch(`${process.env.REACT_APP_API_URL}/users/get-products`,{
             metthod:"GET",
             headers:{
-                "Content-Type":"application/json"
+                "Content-Type":"application/json",
+                Authorization:`Bearer ${Cookies.get("adminToken")}`
             }
         })
         const data = await res.json();

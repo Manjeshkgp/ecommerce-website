@@ -7,7 +7,12 @@ import "react-toastify/dist/ReactToastify.css";
 const AdminOrders = () => {
   const [allOrders, setAllOrders] = useState([]);
   const fetchOrders = async () => {
-    const res = await fetch(`${process.env.REACT_APP_API_URL}/admin/orders`);
+    const res = await fetch(`${process.env.REACT_APP_API_URL}/admin/orders`,{
+      method:"GET",
+      headers:{
+        Authorization:`Bearer ${Cookies.get("adminToken")}`
+      }
+    });
     if (res.status === 200) {
       const data = await res.json();
       setAllOrders(data);

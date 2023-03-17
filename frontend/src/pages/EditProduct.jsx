@@ -1,3 +1,4 @@
+import Cookies from 'js-cookie';
 import React,{useEffect, useState} from 'react'
 import { useParams } from 'react-router-dom'
 import Button from '../components/buttons';
@@ -19,7 +20,7 @@ const EditProduct = () => {
     const res = await fetch(`${process.env.REACT_APP_API_URL}/users/get-a-product`,{
         method:"POST",
         headers:{
-            "Content-Type":"application/json"
+            "Content-Type":"application/json",
         },
         body:JSON.stringify({
             _id:id,
@@ -35,7 +36,8 @@ const EditProduct = () => {
     const res = await fetch(`${process.env.REACT_APP_API_URL}/admin/update-product/${id}`,{
         method:"PATCH",
         headers:{
-            "Content-Type":"application/json"
+            "Content-Type":"application/json",
+            Authorization:`Bearer ${Cookies.get("adminToken")}`
         },
         body:JSON.stringify(productData),
     })

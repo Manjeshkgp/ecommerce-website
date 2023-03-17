@@ -6,11 +6,11 @@ const router = Router();
 
 router.route("/create").post(registerUser);
 router.route("/login").post(loginUser);
-router.route("/get-products").get(getProducts);
-router.route("/get-a-product").post(getAProduct);
+router.route("/get-products").get(getProducts); // no auth
+router.route("/get-a-product").post(getAProduct); // no auth
 router.route("/buy-product").post(auth,buyProduct);
-router.route("/recent-products").get(recentProducts);
-router.route("/rate-a-product/:productId").post(rateAProduct);
+router.route("/recent-products").get(recentProducts); // no auth
+router.route("/rate-a-product/:productId").post(rateAProduct); // auth
 router.route("/:email").get(auth,getUserData);
 router.route("/:email/update-cart").post(auth,updateCart);
 

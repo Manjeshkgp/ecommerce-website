@@ -1,3 +1,4 @@
+import Cookies from "js-cookie";
 import React, { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import "./DeleteProduct.css";
@@ -9,7 +10,8 @@ const DeleteProduct = () => {
     const res = await fetch(`${process.env.REACT_APP_API_URL}/admin/delete-product`,{
         method:"DELETE",
         headers:{
-            "Content-Type":"application/json"
+            "Content-Type":"application/json",
+            Authorization:`Bearer ${Cookies.get("adminToken")}`
         },
         body:JSON.stringify({
             _id:id

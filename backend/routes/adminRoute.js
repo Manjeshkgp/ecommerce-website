@@ -23,24 +23,24 @@ const router = Router();
 
 router.route('/login').post(adminLogin);
 router.route('/verify').post(auth,verifyMe);
-router.route('/forget-password').post(forgetPassword);
-router.route('/business-data').get(getBusinessData);
-router.route('/add-product').post(upload.fields([{name: 'files', maxCount:5}, {name: 'primaryImage', maxCount: 1}]),addProduct);
-router.route('/delete-product').delete(deleteProduct);
-router.route('/update-product/:_id').patch(updateProduct);
+router.route('/forget-password').post(auth,forgetPassword);
+router.route('/business-data').get(auth,getBusinessData);
+router.route('/add-product').post(auth,upload.fields([{name: 'files', maxCount:5}, {name: 'primaryImage', maxCount: 1}]),addProduct);
+router.route('/delete-product').delete(auth,deleteProduct);
+router.route('/update-product/:_id').patch(auth,updateProduct);
 router.route('/get-users').get(auth,getUsers);
-router.route('/remove-user/:_id').delete(removeUser);
+router.route('/remove-user/:_id').delete(auth,removeUser);
 router.route('/get-sellers').get(getSellers);
 router.route('/remove-seller/:_id').delete(removeSeller);
-router.route('/get-sales/:days').get(salesGraph);
-router.route('/get-sales').get(salesGraph);
-router.route('/orders').get(getOrders);
-router.route('/order-to-sale/:_id').patch(orderToSale);
-router.route('/order-cancel/:_id').patch(orderCancel);
+router.route('/get-sales/:days').get(auth,salesGraph);
+router.route('/get-sales').get(auth,salesGraph);
+router.route('/orders').get(auth,getOrders);
+router.route('/order-to-sale/:_id').patch(auth,orderToSale);
+router.route('/order-cancel/:_id').patch(auth,orderCancel);
 router.route('/all-orders-graph/:days').get(auth,allOrdersGraph);
 router.route('/all-orders-graph/').get(auth,allOrdersGraph);
-router.route('/total-revenue').get(getTotalRevenue);
-router.route('/total-revenue/:date1/:date2').get(totalRevenueAccordingToDate);
+router.route('/total-revenue').get(auth,getTotalRevenue);
+router.route('/total-revenue/:date1/:date2').get(auth,totalRevenueAccordingToDate);
 router.route('/revenue-by-month/:year').get(getRevenueByMonth); // under construction for later
 
 export default router;

@@ -2,12 +2,18 @@ import React, { useEffect, useState } from "react";
 import BarChart from "../components/barcharts";
 import Areachart from "../components/areacharts";
 import Button from "../components/buttons";
+import Cookies from "js-cookie";
 
 const AdminSales = () => {
   const [days, setDays] = useState(7);
   const [graphData, setGraphData] = useState([]);
   const graphRequest = async () => {
-    const res = await fetch(`${process.env.REACT_APP_API_URL}/admin/get-sales/${days}`);
+    const res = await fetch(`${process.env.REACT_APP_API_URL}/admin/get-sales/${days}`,{
+      method:"GET",
+      headers:{
+        Authorization:`Bearer ${Cookies.get("adminToken")}`
+      }
+    });
     const result = await res.json();
     if(res.status===200){
       setGraphData(result);

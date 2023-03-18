@@ -60,15 +60,15 @@ const router = createBrowserRouter([
         path: "/products/:id",
         element: <SingleProduct />,
       },
+      {
+        path: "/authenticate",
+        element: <Authenticate />,
+      },
     ],
   },
   {
     path: "/auth-with-google/:jwtToken",
     element: <GoogleJwt />,
-  },
-  {
-    path: "/authenticate",
-    element: <Authenticate />,
   },
   {
     path: "/admin-login",

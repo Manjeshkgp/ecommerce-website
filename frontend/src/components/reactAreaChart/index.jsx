@@ -25,16 +25,17 @@ ChartJS.register(
 
 export default function index({labels,dataNumberArr}) {
 const options = {
-  responsive: true,
+  maintainAspectRatio:false,
   plugins: {
     legend: {
       position: 'top',
     },
     title: {
       display: true,
-      text: 'Chart.js Line Chart',
+      text: 'Total Orders in last 7 days Chart.js Line Chart',
     },
   },
+  tension:0.4, // by default it is 0 for straight line chart, by increasing the number the graph starts curving in a mathematical cubic manner
 };
 
 // const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
@@ -51,5 +52,5 @@ const data = {
     },
   ],
 };
-  return <Line className='w-full h-full' options={options} data={data} />;
+  return <Line options={options} data={data} />;
 }

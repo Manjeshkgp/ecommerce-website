@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { BiCartAdd } from "react-icons/bi";
 import { AiFillEye } from "react-icons/ai";
-import { useSelector } from "react-redux";
 import ProductData from "./ProductData";
 import { useNavigate } from "react-router-dom";
-import Button from "../buttons";
-import { useDispatch } from "react-redux";
+import { useDispatch,useSelector } from "react-redux";
 import { increment } from "../../slices/cartSlice";
 import {BiEdit} from "react-icons/bi";
 import {MdDeleteOutline} from "react-icons/md";
@@ -16,6 +14,7 @@ const Products = ({ productDetails, setAlert }) => {
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
   const admin = user.admin;
+  const isAuthenticated = user.authenticated;
   function averageRating(ratings) {
     let totalRating = 0;
     let average;
@@ -38,10 +37,11 @@ const Products = ({ productDetails, setAlert }) => {
             <>
               <div
                 onClick={() => {
+                  if(isAuthenticated){
                   dispatch(
                     increment({ ...productDetails, numberOfProducts: 1 })
                   );
-                  setAlert(true);
+                  setAlert(true);}else{navigate("/authenticate",{replace:true})}
                 }}
                 className="absolute top-2 right-2"
               >

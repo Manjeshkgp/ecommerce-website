@@ -13,6 +13,7 @@ import ReactAreaChart from "../components/reactAreaChart";
 const AdminDashboard = () => {
   const [businessData, setBusinessData] = useState({});
   const [allOrdersArray,setAllOrdersArray] = useState([]);
+  const [weekRevenue,setWeekRevenue] = useState(0);
   const [newPass, setNewPass] = useState({ password: "", retypePassword: "" });
   const forgetPasswordRequest = async () => {
     let newPassword;
@@ -28,6 +29,7 @@ const AdminDashboard = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization:`Bearer ${Cookies.get("adminToken")}`
         },
         body: JSON.stringify({
           newPassword: newPassword,
@@ -70,9 +72,27 @@ const AdminDashboard = () => {
       // console.log(testArrValues)
     }
   }
+  const oneWeekRevenue = async () => {
+    const presentDate = new Date();
+    const sevenDaysAgo = new Date();sevenDaysAgo.setDate(presentDate.getDate()-7);sevenDaysAgo.setHours(0,0,0,0)
+    const date2 = sevenDaysAgo.toISOString();
+    const date1 = presentDate.toISOString();
+    console.log(date1,date2)
+    const res = await fetch(`${process.env.REACT_APP_API_URL}/admin/total-revenue/${date1}/${date2}`,{
+      method:"GET",
+      headers:{
+        Authorization:`Bearer ${Cookies.get("adminToken")}`
+      }
+    })
+    const data = await res.json();
+    if(res.status===200){
+      setWeekRevenue(data.totalRevenue);
+    }
+  }
   useEffect(() => {
     getBusinessData();
-    allOrdersGraph()
+    oneWeekRevenue();
+    allOrdersGraph();
   }, []);
 
   return (
@@ -82,7 +102,7 @@ const AdminDashboard = () => {
           <div className="container px-5 py-24 mx-auto">
             <div className="flex flex-col items-center mb-20 text-center">
               <p className="text-3xl text-gray-200 mb-4 font-medium">
-                Some Basic Data
+                This Week Revenue: ${weekRevenue}
               </p>
               <p className="w-2/3 text-lg">
                 See the data of your users, products, handle orders
@@ -136,10 +156,10 @@ const AdminDashboard = () => {
             <AiOutlinePlus className="w-20 h-20 group-hover:text-green-300 text-gray-300"/>
           </Link>
         </div>
-        <div className="flex justify-around items-center flex-wrap w-full min-h-[16rem] pt-20 bg-gray-900 text-gray-400">
+        <div className="flex justify-around items-center flex-wrap w-full min-h-[16rem] h-full pt-20 bg-gray-900 text-gray-400">
           <Barchart graphData={allOrdersArray} barDataKey={"orders"}/>
           {/* <Areachart graphData={allOrdersArray} areaDataKey={"orders"}/> */}
-          <div className="w-[30rem] h-[10rem] flex justify-center items-center"><ReactAreaChart labels={allOrdersArray?.map((order)=>(order?.date))} dataNumberArr={allOrdersArray?.map((order)=>(order?.orders))}/></div>
+          <div className="w-[20rem] h-[16rem] md:h-[24rem] md:w-[30rem] flex justify-center items-center"><ReactAreaChart labels={allOrdersArray?.map((order)=>(order?.date))} dataNumberArr={allOrdersArray?.map((order)=>(order?.orders))}/></div>
         </div>
         <section className="text-gray-400 bg-gray-900 body-font">
           <div className="container px-5 py-24 mx-auto">
@@ -161,7 +181,7 @@ const AdminDashboard = () => {
                 <input
                   type="text"
                   name="password"
-                  value={newPass.password}
+                  value={newPass?.password}
                   onChange={(e) => {
                     setNewPass({ ...newPass, [e.target.name]: e.target.value });
                   }}
@@ -175,7 +195,7 @@ const AdminDashboard = () => {
                 <input
                   type="text"
                   name="retypePassword"
-                  value={newPass.retypePassword}
+                  value={newPass?.retypePassword}
                   onChange={(e) => {
                     setNewPass({ ...newPass, [e.target.name]: e.target.value });
                   }}

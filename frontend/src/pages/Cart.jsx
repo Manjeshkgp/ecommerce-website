@@ -6,10 +6,14 @@ import { removeAllandUpdate } from '../slices/cartSlice';
 import {ToastContainer,toast} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Cookies from 'js-cookie';
+import { useNavigate } from 'react-router-dom';
 
 const Cart = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const cart = useSelector((state)=>state.cart);
+  const user = useSelector((state)=>state.user);
+  const isAuthenticated = user.authenticated;
   const products = cart.products;
   let totalPrice = 0;
 
@@ -58,7 +62,7 @@ const buyProduct = async() => {
       </div>
     </div>
     <div className="h-40 w-full flex flex-col items-center">
-    <button onClick={()=>{buyProduct()}} className="flex mt-2 text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded">Buy Now</button>
+    <button onClick={()=>{isAuthenticated? buyProduct():navigate("/authenticate",{replace:true})}} className="flex mt-2 text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded">Buy Now</button>
     <p className="text-center text-sm mt-2">Lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur, distinctio.</p>
     </div>
    </div>

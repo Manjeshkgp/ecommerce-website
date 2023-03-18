@@ -4,9 +4,16 @@ import Button from '../components/buttons';
 import Products from '../components/products';
 import PopularCategories from '../components/categories/PopularCategories';
 import BlogSection from '../components/blogHero/BlogSection';
+import {ToastContainer,toast} from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Home = () => {
   const [recent,setRecent] = useState([]);
+  const [alert,setAlert] = useState(false);
+  if(alert===true){
+    toast("Product Added to Cart");
+    setAlert(false);
+  }
   const fetchRecent = async () => {
     const res = await fetch(`${process.env.REACT_APP_API_URL}/users/recent-products`);
     const data = await res.json();
@@ -14,10 +21,11 @@ const Home = () => {
   }
   useEffect(()=>{fetchRecent()},[])
   return (<>
+  <ToastContainer/>
   <Welcome/>
     <p className="text-lg text-gray-200 font-bold bg-gray-900 text-center py-2 underline underline-offset-8">Recently Launched Products</p>
   <div className="bg-gray-900 grid grid-cols-1 md:grid-cols-2 md:px-3 lg:grid-cols-4 justify-items-center content-evenly">
-    {recent?.map((singleProduct)=>(<Products key={singleProduct?._id} productDetails={singleProduct}/>))}
+    {recent?.map((singleProduct)=>(<Products key={singleProduct?._id} productDetails={singleProduct} setAlert={setAlert}/>))}
   </div>
   <PopularCategories/>
   <BlogSection/>

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { addProduct, adminLogin,allOrdersGraph,deleteProduct,forgetPassword,getBusinessData, getOrders, getRevenueByMonth, getSellers, getTotalRevenue, getUsers, orderCancel, orderToSale, removeSeller, removeUser, salesGraph, totalRevenueAccordingToDate, updateProduct, verifyMe } from "../controllers/adminController.js";
+import { addProduct, adminLogin,allOrdersGraph,deleteProduct,forgetPassword,getBusinessData, getOrders, getRevenueByMonth, getSellers, getTotalRevenue, getUsers, mostSellingProductsAccordingToDate, orderCancel, orderToSale, removeSeller, removeUser, salesGraph, totalRevenueAccordingToDate, updateProduct, verifyMe } from "../controllers/adminController.js";
 import multer from "multer";
 import { randomUUID } from "crypto";
 import auth from "../middlewares/auth.js";
@@ -39,8 +39,9 @@ router.route('/order-to-sale/:_id').patch(auth,orderToSale);
 router.route('/order-cancel/:_id').patch(auth,orderCancel);
 router.route('/all-orders-graph/:days').get(auth,allOrdersGraph);
 router.route('/all-orders-graph/').get(auth,allOrdersGraph);
-router.route('/total-revenue').get(auth,getTotalRevenue);
+router.route('/total-revenue').get(auth,getTotalRevenue);  // created but not in use
 router.route('/total-revenue/:date1/:date2').get(auth,totalRevenueAccordingToDate);
 router.route('/revenue-by-month/:year').get(getRevenueByMonth); // under construction for later
+router.route('/most-selling-products/:date1/:date2').get(auth,mostSellingProductsAccordingToDate);
 
 export default router;

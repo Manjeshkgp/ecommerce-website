@@ -9,10 +9,12 @@ import Cookies from "js-cookie";
 import Barchart from "../components/barcharts";
 import Areachart from "../components/areacharts";
 import ReactAreaChart from "../components/reactAreaChart";
+import ReactPieChart from "../components/reactPieChart";
 
 const AdminDashboard = () => {
   const [businessData, setBusinessData] = useState({});
   const [allOrdersArray,setAllOrdersArray] = useState([]);
+  const [weekMostSold,setWeekMostSold] = useState([]);
   const [weekRevenue,setWeekRevenue] = useState(0);
   const [newPass, setNewPass] = useState({ password: "", retypePassword: "" });
   const forgetPasswordRequest = async () => {
@@ -71,13 +73,12 @@ const AdminDashboard = () => {
       // console.log(testArrKeys);
       // console.log(testArrValues)
     }
-  }
+  };
   const oneWeekRevenue = async () => {
     const presentDate = new Date();
     const sevenDaysAgo = new Date();sevenDaysAgo.setDate(presentDate.getDate()-7);sevenDaysAgo.setHours(0,0,0,0)
     const date2 = sevenDaysAgo.toISOString();
     const date1 = presentDate.toISOString();
-    console.log(date1,date2)
     const res = await fetch(`${process.env.REACT_APP_API_URL}/admin/total-revenue/${date1}/${date2}`,{
       method:"GET",
       headers:{
@@ -88,11 +89,28 @@ const AdminDashboard = () => {
     if(res.status===200){
       setWeekRevenue(data.totalRevenue);
     }
-  }
+  };
+  const fetchThisWeekMostSelling = async () => {
+    const presentDate = new Date();
+    const sevenDaysAgo = new Date();sevenDaysAgo.setDate(presentDate.getDate()-7);sevenDaysAgo.setHours(0,0,0,0)
+    const date2 = sevenDaysAgo.toISOString(); //Change Date to get data according to different date range
+    const date1 = presentDate.toISOString();  //Change Date to get data according to different date range
+    const res = await fetch(`${process.env.REACT_APP_API_URL}/admin/most-selling-products/${date1}/${date2}`,{
+      method:"GET",
+      headers:{
+        Authorization:`Bearer ${Cookies.get("adminToken")}`
+      }
+    })
+    const data = await res.json();
+    if(res.status===200){
+      setWeekMostSold(data);
+    }
+  } 
   useEffect(() => {
     getBusinessData();
     oneWeekRevenue();
     allOrdersGraph();
+    fetchThisWeekMostSelling();
   }, []);
 
   return (
@@ -158,8 +176,8 @@ const AdminDashboard = () => {
         </div>
         <div className="flex justify-around items-center flex-wrap w-full min-h-[16rem] h-full pt-20 bg-gray-900 text-gray-400">
           <Barchart graphData={allOrdersArray} barDataKey={"orders"}/>
-          {/* <Areachart graphData={allOrdersArray} areaDataKey={"orders"}/> */}
           <div className="w-[20rem] h-[16rem] md:h-[24rem] md:w-[30rem] flex justify-center items-center"><ReactAreaChart labels={allOrdersArray?.map((order)=>(order?.date))} dataNumberArr={allOrdersArray?.map((order)=>(order?.orders))}/></div>
+          <div className="w-full mt-8 h-[28rem] md:h-[30rem] md:w-full flex justify-center items-center"><ReactPieChart labels={weekMostSold?.map((sale)=>(sale?._id))} dataNumberArr={weekMostSold?.map((sale)=>(sale?.soldQuantity))}/></div>
         </div>
         <section className="text-gray-400 bg-gray-900 body-font">
           <div className="container px-5 py-24 mx-auto">

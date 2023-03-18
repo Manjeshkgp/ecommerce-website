@@ -485,3 +485,47 @@ export const getRevenueByMonth = async(req,res)=> { // This is Under Constructio
   console.log(result)
   return;
 }
+
+export const mostSellingProductsAccordingToDate = async(req,res) => {
+  const { date1, date2 } = req.params;
+  let Date1 = new Date(date1);
+  let Date2 = new Date(date2);
+  let startDate;
+  let endDate;
+  if (Date1 > Date2) {
+    startDate = Date2;
+    endDate = Date1;
+  } else {
+    startDate = Date1;
+    endDate = Date2;
+  }
+  salesSchema.aggregate([
+    { $match: { saleDate: { $gte: startDate, $lte:endDate } } },
+    { $unwind: "$products" },
+    { $group: {
+        _id: "$products.title",
+        soldQuantity: { $sum: "$products.numberOfProducts" }
+      }
+    }
+  ])
+  .then(result => {
+    // Sort products by soldQuantity in descending order
+  const sortedProducts = result.sort((a, b) => b.soldQuantity - a.soldQuantity);
+
+  // Create a new array with the first 5 products
+  const top5Products = sortedProducts.slice(0, 5);
+
+  // Calculate the total sold quantity for other products
+  const otherProductsSoldQuantity = sortedProducts.slice(5).reduce((acc, cur) => acc + cur.soldQuantity, 0);
+
+  // Create a new object for other products
+  const otherProducts = { _id: 'otherProducts', soldQuantity: otherProductsSoldQuantity };
+
+  // Return an array with the top 5 products and the other products object
+  res.status(200).json([...top5Products,otherProducts])
+  })
+  .catch(error => {
+    console.error(error);
+    res.status(444).json({error:error})
+  });
+}

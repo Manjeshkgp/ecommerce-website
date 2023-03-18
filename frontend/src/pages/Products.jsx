@@ -1,37 +1,100 @@
-import React, { useEffect, useState } from 'react';
-import SmallFilter from '../components/filter/SmallFilter';
+import React, { useEffect, useState } from "react";
+import SmallFilter from "../components/filter/SmallFilter";
 import Product from "../components/products/";
-import {ToastContainer,toast} from "react-toastify";
-import "react-toastify/dist/ReactToastify.css"
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Button from "../components/buttons";
 
 const Products = () => {
-  const [allProducts,setAllProducts] = useState([]);
-  const [alert,setAlert] = useState(false);
-  const getProducts = async() => {
-    const res = await fetch(`${process.env.REACT_APP_API_URL}/users/get-products`);
+  const [allProducts, setAllProducts] = useState([]);
+  const [alert, setAlert] = useState(false);
+  const [totalPages, setTotalPages] = useState(1);
+  const [presentPage, setPresentPage] = useState(1);
+  const getProducts = async () => {
+    const res = await fetch(
+      `${process.env.REACT_APP_API_URL}/users/get-products?page=${presentPage}`
+    );
     const data = await res.json();
     setAllProducts(data.allProducts);
-  }
-  useEffect(()=>{getProducts()},[]);
+    setTotalPages(data.totalPages);
+  };
+  useEffect(() => {
+    getProducts();
+  }, [presentPage]);
   const addedToCart = () => {
-    toast("Product added to Cart")
-  }
-  if(alert){
+    toast("Product added to Cart");
+  };
+  if (alert) {
     addedToCart();
     setAlert(false);
   }
-  return (<>
-  <ToastContainer/>
-  {/* <SmallFilter allProducts={allProducts} setAllProducts={setAllProducts}/> */}
-  <div className="flex bg-gray-900">
-  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 w-full ml-4 mb-4">
-    {allProducts.map((singleProduct)=>(
-    <div key={singleProduct?._id}>
-      <Product productDetails={singleProduct} setAlert={setAlert}/>
-    </div>))}
-  </div>
-  </div>
-  </>)
-}
+  return (
+    <>
+      <ToastContainer />
+      {/* <SmallFilter allProducts={allProducts} setAllProducts={setAllProducts}/> */}
+      <div className="flex flex-col items-center w-full bg-gray-900">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 w-full ml-5 mb-4">
+          {allProducts.map((singleProduct) => (
+            <div key={singleProduct?._id}>
+              <Product productDetails={singleProduct} setAlert={setAlert} />
+            </div>
+          ))}
+        </div>
+        <div className="flex justify-evenly items-center h-12 w-60">
+          {presentPage !== 1 ? (
+            <>
+              {presentPage - 1 === 1 ? (
+                ""
+              ) : (
+                <div onClick={() => setPresentPage(1)}>
+                  <Button buttonContent={1} />
+                </div>
+              )}
+              <div onClick={() => setPresentPage(presentPage - 1)}>
+                <Button buttonContent={presentPage - 1} />
+              </div>
+              {presentPage===totalPages?<div onClick={()=>setPresentPage(presentPage-1)}><Button buttonContent={"Previous"}/></div>:""}
+              <div className="bg-indigo-500 p-1 rounded">
+                <Button buttonContent={presentPage} />
+              </div>
+              {presentPage === totalPages ? (
+                ""
+              ) : (
+                <>
+                  <div onClick={() => setPresentPage(presentPage + 1)}>
+                    <Button buttonContent="Next" />
+                  </div>
+                  <div onClick={() => setPresentPage(totalPages)}>
+                    <Button buttonContent={totalPages} />
+                  </div>
+                </>
+              )}
+            </>
+          ) : (
+            <>
+              {totalPages === presentPage ? (
+                <div className="bg-indigo-500 p-1 rounded">
+                  <Button buttonContent={presentPage} />
+                </div>
+              ) : (
+                <>
+                  <div className="bg-indigo-500 p-1 rounded">
+                    <Button buttonContent={presentPage} />
+                  </div>
+                  <div onClick={() => setPresentPage(presentPage + 1)}>
+                    <Button buttonContent="Next" />
+                  </div>
+                  <div onClick={() => setPresentPage(totalPages)}>
+                    <Button buttonContent={totalPages} />
+                  </div>
+                </>
+              )}
+            </>
+          )}
+        </div>
+      </div>
+    </>
+  );
+};
 
-export default Products
+export default Products;

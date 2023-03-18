@@ -5,7 +5,7 @@ import productSchema from "../models/productSchema.js";
 import orderSchema from "../models/orderSchema.js";
 
 export const registerUser = async (req, res) => {
-  const userExist = await userSchema.findOne({ email: req.body.email });
+  const userExist = await userSchema.findOne({ email: req.body.email.toLowerCase() });
   if (userExist) {
     res.status(409).json({
       message: "User already exists",
@@ -17,7 +17,7 @@ export const registerUser = async (req, res) => {
   const hashedPassword = bcrypt.hashSync(req.body.password, salt);
   const requiredData = {
     name: req.body.name,
-    email: req.body.email,
+    email: req.body.email.toLowerCase(),
     password: hashedPassword,
   };
   try {
@@ -34,7 +34,7 @@ export const registerUser = async (req, res) => {
 };
 
 export const loginUser = async (req, res) => {
-  const user = await userSchema.findOne({ email: req.body.email });
+  const user = await userSchema.findOne({ email: req.body.email.toLowerCase() });
   if (!user) {
     res.status(408).json({ message: "User Not Found" });
     return;
@@ -69,7 +69,7 @@ export const buyProduct = async (req, res) => {
   try {
     const addOrder = new orderSchema(purchaseDetails);
     const OrderSave =await addOrder.save();
-    await userSchema.findOneAndUpdate({email:req.body.buyer},{$addToSet:{orders:OrderSave}})
+    await userSchema.findOneAndUpdate({email:req.body.buyer.toLowerCase()},{$addToSet:{orders:OrderSave}})
     res.status(200).json({ message: "Product Purchased Successfully" });
   } catch (error) {
     console.log(error);
@@ -95,7 +95,7 @@ export const rateAProduct = async (req, res) => {
   }
   productSchema.findByIdAndUpdate(
     req.params.productId,
-    { $addToSet: { rating: { email: req.body.email, rate: req.body.rate } } },
+    { $addToSet: { rating: { email: req.body.email.toLowerCase(), rate: req.body.rate } } },
     (err) => {
       if (err) {
         console.log(err);
@@ -108,7 +108,7 @@ export const rateAProduct = async (req, res) => {
 };
 
 export const getUserData = async(req,res) => {
-  const email = req.params.email;
+  const email = req.params.email.toLowerCase();
   userSchema.findOne({email:email},(err,user)=>{
     if(err){
       console.log(err);
@@ -123,7 +123,7 @@ export const getUserData = async(req,res) => {
 }
 
 export const updateCart = async(req,res) => {
-  const email = req.params.email;
+  const email = req.params.email.toLowerCase();
   const cart = req.body.cart;
   userSchema.findOneAndUpdate({email:email},{$set:{"cart":cart}},(err,user)=>{
     if(err){

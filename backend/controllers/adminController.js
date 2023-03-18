@@ -9,7 +9,7 @@ import salesSchema from "../models/salesSchema.js";
 import mongoose from "mongoose";
 
 export const adminLogin = async (req, res) => {
-  const email = req.body.email;
+  const email = req.body.email.toLowerCase();
   const password = req.body.password;
   const admin = await adminSchema.findOne({ email: email });
   if (admin === null || !admin) {
@@ -34,7 +34,7 @@ export const adminLogin = async (req, res) => {
 };
 
 export const verifyMe = async (req, res) => {
-  adminSchema.findOne({ email: req.body.email }, (err, admin) => {
+  adminSchema.findOne({ email: req.body.email.toLowerCase() }, (err, admin) => {
     if (err) {
       console.log(err);
       res.status(430).json({ message: "Some Error Occurred" });
@@ -293,7 +293,7 @@ export const orderToSale = async (req, res) => {
   try {
     let saveNewSale = await newSale.save();
     await userSchema.findOneAndUpdate(
-      { email: order.buyer },
+      { email: order.buyer.toLowerCase() },
       {
         $pull: { orders: { _id: mongoose.Types.ObjectId(order._id) } },
         $addToSet: { purchased: saveNewSale },
@@ -313,7 +313,7 @@ export const orderCancel = async (req, res) => {
   try {
     await orderSchema.findByIdAndDelete(_id);
     await userSchema.findOneAndUpdate(
-      { email: order.buyer },
+      { email: order.buyer.toLowerCase() },
       {
         $pull: { orders: { _id: mongoose.Types.ObjectId(order._id) } },
       }

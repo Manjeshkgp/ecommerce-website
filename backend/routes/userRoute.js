@@ -10,7 +10,7 @@ router.route("/get-products").get(getProducts); // no auth
 router.route("/get-a-product").post(getAProduct); // no auth
 router.route("/buy-product").post(auth,buyProduct);
 router.route("/recent-products").get(recentProducts); // no auth
-router.route("/rate-a-product/:productId").post(rateAProduct); // auth
+router.route("/rate-a-product/:productId").post(auth,rateAProduct);
 router.route("/:email").get(auth,getUserData);
 router.route("/:email/update-cart").post(auth,updateCart);
 

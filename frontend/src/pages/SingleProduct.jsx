@@ -14,15 +14,10 @@ import {
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Cookies from "js-cookie";
-import { AiTwotoneStar } from "react-icons/ai";
+import { AiTwotoneStar, AiOutlineStar } from "react-icons/ai";
+import Button from "../components/buttons";
 
 const SingleProduct = () => {
-  const addedToCart = () => {
-    toast("Product added to Cart");
-  };
-  const productPurchased = () => {
-    toast("Product Purchased, You'll get a Call or email soon");
-  };
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { id } = useParams();
@@ -30,8 +25,25 @@ const SingleProduct = () => {
   const [imgArray, setImgArray] = useState([]);
   const [productData, setProductData] = useState({});
   const [averageRate, setAverageRate] = useState(0);
+  const [userRating, setUserRating] = useState(0);
+  const [alreadyRated, setAlreadyRated] = useState(false);
   const user = useSelector((state) => state.user);
   const isAuthenticated = user.authenticated;
+  const addedToCart = () => {
+    toast("Product added to Cart");
+  };
+  const productPurchased = () => {
+    toast("Product Purchased, You'll get a Call or email soon");
+  };
+  const rateSetting = () => {
+    setAlreadyRated(
+      productData?.rating?.some((obj) => obj?.email === Cookies.get("email"))
+    );
+    setUserRating(
+      productData?.rating?.find((obj) => obj?.email === Cookies.get("email"))
+        ?.rate
+    );
+  };
   const getProduct = async () => {
     const res = await fetch(
       `${process.env.REACT_APP_API_URL}/users/get-a-product`,
@@ -50,10 +62,6 @@ const SingleProduct = () => {
     setImgArray([data?.primaryImage, ...data?.images]);
     setProductData(data);
   };
-  useEffect(() => {
-    getProduct();
-  }, []);
-
   const buyProduct = async () => {
     const res = await fetch(
       `${process.env.REACT_APP_API_URL}/users/buy-product`,
@@ -78,7 +86,7 @@ const SingleProduct = () => {
       alert("Login First Then Purchase");
     }
   };
-  function averageRating(ratings) {
+  const averageRating = (ratings) => {
     let totalRating = 0;
     let average;
     if (ratings?.length === 0) {
@@ -92,9 +100,37 @@ const SingleProduct = () => {
     average = totalRating / ratings?.length;
     setAverageRate(average);
     return;
-  }
+  };
+  const rateThatProduct = async () => {
+    const res = await fetch(
+      `${process.env.REACT_APP_API_URL}/users/rate-a-product/${id}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${Cookies.get("jwt")}`,
+        },
+        body: JSON.stringify({
+          email: Cookies.get("email"),
+          rate: userRating,
+        }),
+      }
+    );
+    await res.json();
+    if (res.status === 200) {
+      getProduct();
+    } else if (res.status === 405) {
+      alert("Some Error Occured");
+    }
+  };
+  useEffect(() => {
+    getProduct();
+  }, []);
   useEffect(() => {
     averageRating(productData?.rating);
+  }, [productData]);
+  useEffect(() => {
+    rateSetting();
   }, [productData]);
 
   return (
@@ -187,6 +223,60 @@ const SingleProduct = () => {
             </div>
           </div>
         </div>
+      </section>
+      <section className="w-full pb-10 flex flex-col items-center bg-gray-900 body-font text-gray-400 overflow-hidden">
+        {alreadyRated ? (
+          <>
+            <p className="text-xl text-gray-300 font-medium underline underline-offset-4 my-2">
+              Your Rating to this Product
+            </p>
+            <div className="flex mb-2">
+              {[...Array(5)]?.map((star, i) => (
+                <span className="cursor-pointer" key={i}>
+                  {i + 1 <= userRating ? (
+                    <AiTwotoneStar className="text-yellow-400 w-7 h-7" />
+                  ) : (
+                    <AiOutlineStar className="w-7 h-7" />
+                  )}
+                </span>
+              ))}
+            </div>
+          </>
+        ) : (
+          <>
+            <p className="text-xl text-gray-300 font-medium underline underline-offset-4 my-2">
+              Give Rating To this Product
+            </p>
+            <div className="flex mb-2">
+              {[...Array(5)]?.map((star, i) => (
+                <span
+                  className="cursor-pointer"
+                  onClick={() => {
+                    setUserRating(i + 1);
+                  }}
+                  key={i}
+                >
+                  {i + 1 <= userRating ? (
+                    <AiTwotoneStar className="text-yellow-400 w-7 h-7" />
+                  ) : (
+                    <AiOutlineStar className="w-7 h-7" />
+                  )}
+                </span>
+              ))}
+            </div>
+            <div className="mb-2">
+              <div
+                onClick={() => {
+                  if (userRating !== 0) {
+                    rateThatProduct();
+                  }
+                }}
+              >
+                <Button buttonContent="Submit Rating"></Button>
+              </div>
+            </div>
+          </>
+        )}
       </section>
     </>
   );

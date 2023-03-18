@@ -2,12 +2,15 @@ import Cookies from "js-cookie";
 import React, { useState, useEffect } from "react";
 import { FcCancel, FcApproval } from "react-icons/fc";
 import { ToastContainer, toast } from "react-toastify";
+import Button from "../components/buttons";
 import "react-toastify/dist/ReactToastify.css";
 
 const AdminOrders = () => {
   const [allOrders, setAllOrders] = useState([]);
+  const [totalPages, setTotalPages] = useState(1);
+  const [presentPage, setPresentPage] = useState(1);
   const fetchOrders = async () => {
-    const res = await fetch(`${process.env.REACT_APP_API_URL}/admin/orders`,{
+    const res = await fetch(`${process.env.REACT_APP_API_URL}/admin/orders?page=${presentPage}`,{
       method:"GET",
       headers:{
         Authorization:`Bearer ${Cookies.get("adminToken")}`
@@ -15,12 +18,13 @@ const AdminOrders = () => {
     });
     if (res.status === 200) {
       const data = await res.json();
-      setAllOrders(data);
+      setAllOrders(data.orders);
+      setTotalPages(data.totalPages);
     }
   };
   useEffect(() => {
     fetchOrders();
-  }, []);
+  }, [presentPage]);
 
   const cancelOrder = async (_id) => {
     const res = await fetch(
@@ -65,7 +69,7 @@ const AdminOrders = () => {
   return (
     <>
       <ToastContainer />
-      <div className="relative bg-gray-900 min-h-[calc(100vh-16rem)] overflow-x-auto">
+      <div className="relative flex flex-col items-center bg-gray-900 min-h-[calc(100vh-16rem)] overflow-x-auto">
         <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
             <tr>
@@ -152,6 +156,58 @@ const AdminOrders = () => {
             ))}
           </tbody>
         </table>
+        <div className="flex justify-evenly mt-4 items-center h-12 w-60">
+          {presentPage !== 1 ? (
+            <>
+              {presentPage - 1 === 1 ? (
+                ""
+              ) : (
+                <div onClick={() => setPresentPage(1)}>
+                  <Button buttonContent={1} />
+                </div>
+              )}
+              <div onClick={() => setPresentPage(presentPage - 1)}>
+                <Button buttonContent={presentPage - 1} />
+              </div>
+              {presentPage===totalPages?<div onClick={()=>setPresentPage(presentPage-1)}><Button buttonContent={"Previous"}/></div>:""}
+              <div className="bg-indigo-500 p-1 rounded">
+                <Button buttonContent={presentPage} />
+              </div>
+              {presentPage === totalPages ? (
+                ""
+              ) : (
+                <>
+                  <div onClick={() => setPresentPage(presentPage + 1)}>
+                    <Button buttonContent="Next" />
+                  </div>
+                  <div onClick={() => setPresentPage(totalPages)}>
+                    <Button buttonContent={totalPages} />
+                  </div>
+                </>
+              )}
+            </>
+          ) : (
+            <>
+              {totalPages === presentPage ? (
+                <div className="bg-indigo-500 p-1 rounded">
+                  <Button buttonContent={presentPage} />
+                </div>
+              ) : (
+                <>
+                  <div className="bg-indigo-500 p-1 rounded">
+                    <Button buttonContent={presentPage} />
+                  </div>
+                  <div onClick={() => setPresentPage(presentPage + 1)}>
+                    <Button buttonContent="Next" />
+                  </div>
+                  <div onClick={() => setPresentPage(totalPages)}>
+                    <Button buttonContent={totalPages} />
+                  </div>
+                </>
+              )}
+            </>
+          )}
+        </div>
       </div>
     </>
   );

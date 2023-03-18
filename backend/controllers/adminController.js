@@ -173,8 +173,16 @@ export const updateProduct = async (req, res) => {
 };
 
 export const getUsers = async (req, res) => {
-  const allUsers = await userSchema.find();
-  res.status(200).json(allUsers);
+  let page = Number(req.query.page) || 1;
+  if(page<1){
+    page=1
+  }
+  const limit = 20;
+  const skip = (page-1)*limit;
+  const totalDocs = await userSchema.countDocuments();
+  const totalPages = Math.ceil(totalDocs/limit);
+  const allUsers = await userSchema.find().skip(skip).limit(limit);
+  res.status(200).json({allUsers,totalPages});
 };
 
 export const removeUser = async (req, res) => {
@@ -273,8 +281,16 @@ export const salesGraph = async (req, res) => {
 };
 
 export const getOrders = async (req, res) => {
-  const orders = await orderSchema.find();
-  res.status(200).json(orders);
+  let page = Number(req.query.page) || 1;
+  if(page<1){
+    page=1
+  }
+  const limit = 20;
+  const skip = (page-1)*limit;
+  const totalDocs = await orderSchema.countDocuments();
+  const totalPages = Math.ceil(totalDocs/limit);
+  const orders = await orderSchema.find().skip(skip).limit(limit);
+  res.status(200).json({orders,totalPages});
 };
 
 export const orderToSale = async (req, res) => {

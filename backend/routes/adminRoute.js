@@ -28,13 +28,13 @@ router.route('/business-data').get(auth,getBusinessData);
 router.route('/add-product').post(auth,upload.fields([{name: 'files', maxCount:5}, {name: 'primaryImage', maxCount: 1}]),addProduct);
 router.route('/delete-product').delete(auth,deleteProduct);
 router.route('/update-product/:_id').patch(auth,updateProduct);
-router.route('/get-users').get(auth,getUsers);
+router.route('/get-users').get(auth,getUsers); // pagination
 router.route('/remove-user/:_id').delete(auth,removeUser);
-router.route('/get-sellers').get(getSellers);
-router.route('/remove-seller/:_id').delete(removeSeller);
+router.route('/get-sellers').get(getSellers); // should be removed
+router.route('/remove-seller/:_id').delete(removeSeller); // should be removed
 router.route('/get-sales/:days').get(auth,salesGraph);
 router.route('/get-sales').get(auth,salesGraph);
-router.route('/orders').get(auth,getOrders);
+router.route('/orders').get(auth,getOrders); // pagination
 router.route('/order-to-sale/:_id').patch(auth,orderToSale);
 router.route('/order-cancel/:_id').patch(auth,orderCancel);
 router.route('/all-orders-graph/:days').get(auth,allOrdersGraph);

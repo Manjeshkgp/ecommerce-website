@@ -280,7 +280,7 @@ export const salesGraph = async (req, res) => {
   res.status(200).json(arrOfSalesObj);
 };
 
-export const getOrders = async (req, res) => {
+export const getOrders = async (req, res) => { // Orders are sorted by date:-1 to get latest orders first
   let page = Number(req.query.page) || 1;
   if(page<1){
     page=1
@@ -289,8 +289,14 @@ export const getOrders = async (req, res) => {
   const skip = (page-1)*limit;
   const totalDocs = await orderSchema.countDocuments();
   const totalPages = Math.ceil(totalDocs/limit);
-  const orders = await orderSchema.find().skip(skip).limit(limit);
-  res.status(200).json({orders,totalPages});
+  orderSchema.find().sort({date:-1}).skip(skip).limit(limit).exec((err, orders) => {
+    if (err) {
+      console.error(err);
+      res.status(403).json({message:"Some error occured"})
+    } else {
+      res.status(200).json({orders,totalPages});
+    }
+  });
 };
 
 export const orderToSale = async (req, res) => {

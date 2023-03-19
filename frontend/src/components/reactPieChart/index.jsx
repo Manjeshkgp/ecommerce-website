@@ -4,7 +4,19 @@ import { Pie } from "react-chartjs-2";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-export default function Index({labels,dataNumberArr}) {
+export default function Index({labels,dataNumberArr,titleText}) {
+  const options = {
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: "top",
+      },
+      title: {
+        display: true,
+        text: titleText,
+      },
+    },
+  };
   const data = {
     // labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
     labels:labels,
@@ -32,6 +44,7 @@ export default function Index({labels,dataNumberArr}) {
         borderWidth: 1,
       },
     ],
+    
   };
-  return (<><Pie data={data} /></>);
+  return (<><Pie data={data} options={options} /></>);
 }

@@ -176,7 +176,7 @@ const AdminDashboard = () => {
         <div className="flex justify-around items-center flex-wrap w-full min-h-[16rem] h-full pt-20 bg-gray-900 text-gray-400">
           <div className="w-[20rem] h-[16rem] md:h-[24rem] md:w-[30rem] flex justify-center items-center"><ReactAreaChart labels={allOrdersArray?.map((order)=>(order?.date))} dataNumberArr={allOrdersArray?.map((order)=>(order?.orders))} titleText={"All Orders in the last 7 days"} label={"Orders"}/></div>
           <div className="w-[20rem] h-[16rem] md:h-[24rem] md:w-[30rem] flex justify-center items-center"><ReactBarChart labels={allOrdersArray?.map((order)=>(order?.date))} dataNumberArr={allOrdersArray?.map((order)=>(order?.orders))} titleText={"All Orders in the last 7 days"} label={"Orders"}/></div>
-          <div className="w-full mt-8 h-[28rem] md:h-[30rem] md:w-full flex justify-center items-center"><ReactPieChart labels={weekMostSold?.map((sale)=>(sale?._id))} dataNumberArr={weekMostSold?.map((sale)=>(sale?.soldQuantity))}/></div>
+          <div className="w-full mt-12 h-[28rem] md:h-[30rem] md:w-full flex justify-center items-center"><ReactPieChart labels={weekMostSold?.map((sale)=>(sale?._id))} dataNumberArr={weekMostSold?.map((sale)=>(sale?.soldQuantity))} titleText={"Most Selling Products of the Week"}/></div>
         </div>
         <section className="text-gray-400 bg-gray-900 body-font">
           <div className="container px-5 py-24 mx-auto">

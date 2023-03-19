@@ -1,11 +1,12 @@
 import Navbar from "./components/navbar";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import Footer from "./components/footer";
 import { useDispatch,useSelector } from "react-redux";
 import { addUser } from "./slices/userSlice";
 import { setCart } from "./slices/cartSlice";
 import Cookies from "js-cookie";
 import { useEffect } from "react";
+import { AnimatePresence } from "framer-motion"
 
 function App() {
   const user = useSelector((state)=>state.user)
@@ -43,12 +44,15 @@ function App() {
   useEffect(() => {
     checkUser();
   }, []);
+  const location = useLocation();
   return (
+    <AnimatePresence>
     <div className="overflow-x-hidden">
       <div className="mb-12"><Navbar /></div>
       <Outlet />
       <Footer />
     </div>
+    </AnimatePresence>
   );
 }
 

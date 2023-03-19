@@ -26,6 +26,8 @@ const AdminLogin = () => {
         cookies.set("adminToken",data.token);
         cookies.set("email",requiredBody.email)
         dispatch(makeAdmin());
+        setEmail("");
+        setPassword("");
         alert("login successful");
         navigate("/admin/dashboard",{replace:true});
     }else{
@@ -39,7 +41,6 @@ const AdminLogin = () => {
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            console.log(email,password)
             loginFunction();
           }}
           className="w-80 h-96 bg-[rgba(216,225,224,0.12)] backdrop-blur-md rounded-md border border-[rgb(216,255,250)] flex flex-col justify-evenly items-center"

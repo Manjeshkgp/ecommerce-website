@@ -16,6 +16,7 @@ import "react-toastify/dist/ReactToastify.css";
 import Cookies from "js-cookie";
 import { AiTwotoneStar, AiOutlineStar } from "react-icons/ai";
 import Button from "../components/buttons";
+import { motion } from "framer-motion";
 
 const SingleProduct = () => {
   const dispatch = useDispatch();
@@ -134,7 +135,7 @@ const SingleProduct = () => {
   }, [productData]);
 
   return (
-    <>
+    <motion.div initial={{width:0}} animate={{width:"100%"}} exit={{x:"100%",transition:{duration:0.1}}}>
       <ToastContainer />
       <section className="text-gray-400 bg-gray-900 body-font overflow-hidden">
         <div className="container px-5 py-24 mx-auto">
@@ -278,7 +279,7 @@ const SingleProduct = () => {
           </>
         )}
       </section>
-    </>
+    </motion.div>
   );
 };
 

@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 import { addUser } from "../slices/userSlice";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 
 const Authenticate = () => {
   const navigate = useNavigate();
@@ -48,7 +49,7 @@ const Authenticate = () => {
   };
   return (
     <>
-      <div className="flex relative flex-row justify-center items-center bg-gray-900 min-h-screen min-w-[100vw]">
+      <motion.div  initial={{width:0}} animate={{width:"100%"}} exit={{x:"100%",transition:{duration:0.1}}} className="flex relative flex-row justify-center items-center bg-gray-900 min-h-screen">
         <div className="absolute top-4 flex justify-center gap-4 items-center w-screen h-12">
           {!login ? (
             <div onClick={() => setLogin(true)}>
@@ -89,7 +90,7 @@ const Authenticate = () => {
             cookies and some other technologies to improve this website
           </p>
         </form>
-      </div>
+      </motion.div>
     </>
   );
 };

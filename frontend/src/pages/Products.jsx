@@ -4,6 +4,7 @@ import Product from "../components/products/";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Button from "../components/buttons";
+import { motion } from "framer-motion";
 
 const Products = () => {
   const [allProducts, setAllProducts] = useState([]);
@@ -29,7 +30,9 @@ const Products = () => {
     setAlert(false);
   }
   return (
-    <>
+    <motion.div 
+    initial={{width:0}} animate={{width:"100%"}} exit={{x:"100%",transition:{duration:0.1}}}
+    >
       <ToastContainer />
       {/* <SmallFilter allProducts={allProducts} setAllProducts={setAllProducts}/> */}
       <div className="flex flex-col items-center w-full bg-gray-900">
@@ -93,7 +96,7 @@ const Products = () => {
           )}
         </div>
       </div>
-    </>
+    </motion.div>
   );
 };
 

@@ -1,7 +1,8 @@
 import React from 'react'
+import {motion} from "framer-motion"
 
 const About = () => {
-  return (<section className="text-gray-400 bg-gray-900 body-font">
+  return (<motion.section initial={{width:0}} animate={{width:"100%"}} exit={{x:"100%",transition:{duration:0.1}}} className="text-gray-400 bg-gray-900 body-font">
   <div className="container px-5 py-24 mx-auto">
     <div className="flex flex-col text-center w-full mb-20">
       <h1 className="text-2xl font-medium title-font mb-4 text-white tracking-widest">OUR TEAM</h1>
@@ -118,7 +119,7 @@ const About = () => {
       </div>
     </div>
   </div>
-</section>)
+</motion.section>)
 }
 
 export default About

@@ -7,6 +7,7 @@ import {ToastContainer,toast} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 const Cart = () => {
   const navigate = useNavigate();
@@ -47,7 +48,7 @@ const buyProduct = async() => {
   if(res.status===401){alert("Login First Then Purchase")};
 }
 
-  return (<>
+  return (<motion.div initial={{width:0}} animate={{width:"100%"}} exit={{x:"100%",transition:{duration:0.1}}}>
   <ToastContainer/>
   <div className="flex flex-col lg:flex-row justify-evenly items-center bg-gray-900 text-gray-200 min-h-[calc(100vh-16rem)]">
    <div className='w-80 flex justify-evenly flex-col items-center'> {products?.map((product)=>(<SmallProductComp key={product?._id} productDetails={product}/>))}</div>
@@ -67,7 +68,7 @@ const buyProduct = async() => {
     </div>
    </div>
   </div>
-  </>)
+  </motion.div>)
 }
 
 export default Cart

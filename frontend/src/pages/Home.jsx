@@ -6,6 +6,7 @@ import PopularCategories from '../components/categories/PopularCategories';
 import BlogSection from '../components/blogHero/BlogSection';
 import {ToastContainer,toast} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { motion } from 'framer-motion';
 
 const Home = () => {
   const [recent,setRecent] = useState([]);
@@ -20,7 +21,9 @@ const Home = () => {
     setRecent(data);
   }
   useEffect(()=>{fetchRecent()},[])
-  return (<>
+  return (<motion.div 
+    initial={{width:0}} animate={{width:"100%"}} exit={{x:"100%",transition:{duration:0.1}}}
+  >
   <ToastContainer/>
   <Welcome/>
     <p className="text-lg text-gray-200 font-bold bg-gray-900 text-center py-2 underline underline-offset-8">Recently Launched Products</p>
@@ -40,7 +43,7 @@ const Home = () => {
     </div>
     </div>
     </div>
-  </>)
+  </motion.div>)
 }
 
 export default Home

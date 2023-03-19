@@ -6,11 +6,10 @@ import { GiCash } from "react-icons/gi";
 import { BsCartCheck } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import Cookies from "js-cookie";
-import Barchart from "../components/barcharts";
-import Areachart from "../components/areacharts";
 import ReactAreaChart from "../components/reactAreaChart";
 import ReactPieChart from "../components/reactPieChart";
-
+import ReactBarChart from "../components/reactBarChart";
+ 
 const AdminDashboard = () => {
   const [businessData, setBusinessData] = useState({});
   const [allOrdersArray,setAllOrdersArray] = useState([]);
@@ -175,8 +174,8 @@ const AdminDashboard = () => {
           </Link>
         </div>
         <div className="flex justify-around items-center flex-wrap w-full min-h-[16rem] h-full pt-20 bg-gray-900 text-gray-400">
-          <Barchart graphData={allOrdersArray} barDataKey={"orders"}/>
-          <div className="w-[20rem] h-[16rem] md:h-[24rem] md:w-[30rem] flex justify-center items-center"><ReactAreaChart labels={allOrdersArray?.map((order)=>(order?.date))} dataNumberArr={allOrdersArray?.map((order)=>(order?.orders))}/></div>
+          <div className="w-[20rem] h-[16rem] md:h-[24rem] md:w-[30rem] flex justify-center items-center"><ReactAreaChart labels={allOrdersArray?.map((order)=>(order?.date))} dataNumberArr={allOrdersArray?.map((order)=>(order?.orders))} titleText={"All Orders in the last 7 days"} label={"Orders"}/></div>
+          <div className="w-[20rem] h-[16rem] md:h-[24rem] md:w-[30rem] flex justify-center items-center"><ReactBarChart labels={allOrdersArray?.map((order)=>(order?.date))} dataNumberArr={allOrdersArray?.map((order)=>(order?.orders))} titleText={"All Orders in the last 7 days"} label={"Orders"}/></div>
           <div className="w-full mt-8 h-[28rem] md:h-[30rem] md:w-full flex justify-center items-center"><ReactPieChart labels={weekMostSold?.map((sale)=>(sale?._id))} dataNumberArr={weekMostSold?.map((sale)=>(sale?.soldQuantity))}/></div>
         </div>
         <section className="text-gray-400 bg-gray-900 body-font">

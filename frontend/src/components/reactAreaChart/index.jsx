@@ -23,7 +23,7 @@ ChartJS.register(
   Legend
 );
 
-export default function index({labels,dataNumberArr}) {
+export default function index({labels,dataNumberArr,label,titleText}) {
 const options = {
   maintainAspectRatio:false,
   plugins: {
@@ -32,7 +32,7 @@ const options = {
     },
     title: {
       display: true,
-      text: 'Total Orders in last 7 days Chart.js Line Chart',
+      text: titleText,
     },
   },
   tension:0.4, // by default it is 0 for straight line chart, by increasing the number the graph starts curving in a mathematical cubic manner
@@ -45,7 +45,7 @@ const data = {
   datasets: [
     {
       fill: true,
-      label: 'Orders',
+      label: label,
       data: dataNumberArr,
       borderColor: 'rgb(53, 162, 235)',
       backgroundColor: 'rgba(53, 162, 235, 0.5)',

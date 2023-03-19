@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import BarChart from "../components/barcharts";
-import Areachart from "../components/areacharts";
 import Button from "../components/buttons";
 import Cookies from "js-cookie";
+import ReactAreaChart from "../components/reactAreaChart";
+import ReactBarChart from "../components/reactBarChart"
 
 const AdminSales = () => {
   const [days, setDays] = useState(7);
@@ -17,6 +17,7 @@ const AdminSales = () => {
     const result = await res.json();
     if(res.status===200){
       setGraphData(result);
+      console.log(result)
     }
   }
   useEffect(()=>{graphRequest()},[])
@@ -41,8 +42,8 @@ const AdminSales = () => {
             <Button buttonContent="Apply" />
           </div>
         </div>
-        <BarChart graphData={graphData} barDataKey={"sales"}/>
-        <Areachart graphData={graphData} areaDataKey={"sales"}/>
+        <div className="w-[20rem] h-[16rem] md:h-[24rem] md:w-[30rem] flex justify-center items-center"><ReactAreaChart labels={graphData?.map((sale)=>(sale?.date))} dataNumberArr={graphData?.map((sale)=>(sale?.sales))} titleText={`Sales in the last ${days} days`} label={"Sales"}/></div>
+          <div className="w-[20rem] h-[16rem] md:h-[24rem] md:w-[30rem] flex justify-center items-center"><ReactBarChart labels={graphData?.map((sale)=>(sale?.date))} dataNumberArr={graphData?.map((sale)=>(sale?.sales))} titleText={`Sales in the last ${days} days`} label={"Sales"}/></div>
       </div>
     </>
   );

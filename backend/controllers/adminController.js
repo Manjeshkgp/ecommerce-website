@@ -473,7 +473,7 @@ export const totalRevenueAccordingToDate = async (req, res) => {
         res.status(449).json({ message: "Some Error Occured" });
       } else {
         console.log(result);
-        res.status(200).json({ totalRevenue: result[0].totalRevenue });
+        res.status(200).json({ totalRevenue: result[0]?.totalRevenue || 0 });
       }
     });
 };

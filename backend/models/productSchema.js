@@ -10,6 +10,7 @@ const productSchema = new Schema(
     brand: String,
     images: Array,
     primaryImage: String,
+    imagesPublicIds:Array,
     sellerId: { type: String, required: true },
   },
   {

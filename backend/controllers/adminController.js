@@ -7,6 +7,13 @@ import jwt from "jsonwebtoken";
 import orderSchema from "../models/orderSchema.js";
 import salesSchema from "../models/salesSchema.js";
 import mongoose from "mongoose";
+import { v2 as cloudinary } from "cloudinary";
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
 
 export const adminLogin = async (req, res) => {
   const email = req.body.email.toLowerCase();
@@ -95,17 +102,30 @@ export const getBusinessData = async (req, res) => {
 
 export const addProduct = async (req, res) => {
   const files = await req.files;
-  let images;
-  let primaryImage;
+  let images=[];
+  let primaryImage="";
+  let imagesPublicIds=[];
   if (files === null || files === undefined) {
     images = [];
     primaryImage = "";
   }
   if (files?.files !== undefined && files?.files !== null) {
-    images = files?.files?.map((file) => file.path);
+    images = await Promise.all(files.files.map(async (file) => {
+      const result = await cloudinary.uploader.upload(file.path);
+      fs.unlink(file.path,(err)=>{
+        if(err) throw err;
+      });
+      imagesPublicIds.push(result.public_id);
+      return result.url;
+    }));
   }
   if (files?.primaryImage !== undefined && files?.primaryImage !== null) {
-    primaryImage = files?.primaryImage[0]?.path;
+    const primaryImageFile = await cloudinary.uploader.upload(files.primaryImage[0].path);
+    fs.unlink(files.primaryImage[0].path,(err)=>{
+      if(err) throw err;
+    });
+    primaryImage = primaryImageFile.url;
+    imagesPublicIds.push(primaryImageFile.public_id);
   }
   const product = {
     title: req.body.title,
@@ -116,9 +136,9 @@ export const addProduct = async (req, res) => {
     price: req.body.price,
     images: images,
     primaryImage: primaryImage,
+    imagesPublicIds:imagesPublicIds,
     sellerId: "Admin",
   };
-
   try {
     const newProduct = new productSchema(product);
     const saveProduct = await newProduct.save();
@@ -135,18 +155,19 @@ export const deleteProduct = async (req, res) => {
   const _id = req.body._id;
   const theProduct = await productSchema.findById(_id);
   if (theProduct === null || theProduct === undefined) {
-    res.status(350).json({ message: "Product Already Unavailable" });
+    res.status(350).json({ message: "Product Unavailable" });
     return;
   }
-  var allImages = [...theProduct?.images];
-  var primaryImage = theProduct?.primaryImage;
-  allImages.push(primaryImage);
-  allImages.forEach((image) => {
-    // Not used Array.from due to some Symbol.Iterable problems
-    fs.unlink(String(image), (err) => {
-      console.log(err);
-    });
-  });
+  const imagesPublicIds = theProduct.imagesPublicIds;
+  imagesPublicIds.forEach(async(public_id)=>{
+  await cloudinary.uploader.destroy(public_id,(error, result)=>{
+    if (error) {
+      console.error('Error deleting image:', error);
+    } else {
+      console.log('Image deleted successfully:', result);
+    }
+  })
+  })
   productSchema.findByIdAndDelete(_id, (err, deletedDoc) => {
     if (err) {
       // Handle the error
@@ -174,15 +195,15 @@ export const updateProduct = async (req, res) => {
 
 export const getUsers = async (req, res) => {
   let page = Number(req.query.page) || 1;
-  if(page<1){
-    page=1
+  if (page < 1) {
+    page = 1;
   }
   const limit = 20;
-  const skip = (page-1)*limit;
+  const skip = (page - 1) * limit;
   const totalDocs = await userSchema.countDocuments();
-  const totalPages = Math.ceil(totalDocs/limit);
+  const totalPages = Math.ceil(totalDocs / limit);
   const allUsers = await userSchema.find().skip(skip).limit(limit);
-  res.status(200).json({allUsers,totalPages});
+  res.status(200).json({ allUsers, totalPages });
 };
 
 export const removeUser = async (req, res) => {
@@ -280,23 +301,29 @@ export const salesGraph = async (req, res) => {
   res.status(200).json(arrOfSalesObj);
 };
 
-export const getOrders = async (req, res) => { // Orders are sorted by date:-1 to get latest orders first
+export const getOrders = async (req, res) => {
+  // Orders are sorted by date:-1 to get latest orders first
   let page = Number(req.query.page) || 1;
-  if(page<1){
-    page=1
+  if (page < 1) {
+    page = 1;
   }
   const limit = 20;
-  const skip = (page-1)*limit;
+  const skip = (page - 1) * limit;
   const totalDocs = await orderSchema.countDocuments();
-  const totalPages = Math.ceil(totalDocs/limit);
-  orderSchema.find().sort({date:-1}).skip(skip).limit(limit).exec((err, orders) => {
-    if (err) {
-      console.error(err);
-      res.status(403).json({message:"Some error occured"})
-    } else {
-      res.status(200).json({orders,totalPages});
-    }
-  });
+  const totalPages = Math.ceil(totalDocs / limit);
+  orderSchema
+    .find()
+    .sort({ date: -1 })
+    .skip(skip)
+    .limit(limit)
+    .exec((err, orders) => {
+      if (err) {
+        console.error(err);
+        res.status(403).json({ message: "Some error occured" });
+      } else {
+        res.status(200).json({ orders, totalPages });
+      }
+    });
 };
 
 export const orderToSale = async (req, res) => {
@@ -478,8 +505,9 @@ export const totalRevenueAccordingToDate = async (req, res) => {
     });
 };
 
-export const getRevenueByMonth = async(req,res)=> { // This is Under Construction for later
-  const {year} = req.params; 
+export const getRevenueByMonth = async (req, res) => {
+  // This is Under Construction for later
+  const { year } = req.params;
   const startDate = new Date(year, 0, 1); // start of the year
   const endDate = new Date(year, 11, 31); // end of the year
 
@@ -492,23 +520,23 @@ export const getRevenueByMonth = async(req,res)=> { // This is Under Constructio
     {
       $group: {
         _id: {
-          year: { $year: '$saleDate' },
-          month: { $month: '$saleDate' },
+          year: { $year: "$saleDate" },
+          month: { $month: "$saleDate" },
         },
-        totalRevenue: { $sum: '$totalPrice' },
+        totalRevenue: { $sum: "$totalPrice" },
       },
     },
     {
       $sort: {
-        '_id.month': 1,
+        "_id.month": 1,
       },
     },
   ]);
-  console.log(result)
+  console.log(result);
   return;
-}
+};
 
-export const mostSellingProductsAccordingToDate = async(req,res) => {
+export const mostSellingProductsAccordingToDate = async (req, res) => {
   const { date1, date2 } = req.params;
   let Date1 = new Date(date1);
   let Date2 = new Date(date2);
@@ -521,33 +549,42 @@ export const mostSellingProductsAccordingToDate = async(req,res) => {
     startDate = Date1;
     endDate = Date2;
   }
-  salesSchema.aggregate([
-    { $match: { saleDate: { $gte: startDate, $lte:endDate } } },
-    { $unwind: "$products" },
-    { $group: {
-        _id: "$products.title",
-        soldQuantity: { $sum: "$products.numberOfProducts" }
-      }
-    }
-  ])
-  .then(result => {
-    // Sort products by soldQuantity in descending order
-  const sortedProducts = result.sort((a, b) => b.soldQuantity - a.soldQuantity);
+  salesSchema
+    .aggregate([
+      { $match: { saleDate: { $gte: startDate, $lte: endDate } } },
+      { $unwind: "$products" },
+      {
+        $group: {
+          _id: "$products.title",
+          soldQuantity: { $sum: "$products.numberOfProducts" },
+        },
+      },
+    ])
+    .then((result) => {
+      // Sort products by soldQuantity in descending order
+      const sortedProducts = result.sort(
+        (a, b) => b.soldQuantity - a.soldQuantity
+      );
 
-  // Create a new array with the first 5 products
-  const top5Products = sortedProducts.slice(0, 5);
+      // Create a new array with the first 5 products
+      const top5Products = sortedProducts.slice(0, 5);
 
-  // Calculate the total sold quantity for other products
-  const otherProductsSoldQuantity = sortedProducts.slice(5).reduce((acc, cur) => acc + cur.soldQuantity, 0);
+      // Calculate the total sold quantity for other products
+      const otherProductsSoldQuantity = sortedProducts
+        .slice(5)
+        .reduce((acc, cur) => acc + cur.soldQuantity, 0);
 
-  // Create a new object for other products
-  const otherProducts = { _id: 'otherProducts', soldQuantity: otherProductsSoldQuantity };
+      // Create a new object for other products
+      const otherProducts = {
+        _id: "otherProducts",
+        soldQuantity: otherProductsSoldQuantity,
+      };
 
-  // Return an array with the top 5 products and the other products object
-  res.status(200).json([...top5Products,otherProducts])
-  })
-  .catch(error => {
-    console.error(error);
-    res.status(444).json({error:error})
-  });
-}
+      // Return an array with the top 5 products and the other products object
+      res.status(200).json([...top5Products, otherProducts]);
+    })
+    .catch((error) => {
+      console.error(error);
+      res.status(444).json({ error: error });
+    });
+};

@@ -14,7 +14,7 @@ const storage = multer.diskStorage({
       const ext = file.originalname.split('.').pop();
       cb(null, `${file.fieldname}-${randomUUID()}-${Date.now()}.${ext}`);
     }
-  });
+    });
   
   // Create a Multer instance with the disk storage
   const upload = multer({ storage });

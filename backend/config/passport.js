@@ -19,7 +19,7 @@ export const GoogleAuth = passport.use(
       console.log(profile.displayName)
       userSchema.findOne({
         email: profile.emails[0].value
-      },function(err,user){
+      }).lean().exec(function(err,user){
         if (err) {
           return cb(err, false);
         }

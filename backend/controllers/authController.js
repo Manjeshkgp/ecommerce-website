@@ -6,7 +6,7 @@ dotenv.config();
 export const authenticateGoogle = passport.authenticate("google", { scope: ["profile","email"] });
 
 export const authenticateGoogleResult = async (req, res) => {
-  const jwt_payload = req.user.toJSON();
+  const jwt_payload = JSON.parse(JSON.stringify(req.user));
   const token = jwt.sign(jwt_payload,process.env.JWT_SECRET,{expiresIn:"24h"});
   // res.status(200).json({user:jwt_payload,token:token});
   res.redirect(process.env.FRONTEND_URL+"/auth-with-google/"+token)

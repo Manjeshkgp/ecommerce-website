@@ -87,7 +87,7 @@ const Products = ({ productDetails, setAlert }) => {
           )}
           <img
             className="w-full rounded-t h-52 object-cover"
-            src={`${process.env.REACT_APP_API_URL}/${productDetails?.primaryImage}`}
+            src={`${productDetails?.primaryImage}`}
             onError={(e) =>
               (e.currentTarget.src =
                 "https://images.unsplash.com/photo-1531297484001-80022131f5a1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2620&q=80")

@@ -143,7 +143,7 @@ const SingleProduct = () => {
             <img
               alt="ecommerce"
               className="lg:w-1/2 w-full lg:h-auto lg:max-h-screen h-64 object-cover object-center rounded"
-              src={`${process.env.REACT_APP_API_URL}/${mainImg}`}
+              src={`${mainImg}`}
             />
             <div className="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
               <h2 className="text-sm title-font text-gray-500 tracking-widest">
@@ -181,7 +181,7 @@ const SingleProduct = () => {
               <div className="flex gap-4 mt-6 items-center pb-5 border-b-2 border-gray-800 mb-5">
                 {imgArray.map((singleImg, index) => (
                   <img
-                    src={`${process.env.REACT_APP_API_URL}/${singleImg}`}
+                    src={`${singleImg}`}
                     onClick={() => {
                       setMainImg(singleImg);
                     }}

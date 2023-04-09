@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { incrementByOne,decrementByOne,decrement } from "../../slices/cartSlice";
+import { incrementByOne,decrementByOne } from "../../slices/cartSlice";
 
 const SmallProductComp = ({ productDetails }) => {
   const dispatch = useDispatch();
@@ -14,7 +14,7 @@ const SmallProductComp = ({ productDetails }) => {
             onClick={() => {
               navigate(`/products/${productDetails?._id}`);
             }}
-            src={`${process.env.REACT_APP_API_URL}/${productDetails?.primaryImage}`}
+            src={`${productDetails?.primaryImage}`}
             alt="product pic"
             className="h-20 w-20 object-cover rounded"
           />

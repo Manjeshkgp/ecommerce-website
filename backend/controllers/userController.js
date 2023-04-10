@@ -5,7 +5,9 @@ import productSchema from "../models/productSchema.js";
 import orderSchema from "../models/orderSchema.js";
 
 export const registerUser = async (req, res) => {
-  const userExist = await userSchema.findOne({ email: req.body.email.toLowerCase() });
+  const userExist = await userSchema.findOne({
+    email: req.body.email.toLowerCase(),
+  });
   if (userExist) {
     res.status(409).json({
       message: "User already exists",
@@ -34,7 +36,9 @@ export const registerUser = async (req, res) => {
 };
 
 export const loginUser = async (req, res) => {
-  const user = await userSchema.findOne({ email: req.body.email.toLowerCase() });
+  const user = await userSchema.findOne({
+    email: req.body.email.toLowerCase(),
+  });
   if (!user) {
     res.status(408).json({ message: "User Not Found" });
     return;
@@ -52,20 +56,30 @@ export const loginUser = async (req, res) => {
 
 export const getProducts = async (req, res) => {
   let page = Number(req.query.page) || 1;
-  if(page<1){
-    page=1
+  let sort = Number(req.query.sort) || 0;
+  let allProducts;
+  if (page < 1) {
+    page = 1;
   }
   const limit = 20;
-  const skip = (page-1)*limit;
+  const skip = (page - 1) * limit;
   const totalDocs = await productSchema.countDocuments();
-  const totalPages = Math.ceil(totalDocs/limit);
-  const allProducts = await productSchema.find().skip(skip).limit(limit);
+  const totalPages = Math.ceil(totalDocs / limit);
+  if (sort === 0) {
+    allProducts = await productSchema.find().skip(skip).limit(limit);
+  } else {
+    allProducts = await productSchema
+      .find()
+      .sort({ price: sort })
+      .skip(skip)
+      .limit(limit);
+  }
   res.status(200).json({ allProducts, totalPages });
 };
 
 export const buyProduct = async (req, res) => {
-  if(req.body.products.length===0){
-    res.status(406).json({message:"No Products Chosen"});
+  if (req.body.products.length === 0) {
+    res.status(406).json({ message: "No Products Chosen" });
     return;
   }
   const purchaseDetails = {
@@ -76,8 +90,11 @@ export const buyProduct = async (req, res) => {
   };
   try {
     const addOrder = new orderSchema(purchaseDetails);
-    const OrderSave =await addOrder.save();
-    await userSchema.findOneAndUpdate({email:req.body.buyer.toLowerCase()},{$addToSet:{orders:OrderSave}})
+    const OrderSave = await addOrder.save();
+    await userSchema.findOneAndUpdate(
+      { email: req.body.buyer.toLowerCase() },
+      { $addToSet: { orders: OrderSave } }
+    );
     res.status(200).json({ message: "Product Purchased Successfully" });
   } catch (error) {
     console.log(error);
@@ -97,51 +114,57 @@ export const recentProducts = async (req, res) => {
 };
 
 export const rateAProduct = async (req, res) => {
-  if(req.body.rate>5 || req.body.rate<1){
-    res.status(432).json({message:"Rating must be between 1 to 5"});
+  if (req.body.rate > 5 || req.body.rate < 1) {
+    res.status(432).json({ message: "Rating must be between 1 to 5" });
     return;
   }
   productSchema.findByIdAndUpdate(
     req.params.productId,
-    { $addToSet: { rating: { email: req.body.email.toLowerCase(), rate: req.body.rate } } },
+    {
+      $addToSet: {
+        rating: { email: req.body.email.toLowerCase(), rate: req.body.rate },
+      },
+    },
     (err) => {
       if (err) {
         console.log(err);
-        res.status(405).json({message:"Some Error Occured"});
+        res.status(405).json({ message: "Some Error Occured" });
       } else {
-        res.status(200).json({message:"Rating Added Successfully"})
+        res.status(200).json({ message: "Rating Added Successfully" });
       }
     }
   );
 };
 
-export const getUserData = async(req,res) => {
+export const getUserData = async (req, res) => {
   const email = req.params.email.toLowerCase();
-  userSchema.findOne({email:email},(err,user)=>{
-    if(err){
+  userSchema.findOne({ email: email }, (err, user) => {
+    if (err) {
       console.log(err);
-      res.status(440).json({message:"Some Error Occured"})
-    }
-    else if(!user){
-      res.status(441).json({message:"User Not Found"})
-    }else{
+      res.status(440).json({ message: "Some Error Occured" });
+    } else if (!user) {
+      res.status(441).json({ message: "User Not Found" });
+    } else {
       res.status(200).json(user);
     }
   });
-}
+};
 
-export const updateCart = async(req,res) => {
+export const updateCart = async (req, res) => {
   const email = req.params.email.toLowerCase();
   const cart = req.body.cart;
-  userSchema.findOneAndUpdate({email:email},{$set:{"cart":cart}},(err,user)=>{
-    if(err){
-      console.log(err)
-      res.status(444).json({message:"Error"})
+  userSchema.findOneAndUpdate(
+    { email: email },
+    { $set: { cart: cart } },
+    (err, user) => {
+      if (err) {
+        console.log(err);
+        res.status(444).json({ message: "Error" });
+      } else if (!user) {
+        res.status(445).json({ message: "User Not Found" });
+      } else {
+        res.status(200).json({ message: "Cart Updated" });
+      }
     }
-    else if(!user){
-      res.status(445).json({message:"User Not Found"})
-    }else{
-      res.status(200).json({message:"Cart Updated"})
-    }
-  })
-}
+  );
+};

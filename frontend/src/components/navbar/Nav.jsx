@@ -57,9 +57,9 @@ const Nav = ({ openNav, setOpenNav }) => {
         <Link
           onClick={() => setOpenNav(false)}
           className="text-gray-300 hover:text-gray-100 active:text-white"
-          to="/placements"
+          to="/customers"
         >
-          Placements
+          Customers
         </Link>
         {!isAuthenticated ? (
           <Link onClick={() => setOpenNav(false)} to="authenticate">

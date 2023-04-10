@@ -11,9 +11,10 @@ const Products = () => {
   const [alert, setAlert] = useState(false);
   const [totalPages, setTotalPages] = useState(1);
   const [presentPage, setPresentPage] = useState(1);
+  const [sort,setSort] = useState(0);
   const getProducts = async () => {
     const res = await fetch(
-      `${process.env.REACT_APP_API_URL}/users/get-products?page=${presentPage}`
+      `${process.env.REACT_APP_API_URL}/users/get-products?page=${presentPage}&sort=${sort}`
     );
     const data = await res.json();
     setAllProducts(data.allProducts);
@@ -21,7 +22,7 @@ const Products = () => {
   };
   useEffect(() => {
     getProducts();
-  }, [presentPage]);
+  }, [presentPage,sort]);
   const addedToCart = () => {
     toast("Product added to Cart");
   };
@@ -34,7 +35,7 @@ const Products = () => {
     initial={{width:0}} animate={{width:"100%"}} exit={{x:"100%",transition:{duration:0.1}}}
     >
       <ToastContainer />
-      {/* <SmallFilter allProducts={allProducts} setAllProducts={setAllProducts}/> */}
+      <SmallFilter allProducts={allProducts} setAllProducts={setAllProducts} setSort={setSort}/>
       <div className="flex flex-col items-center w-full bg-gray-900">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 w-full ml-5 mb-4">
           {allProducts.map((singleProduct) => (

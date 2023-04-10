@@ -178,7 +178,7 @@ const SingleProduct = () => {
                 {productData?.description ||
                   "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Itaque excepturi sunt iure modi, cumque atque totam tempora culpa facilis nam consequatur eos. Minima itaque dolorum deserunt voluptatibus ea libero tempora!"}
               </p>
-              <div className="flex gap-4 mt-6 items-center pb-5 border-b-2 border-gray-800 mb-5">
+              <div className="flex flex-wrap gap-4 mt-6 items-center pb-5 border-b-2 border-gray-800 mb-5">
                 {imgArray.map((singleImg, index) => (
                   <img
                     src={`${singleImg}`}

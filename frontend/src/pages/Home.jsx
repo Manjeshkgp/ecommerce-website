@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react';
 import Welcome from '../components/welcome';
 import Button from '../components/buttons';
 import Products from '../components/products';
-import PopularCategories from '../components/categories/PopularCategories';
 import BlogSection from '../components/blogHero/BlogSection';
 import {ToastContainer,toast} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { motion } from 'framer-motion';
+import PopularBrands from '../components/categories/PopularBrands';
 
 const Home = () => {
   const [recent,setRecent] = useState([]);
@@ -27,10 +27,10 @@ const Home = () => {
   <ToastContainer/>
   <Welcome/>
     <p className="text-lg text-gray-200 font-bold bg-gray-900 text-center py-2 underline underline-offset-8">Recently Launched Products</p>
-  <div className="bg-gray-900 grid grid-cols-1 md:grid-cols-2 md:px-3 lg:grid-cols-4 justify-items-center content-evenly">
+  <div className="bg-gray-900 px-4 gap-y-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 justify-items-center content-evenly">
     {recent?.map((singleProduct)=>(<Products key={singleProduct?._id} productDetails={singleProduct} setAlert={setAlert}/>))}
   </div>
-  <PopularCategories/>
+  <PopularBrands/>
   <BlogSection/>
   <div
   style={{backgroundImage:"url('https://images.unsplash.com/photo-1661961112951-f2bfd1f253ce?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2672&q=80')"}}

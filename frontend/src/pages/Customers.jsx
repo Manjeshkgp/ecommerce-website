@@ -1,10 +1,10 @@
 import React from 'react'
 import { motion } from 'framer-motion'
-const Placements = () => {
+const Customers = () => {
   return (<>
   <motion.section initial={{width:0}} animate={{width:"100%"}} exit={{x:"100%",transition:{duration:0.1}}} className="text-gray-400 min-h-[calc(100vh-10rem)] bg-gray-900 body-font">
   <div className="container px-5 py-24 mx-auto">
-    <h1 className="text-3xl font-medium title-font text-white mb-12 text-center">Placements</h1>
+    <h1 className="text-3xl font-medium title-font text-white mb-12 text-center">Our Customers</h1>
     <div className="flex flex-wrap -m-4">
       <div className="p-4 md:w-1/2 w-full">
         <div className="h-full bg-gray-800 bg-opacity-40 p-8 rounded">
@@ -42,4 +42,4 @@ const Placements = () => {
   </>)
 }
 
-export default Placements
+export default Customers;

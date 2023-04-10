@@ -23,7 +23,7 @@ import EditProduct from "./pages/EditProduct.jsx";
 import AdminUsers from "./pages/AdminUsers.jsx";
 import SingleProduct from "./pages/SingleProduct.jsx";
 import About from "./pages/About.jsx";
-import Placements from "./pages/Placements.jsx";
+import Customers from "./pages/Customers.jsx";
 import Admin from "./pages/Admin.jsx";
 import AddProduct from "./pages/AddProduct.jsx";
 
@@ -53,8 +53,8 @@ const router = createBrowserRouter([
         element: <Contact />,
       },
       {
-        path: "/placements",
-        element: <Placements />,
+        path: "/customers",
+        element: <Customers />,
       },
       {
         path: "/products/:id",

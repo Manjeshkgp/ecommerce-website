@@ -2,13 +2,15 @@ import Cookies from "js-cookie";
 import React,{useEffect,useState} from "react";
 import Product from "../components/products";
 import Button from "../components/buttons";
+import SmallFilter from "../components/filter/SmallFilter";
 
 const AdminProducts = () => {
     const [productData,setProductData] = useState([]);
     const [totalPages, setTotalPages] = useState(1);
     const [presentPage, setPresentPage] = useState(1);
+    const [sort,setSort] = useState(0);
     const getProducts = async()=>{
-        const res = await fetch(`${process.env.REACT_APP_API_URL}/users/get-products`,{
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/users/get-products?page=${presentPage}&sort=${sort}`,{
             metthod:"GET",
             headers:{
                 "Content-Type":"application/json",
@@ -19,9 +21,10 @@ const AdminProducts = () => {
         setProductData(data);
         setTotalPages(data.totalPages);
     }
-    useEffect(()=>{getProducts()},[])
+    useEffect(()=>{getProducts()},[presentPage,sort])
   return (
     <>
+    <SmallFilter setSort={setSort}/>
       <div className="flex flex-col items-center bg-gray-900">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 w-full ml-4 mb-4">
             {productData?.allProducts?.map((singleProduct)=>(<Product key={singleProduct?._id} productDetails={singleProduct}/>))}

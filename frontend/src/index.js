@@ -23,9 +23,10 @@ import EditProduct from "./pages/EditProduct.jsx";
 import AdminUsers from "./pages/AdminUsers.jsx";
 import SingleProduct from "./pages/SingleProduct.jsx";
 import About from "./pages/About.jsx";
-import Customers from "./pages/Customers.jsx";
+import MyAddresses from "./pages/MyAddresses.jsx";
 import Admin from "./pages/Admin.jsx";
 import AddProduct from "./pages/AddProduct.jsx";
+import Wishlist from "./pages/Wishlist.jsx";
 
 const router = createBrowserRouter([
   {
@@ -53,8 +54,12 @@ const router = createBrowserRouter([
         element: <Contact />,
       },
       {
-        path: "/customers",
-        element: <Customers />,
+        path: "/addresses",
+        element: <MyAddresses />,
+      },
+      {
+        path: "/wishlist",
+        element: <Wishlist />,
       },
       {
         path: "/products/:id",

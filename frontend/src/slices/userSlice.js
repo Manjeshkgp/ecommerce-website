@@ -17,13 +17,18 @@ export const userSlice = createSlice({
     removeUser:(state,action)=>{
         state.user = initialState.user;
         state.authenticated = false;
+        window.location.reload()
     },
     makeAdmin:(state,action)=>{
       state.admin = true;
+    },
+    addAddress:(state,action)=>{
+      const newAddress = action.payload;
+      state.user.addresses.push(newAddress);
     }
   },
 })
 
-export const { addUser,removeUser,makeAdmin } = userSlice.actions
+export const { addUser,removeUser,makeAdmin,addAddress } = userSlice.actions
 
 export default userSlice.reducer

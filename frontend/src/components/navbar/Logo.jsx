@@ -4,7 +4,7 @@ import Lappy from "../../assets/Lappy.png";
 
 const Logo = () => {
   return (
-    <div className="ml-4">
+    <div className="ml-4 hidden md:block">
       <Link to="/">
         <img
           src={Lappy}

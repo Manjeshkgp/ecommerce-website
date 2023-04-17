@@ -7,6 +7,7 @@ import { setCart } from "./slices/cartSlice";
 import Cookies from "js-cookie";
 import { useEffect } from "react";
 import { AnimatePresence } from "framer-motion"
+import { setWishlist } from "./slices/wishlistSlice";
 
 function App() {
   const user = useSelector((state)=>state.user)
@@ -38,6 +39,7 @@ function App() {
       if (res.status === 200) {
         dispatch(addUser(userData));
         dispatch(setCart(userData?.cart));
+        dispatch(setWishlist(userData?.wishlist));
       }
     }
   };

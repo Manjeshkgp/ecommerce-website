@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { BiCartAdd } from "react-icons/bi";
-import { AiFillEye } from "react-icons/ai";
+import { AiFillEye} from "react-icons/ai";
 import ProductData from "./ProductData";
 import { useNavigate } from "react-router-dom";
 import { useDispatch,useSelector } from "react-redux";
@@ -96,7 +96,7 @@ const Products = ({ productDetails, setAlert }) => {
           />
         </div>
         <div className="flex w-[98%] justify-between items-start">
-          <ProductData productDetails={productDetails} averageRate={averageRate}/>
+          <ProductData productDetails={productDetails} averageRate={averageRate} admin={admin} isAuthenticated={isAuthenticated} navigate={navigate}/>
         </div>
       </div>
     </>

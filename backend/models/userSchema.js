@@ -8,6 +8,8 @@ const userSchema = new mongoose.Schema(
     cart: [Object],
     orders: [Object],
     purchased: [Object],
+    wishlist: [Object],
+    addresses:[Object],
   },
   {
     timestamps: true,

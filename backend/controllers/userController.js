@@ -168,3 +168,34 @@ export const updateCart = async (req, res) => {
     }
   );
 };
+
+export const addAddress = async (req,res) => {
+  const email = req.user.email.toLowerCase();
+  const address = req.body.address;
+  userSchema.findOneAndUpdate({email:email},{$addToSet:{addresses:address}},(err,result)=>{
+    if(err){
+      console.log(err)
+      return res.status(470).json({message:"some error occured"});
+    }
+    res.status(200).json(result);
+  })
+}
+
+export const updateWishlist = async (req,res) => {
+  const email = req.user.email.toLowerCase();
+  const wishlist = req.body.wishlist;
+  userSchema.findOneAndUpdate(
+    { email: email },
+    { $set: { wishlist: wishlist } },
+    (err, user) => {
+      if (err) {
+        console.log(err);
+        res.status(444).json({ message: "Error" });
+      } else if (!user) {
+        res.status(445).json({ message: "User Not Found" });
+      } else {
+        res.status(200).json({ message: "Cart Updated" });
+      }
+    }
+  );
+}

@@ -3,7 +3,7 @@ import React from 'react'
 const HamButton = ({openNav,setOpenNav}) => {
   return (<div
     onClick={() => setOpenNav(!openNav)}
-    className="absolute top-4 right-4 md:hidden z-10"
+    className="absolute top-4 right-0 lg:hidden z-10"
   >
     {!openNav ? (
       <>

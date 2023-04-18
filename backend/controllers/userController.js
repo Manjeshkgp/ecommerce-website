@@ -3,6 +3,8 @@ import userSchema from "../models/userSchema.js";
 import jwt from "jsonwebtoken";
 import productSchema from "../models/productSchema.js";
 import orderSchema from "../models/orderSchema.js";
+import { instance } from "../server.js";
+import crypto from "crypto"
 
 export const registerUser = async (req, res) => {
   const userExist = await userSchema.findOne({
@@ -76,31 +78,6 @@ export const getProducts = async (req, res) => {
       .limit(limit);
   }
   res.status(200).json({ allProducts, totalPages });
-};
-
-export const buyProduct = async (req, res) => {
-  if (req.body.products.length === 0) {
-    res.status(406).json({ message: "No Products Chosen" });
-    return;
-  }
-  const purchaseDetails = {
-    products: req.body.products,
-    buyer: req.body.buyer,
-    totalPrice: req.body.totalPrice,
-    date: new Date(),
-  };
-  try {
-    const addOrder = new orderSchema(purchaseDetails);
-    const OrderSave = await addOrder.save();
-    await userSchema.findOneAndUpdate(
-      { email: req.body.buyer.toLowerCase() },
-      { $addToSet: { orders: OrderSave } }
-    );
-    res.status(200).json({ message: "Product Purchased Successfully" });
-  } catch (error) {
-    console.log(error);
-    res.status(400).json({ error });
-  }
 };
 
 export const getAProduct = async (req, res) => {
@@ -222,3 +199,86 @@ export const searchBrandedProducts = async (req,res) => {
     res.status(505).json(err);
   }
 }
+
+export const checkout = async (req, res) => {
+  const productIDs = await req.body.products.flatMap((product)=>product._id);
+  const numberOfProducts = await req.body.products.flatMap((product)=>product.numberOfProducts);
+    let totalPrice = 0;
+    try {
+      // Fetch products from MongoDB based on productIDs
+      const products = await productSchema.find({ _id: { $in: productIDs } });
+  
+      // Create a dictionary or Map to store products by ID
+      const productMap = new Map();
+      products.forEach(product => {
+        productMap.set(product._id.toString(), product);
+      });
+  
+      // Calculate total price
+      for (let i = 0; i < productIDs.length; i++) {
+        const productID = productIDs[i];
+        const product = productMap.get(productID.toString());
+        const numberOfProduct = numberOfProducts[i];
+        totalPrice += product.price * numberOfProduct;
+      }
+
+    } catch (error) {
+      console.error('Error calculating total price:', error);
+      throw error;
+    }
+    console.log(totalPrice);
+  const options = {
+    amount: Number(totalPrice * 100),
+    currency: "INR",
+  };
+  const order = await instance.orders.create(options);
+    res.status(200).json({ 
+      success: true,
+      order,
+    });
+};
+
+export const paymentVerification = async (req, res) => {
+  const { razorpay_order_id, razorpay_payment_id, razorpay_signature, buyer, products, totalPrice } =
+    req.body;
+
+  const order_payment = razorpay_order_id + "|" + razorpay_payment_id;
+
+  const expectedSignature = crypto
+    .createHmac("sha256", process.env.RAZORPAY_API_SECRET)
+    .update(order_payment.toString())
+    .digest("hex");
+
+  const isAuthentic = expectedSignature === razorpay_signature;
+
+  if (isAuthentic) {
+    // Database comes here
+    try {
+      const addOrder = new orderSchema({
+        buyer:buyer,
+        products:products,
+        totalPrice:totalPrice,
+        date: new Date(),
+        paymentId:razorpay_payment_id
+      });
+    const OrderSave = await addOrder.save();
+    await userSchema.findOneAndUpdate(
+      { email: buyer.email.toLowerCase()},
+      { $addToSet: { orders: OrderSave._id } }
+    );
+    res.status(200).json({
+      success:true,
+    })
+    } catch (error) {
+      res.status(500).json({
+        success:false,
+        message:"Database Order Creation error"
+      })
+    }
+    
+  } else {
+    res.status(400).json({
+      success: false,
+    });
+  }
+};

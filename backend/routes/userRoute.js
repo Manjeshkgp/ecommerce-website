@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { registerUser,loginUser, getProducts, buyProduct, getAProduct, recentProducts, rateAProduct, getUserData, updateCart, addAddress, updateWishlist, searchProducts, searchBrandedProducts } from "../controllers/userController.js";
+import { registerUser,loginUser, getProducts, getAProduct, recentProducts, rateAProduct, getUserData, updateCart, addAddress, updateWishlist, searchProducts, searchBrandedProducts, checkout, paymentVerification } from "../controllers/userController.js";
 import auth from "../middlewares/auth.js";
 
 const router = Router();
@@ -8,7 +8,8 @@ router.route("/create").post(registerUser);
 router.route("/login").post(loginUser);
 router.route("/get-products").get(getProducts); // no auth // pagination
 router.route("/get-a-product").post(getAProduct); // no auth
-router.route("/buy-product").post(auth,buyProduct);
+router.route("/buy-product").post(auth,checkout);
+router.route("/paymentverification").post(paymentVerification);
 router.route("/recent-products").get(recentProducts); // no auth
 router.route("/rate-a-product/:productId").post(auth,rateAProduct);
 router.route("/add-address").post(auth,addAddress);

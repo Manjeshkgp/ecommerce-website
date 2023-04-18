@@ -67,7 +67,7 @@ const SingleProduct = () => {
     setImgArray([data?.primaryImage, ...data?.images]);
     setProductData(data);
   };
-  const buyProduct = async () => {
+  const buyProduct1 = async () => {
     const res = await fetch(
       `${process.env.REACT_APP_API_URL}/users/buy-product`,
       {
@@ -91,6 +91,80 @@ const SingleProduct = () => {
       alert("Login First Then Purchase");
     }
   };
+  
+  const buyProduct = async () => {
+    const res1 = await fetch(`${process.env.REACT_APP_API_URL}/razorpay/key`);
+    const {key} = await res1.json();
+    const res2 = await fetch(
+      `${process.env.REACT_APP_API_URL}/users/buy-product`,
+      {
+        method: "POST",
+        body: JSON.stringify({
+          buyer: buyer,
+          products: [{...productData,numberOfProducts:1}],
+          totalPrice: productData?.price,
+        }),
+        headers: {
+          Authorization: `Bearer ${Cookies.get("jwt")}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const {order} = await res2.json();
+    if (res2.status === 200) {
+      // dispatch(removeAllandUpdate());
+      // productPurchased();
+      const options = {
+        key:key.toString(),
+        amount: order.amount,
+        currency: "INR",
+        name: buyer?.Name || "",
+        description: `Purchasing of ${productData?.title}`,
+        order_id: order.id,
+        handler: function(response){
+          paymentDoneHandler(response,order.amount)
+        },
+        prefill: {
+            name: buyer?.Name || "",
+            email: Cookies.get("email"),
+            contact: "9999999999"
+        },
+        notes: {
+            "address": "Razorpay Corporate Office"
+        },
+        theme: {
+            "color": "#121212"
+        }
+    };
+    const razor = new window.Razorpay(options);
+    razor.open();
+    }
+    if (res2.status === 401) {
+      alert("Login First Then Purchase");
+    }
+  };
+  const paymentDoneHandler = async (payment,amount) => {
+    const res = await fetch(`${process.env.REACT_APP_API_URL}/users/paymentverification`,{
+      method:"POST",
+      headers:{
+        Authorization:`Bearer ${Cookies.get("jwt")}`,
+        "Content-Type":"application/json"
+      },
+      body:JSON.stringify({
+        razorpay_order_id:payment.razorpay_order_id,
+        razorpay_payment_id:payment.razorpay_payment_id,
+        razorpay_signature:payment.razorpay_signature,
+        buyer:{...buyer,email:Cookies.get("email")},
+        products:[{...productData,numberOfProducts:1}],
+        totalPrice:productData?.price
+      })
+    })
+    await res.json();
+    if(res.status===200){
+      productPurchased();
+      setBuypopup(false);
+    }
+  }
   const averageRating = (ratings) => {
     let totalRating = 0;
     let average;

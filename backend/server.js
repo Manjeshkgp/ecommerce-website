@@ -13,8 +13,13 @@ import authRoute from "./routes/authRoute.js";
 import adminRoute from "./routes/adminRoute.js";
 import passport from "passport";
 import passportSetup, { GoogleAuth } from "./config/passport.js";
+import Razorpay from "razorpay"
 
 dotenv.config();
+export const instance = new Razorpay({
+  key_id:process.env.RAZORPAY_API_KEY_ID,
+  key_secret:process.env.RAZORPAY_API_SECRET
+})
 const app = express();
 app.use(
   expressSession({
@@ -40,6 +45,10 @@ await connect();
 app.get("/", (req, res) => {
   res.json({ message: "Hello and welcome" });
 });
+
+app.get("/razorpay/key",(req,res)=>{
+  res.json({key:process.env.RAZORPAY_API_KEY_ID});
+})
 
 app.use("/auth", authRoute);
 app.use("/users", userRoute);

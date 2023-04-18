@@ -5,7 +5,8 @@ const salesSchema = new Schema({
     buyer:{type:Object,required:true},
     totalPrice:{type:Number,required:true},
     date: {type:Date,required:true},
-    saleDate: {type:Date,required:true}
+    saleDate: {type:Date,required:true},
+    paymentId: {type:String,required:true}
 })
 
 export default mongoose.model("sales",salesSchema);

@@ -7,7 +7,8 @@ export const authenticateGoogle = passport.authenticate("google", { scope: ["pro
 
 export const authenticateGoogleResult = async (req, res) => {
   const jwt_payload = JSON.parse(JSON.stringify(req.user));
-  const token = jwt.sign(jwt_payload,process.env.JWT_SECRET,{expiresIn:"24h"});
+  console.log(jwt_payload)
+  const token = jwt.sign(jwt_payload,process.env.JWT_SECRET,{expiresIn:"1d"});
   res.redirect(`${process.env.FRONTEND_URL}/auth-with-google/${token}`)
 };
 
@@ -19,7 +20,7 @@ export const loginFailed = async (req, res) => {
 
 export const getUserData = async (req,res) => {
   if(req.user){
-    const user = req.user.toJSON();
+    const user = JSON.parse(JSON.stringify(req.user));
     res.status(200).json(user);
   }
 }

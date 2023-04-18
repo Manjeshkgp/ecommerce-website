@@ -26,7 +26,7 @@ export const registerUser = async (req, res) => {
     const registerUser = new userSchema(requiredData);
     const saveUser = await registerUser.save();
     const token = jwt.sign(saveUser.toJSON(), process.env.JWT_SECRET, {
-      expiresIn: "24h",
+      expiresIn: "1d",
     });
     res.status(200).json({ user: saveUser, token });
   } catch (error) {
@@ -48,9 +48,10 @@ export const loginUser = async (req, res) => {
     res.status(410).json({ message: "Password is Incorrect" });
     return;
   }
-  const token = jwt.sign(user.toJSON(), process.env.JWT_SECRET, {
-    expiresIn: "24h",
+  const token = jwt.sign(JSON.parse(JSON.stringify({_id:user._id,name:user.name,email:user.email,createdAt:user.createdAt})), process.env.JWT_SECRET, {
+    expiresIn: "1d",
   });
+  console.log(token.length);
   res.status(200).json({ user, token });
 };
 
@@ -198,4 +199,15 @@ export const updateWishlist = async (req,res) => {
       }
     }
   );
+}
+
+export const searchProducts = async (req,res) => {
+  const {search} = req.query;
+  try {
+  const products = await productSchema.find({title:{$regex:search, $options:"i"}}).exec()
+  res.status(200).json(products);
+  } catch (err) {
+    console.log(err);
+    res.status(505).json(err);
+  }
 }

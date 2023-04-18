@@ -1,5 +1,5 @@
 import Navbar from "./components/navbar";
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import Footer from "./components/footer";
 import { useDispatch,useSelector } from "react-redux";
 import { addUser } from "./slices/userSlice";
@@ -25,7 +25,7 @@ function App() {
       console.log("Login Rquired");
     } else if(isAuthenticated===true){
       console.log("Already Verified, may be via google")
-    }else {
+    }
       const res = await fetch(
         `${process.env.REACT_APP_API_URL}/users/${email}`,
         {
@@ -41,12 +41,10 @@ function App() {
         dispatch(setCart(userData?.cart));
         dispatch(setWishlist(userData?.wishlist));
       }
-    }
   };
   useEffect(() => {
     checkUser();
   }, []);
-  const location = useLocation();
   return (
     <AnimatePresence>
     <div className="overflow-x-hidden">

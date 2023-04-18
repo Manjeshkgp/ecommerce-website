@@ -17,6 +17,8 @@ import Cookies from "js-cookie";
 import { AiTwotoneStar, AiOutlineStar } from "react-icons/ai";
 import Button from "../components/buttons";
 import { motion } from "framer-motion";
+import Buypopup from "../components/popups/Buypopup";
+import Addresspopup from "../components/popups/Addresspopup";
 
 const SingleProduct = () => {
   const dispatch = useDispatch();
@@ -28,8 +30,10 @@ const SingleProduct = () => {
   const [averageRate, setAverageRate] = useState(0);
   const [userRating, setUserRating] = useState(0);
   const [alreadyRated, setAlreadyRated] = useState(false);
-  const user = useSelector((state) => state.user);
-  const isAuthenticated = user.authenticated;
+  const [buyer,setBuyer] = useState({});
+  const [popup,setPopup] = useState(false);
+  const [buypopup,setBuypopup] = useState(false);
+  const isAuthenticated = useSelector((state) => state.user.authenticated);
   const addedToCart = () => {
     toast("Product added to Cart");
   };
@@ -69,7 +73,7 @@ const SingleProduct = () => {
       {
         method: "POST",
         body: JSON.stringify({
-          buyer: Cookies.get("email"),
+          buyer: buyer,
           products: [{ ...productData, numberOfProducts: 1 }],
           totalPrice: productData?.price,
         }),
@@ -126,7 +130,7 @@ const SingleProduct = () => {
   };
   useEffect(() => {
     getProduct();
-  }, []);
+  }, [id]);
   useEffect(() => {
     averageRating(productData?.rating);
   }, [productData]);
@@ -136,6 +140,8 @@ const SingleProduct = () => {
 
   return (
     <motion.div initial={{width:0}} animate={{width:"100%"}} exit={{x:"100%",transition:{duration:0.1}}}>
+      <Buypopup buypopup={buypopup} setBuypopup={setBuypopup} buyProduct={buyProduct}/>
+      <Addresspopup popup={popup} setPopup={setPopup} setBuyer={setBuyer} setBuypopup={setBuypopup} />
       <ToastContainer />
       <section className="text-gray-400 bg-gray-900 body-font overflow-hidden">
         <div className="container px-5 py-24 mx-auto">
@@ -198,7 +204,7 @@ const SingleProduct = () => {
                 <button
                   onClick={() => {
                     isAuthenticated
-                      ? buyProduct()
+                      ? setPopup(true)
                       : navigate("/authenticate", { replace: true });
                   }}
                   className="flex ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded"

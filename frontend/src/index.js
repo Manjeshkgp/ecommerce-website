@@ -27,6 +27,7 @@ import MyAddresses from "./pages/MyAddresses.jsx";
 import Admin from "./pages/Admin.jsx";
 import AddProduct from "./pages/AddProduct.jsx";
 import Wishlist from "./pages/Wishlist.jsx";
+import Brandedproducts from "./pages/Brandedproducts.jsx";
 
 const router = createBrowserRouter([
   {
@@ -60,6 +61,10 @@ const router = createBrowserRouter([
       {
         path: "/wishlist",
         element: <Wishlist />,
+      },
+      {
+        path:"/brands/:brand",
+        element: <Brandedproducts/>
       },
       {
         path: "/products/:id",

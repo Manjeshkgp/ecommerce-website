@@ -5,12 +5,12 @@ const initialState = {
   products: [],
 }
 
-const jwt = Cookies.get("jwt");
+
 const updateWishlist = async(wishlist) => {
   const res = await fetch(`${process.env.REACT_APP_API_URL}/users/update-wishlist`,{
     method:"POST",
     headers:{
-      Authorization:`Bearer ${jwt}`,
+      Authorization:`Bearer ${Cookies.get("jwt")}`,
       "Content-Type":"application/json"
     },
     body:JSON.stringify({

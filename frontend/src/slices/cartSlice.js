@@ -5,13 +5,11 @@ const initialState = {
   products: [],
 }
 
-const jwt = Cookies.get("jwt");
-const email = Cookies.get("email");
 const updateCart = async(cart) => {
-  const res = await fetch(`${process.env.REACT_APP_API_URL}/users/${email}/update-cart`,{
+  const res = await fetch(`${process.env.REACT_APP_API_URL}/users/${Cookies.get("email")}/update-cart`,{
     method:"POST",
     headers:{
-      Authorization:`Bearer ${jwt}`,
+      Authorization:`Bearer ${Cookies.get("jwt")}`,
       "Content-Type":"application/json"
     },
     body:JSON.stringify({
@@ -34,6 +32,7 @@ export const cartSlice = createSlice({
         let indexOfObj = state.products.findIndex(obj => obj._id === itemToUpdate._id);
         let updatedObj = state.products[indexOfObj];
         updatedObj.numberOfProducts += 1;
+        updateCart(state)
         return;
       }
       state.products.push(action.payload)

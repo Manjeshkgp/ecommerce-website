@@ -7,7 +7,7 @@ export const authenticateGoogle = passport.authenticate("google", { scope: ["pro
 
 export const authenticateGoogleResult = async (req, res) => {
   const jwt_payload = JSON.parse(JSON.stringify(req.user));
-  console.log(jwt_payload)
+  // console.log(jwt_payload)
   const token = jwt.sign(jwt_payload,process.env.JWT_SECRET,{expiresIn:"1d"});
   res.redirect(`${process.env.FRONTEND_URL}/auth-with-google/${token}`)
 };

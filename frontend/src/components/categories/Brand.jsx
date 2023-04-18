@@ -1,9 +1,11 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const Brand = ({brand,slogan,img}) => {
+  const navigate = useNavigate();
   return (
     <>
-      <div className="flex md:col-span-1 w-[90%] bg-[rgba(129,141,248,0.35)] text-gray-200 shadow-lg hover:shadow-gray-600 hover:scale-110 hover:transition-all hover:duration-400 transition-all rounded">
+      <div onClick={()=>navigate(`/brands/${brand}`)} className="flex cursor-pointer md:col-span-1 w-[90%] bg-[rgba(129,141,248,0.35)] text-gray-200 shadow-lg hover:shadow-gray-600 hover:scale-110 hover:transition-all hover:duration-400 transition-all rounded">
         <img
           src={`${img}`}
           alt=""

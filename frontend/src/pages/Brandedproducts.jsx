@@ -1,27 +1,47 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import {motion} from "framer-motion"
 import { useSelector } from 'react-redux'
-import Button from '../components/buttons'
 import { addOrRemove } from '../slices/wishlistSlice'
 import { useDispatch } from 'react-redux'
 import { increment } from '../slices/cartSlice'
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { BiCartAdd } from 'react-icons/bi'
+import { useParams } from 'react-router-dom'
+import { AiFillHeart, AiOutlineHeart} from "react-icons/ai"
 
-const Wishlist = () => {
+const Brandedproducts = () => {
+    const [products,setProducts] = useState([]);
+    const {brand} = useParams();
     const addedToCart = () => { toast("Added to Cart")}
     const wishlist = useSelector((state)=>state.wishlist.products);
+    const isAuthenticated = useSelector((state)=>state.user.authenticated);
     const dispatch = useDispatch();
+    const fetchBrandedProducts = async() => {
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/users/brands?brand=${brand}`);
+        const data = await res.json();
+        if(res.status===200){
+            setProducts(data);
+        }
+    }
+    const updateWishlist = (product) => {
+        if(!isAuthenticated){
+            return alert("You are not logged in, first login/signup then add to wishlist");
+        }
+        dispatch(addOrRemove(product));
+    }
+    useEffect(()=>{
+        fetchBrandedProducts();
+    },[brand])
   return (<motion.section initial={{width:0}} animate={{width:"100%"}} exit={{x:"100%",transition:{duration:0.1}}} className="text-gray-400 bg-gray-900 body-font">
   <ToastContainer/>
   <div className="container px-5 py-24 mx-auto">
     <div className="flex flex-col text-center w-full mb-20">
-      <h1 className="text-2xl font-medium title-font mb-4 text-white tracking-widest">My Wishlist</h1>
-      <p className="lg:w-2/3 mx-auto leading-relaxed text-base">Add your favourite laptops to this wishlist and purchase them whenever required. You can remove them as well as per your wish.</p>
+      <h1 className="text-2xl font-medium title-font mb-4 text-white tracking-widest">All Products of {brand}</h1>
+      <p className="lg:w-2/3 mx-auto leading-relaxed text-base">We have {products.length} products of {brand}.</p>
     </div>
     <div className="flex flex-wrap justify-center -m-4">
-        {wishlist.map((product)=>(<div key={product?._id} className="p-4 lg:w-1/2">
+        {products.map((product)=>(<div key={product?._id} className="p-4 lg:w-1/2">
         <div className="h-full bg-gray-800 rounded flex sm:flex-row flex-col items-center sm:justify-start justify-center text-center sm:text-left">
           <img alt="team" className="flex-shrink-0 rounded-lg w-48 h-48 object-contain object-center sm:mb-0 mb-4" src={`${product?.primaryImage}`}/>
           <div className="flex-grow sm:pl-8">
@@ -30,7 +50,15 @@ const Wishlist = () => {
             <h3 className="text-gray-500 mb-3">${product?.price}</h3>
             <p className="mb-4">{product?.shortDescription}</p>
             <div className='flex flex-wrap gap-4 items-center'>
-            <div onClick={()=>{dispatch(addOrRemove(product))}}><Button buttonContent={"Remove"}/></div>
+            <div onClick={()=>{updateWishlist(product)}}>{wishlist.some(obj=>obj._id===product?._id)===true?(<>
+            <button>
+                <AiFillHeart className="h-8 w-8 text-red-600"/>
+            </button>
+            </>):(<>
+            <button>
+                <AiOutlineHeart className="h-8 w-8 text-red-600"/>
+            </button>
+            </>)}</div>
             <button
                   onClick={() => {
                     
@@ -54,4 +82,4 @@ const Wishlist = () => {
 </motion.section>)
 }
 
-export default Wishlist;
+export default Brandedproducts;

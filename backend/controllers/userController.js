@@ -211,3 +211,14 @@ export const searchProducts = async (req,res) => {
     res.status(505).json(err);
   }
 }
+
+export const searchBrandedProducts = async (req,res) => {
+  const {brand} = req.query;
+  try {
+  const products = await productSchema.find({brand:{$regex:brand,$options:"i"}}).exec();
+  res.status(200).json(products);
+  } catch (err) {
+    console.log(err);
+    res.status(505).json(err);
+  }
+}

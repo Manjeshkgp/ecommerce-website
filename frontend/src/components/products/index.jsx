@@ -31,7 +31,7 @@ const Products = ({ productDetails, setAlert }) => {
   useEffect(()=>{averageRating(productDetails?.rating)},[]) 
   return (
     <>
-      <div className="w-[94%] work-sans border group border-gray-700 hover:scale-105 duration-300  transition-all hover:shadow-xl hover:shadow-gray-500 mt-3 rounded h-80 flex flex-col justify-start items-center">
+      <div className="w-[94%] work-sans border group border-gray-700 hover:scale-105 duration-300  transition-all hover:shadow-xl hover:shadow-gray-500 mt-3 rounded min:h-80 h-max flex flex-col justify-start items-center">
         <div className="w-full relative">
           {!admin ? (
             <>

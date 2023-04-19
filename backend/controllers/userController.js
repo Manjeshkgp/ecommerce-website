@@ -64,7 +64,7 @@ export const getProducts = async (req, res) => {
   if (page < 1) {
     page = 1;
   }
-  const limit = 20;
+  const limit = 8;
   const skip = (page - 1) * limit;
   const totalDocs = await productSchema.countDocuments();
   const totalPages = Math.ceil(totalDocs / limit);

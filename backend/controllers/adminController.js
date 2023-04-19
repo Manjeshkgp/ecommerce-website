@@ -342,7 +342,7 @@ export const orderToSale = async (req, res) => {
   try {
     let saveNewSale = await newSale.save();
     await userSchema.findOneAndUpdate(
-      { email: order.buyer.toLowerCase() },
+      { email: order.buyer.email.toLowerCase() },
       {
         $pull: { orders: { _id: mongoose.Types.ObjectId(order._id) } },
         $addToSet: { purchased: saveNewSale },
@@ -362,9 +362,9 @@ export const orderCancel = async (req, res) => {
   try {
     await orderSchema.findByIdAndDelete(_id);
     await userSchema.findOneAndUpdate(
-      { email: order.buyer.toLowerCase() },
+      { email: order.buyer.email.toLowerCase() },
       {
-        $pull: { orders: { _id: mongoose.Types.ObjectId(order._id) } },
+        $pull: { orders: mongoose.Types.ObjectId(order._id) },
       }
     );
     res.status(200).json({ message: "Order Canceled" });

@@ -1,10 +1,9 @@
 import React, { useState } from 'react'
 import { AiOutlineHeart } from 'react-icons/ai'
 import { BiCart } from 'react-icons/bi'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 const Search = ({wishlistLength,cartLength}) => {
-  const navigate = useNavigate()
   const [products,setProducts] = useState([]);
   const searchFunction = async(value) => {
     const res = await fetch(`${process.env.REACT_APP_API_URL}/users/search?search=${value}`);
@@ -15,7 +14,7 @@ const Search = ({wishlistLength,cartLength}) => {
   }
   return (
     <div className='flex relative items-center gap-x-4 ml-4 md:mr-20'>
-    <input onChange={(e)=>{if(e.target.value!==""){searchFunction(e.target.value.toString())}else{setProducts([])}}} type="text" placeholder='Search' className='focus:outline-none bg-gray-800 caret-gray-300 rounded-md p-1 text-gray-100' />
+    <input onChange={(e)=>{if(e.target.value!==""){searchFunction(e.target.value.toString())}else{setProducts([])}}} type="text" placeholder='Search' className='focus:outline-none bg-gray-800 caret-gray-300 rounded-md w-36 md:w-auto p-1 text-gray-100' />
     <div className="absolute top-8 left-0 w-72 bg-indigo-900 text-gray-100 flex flex-col gap-y-1 rounded-md">
       {products?.map((product)=>(<Link to={`/products/${product?._id}`} onClick={()=>setProducts([])} className="w-full h-16 cursor-pointer hover:bg-indigo-300 hover:text-gray-900 font-semibold rounded-md flex justify-between items-center">
         <img src={`${product?.primaryImage}`} className='w-16 h-16 object-contain object-center' alt="product" />

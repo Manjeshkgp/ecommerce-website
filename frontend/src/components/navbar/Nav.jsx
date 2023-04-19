@@ -46,9 +46,9 @@ const Nav = ({ openNav, setOpenNav, wishlistLength, cartLength }) => {
         <Link
           onClick={() => setOpenNav(false)}
           className="text-gray-300 hover:text-gray-100 active:text-white"
-          to="/about"
+          to="/orders"
         >
-          About
+          Orders
         </Link>
         <Link
           onClick={() => setOpenNav(false)}

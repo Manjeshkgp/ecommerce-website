@@ -62,16 +62,15 @@ const Cart = () => {
         key:key.toString(),
         amount: order.amount,
         currency: "INR",
-        name: "6 Pack Programmer",
-        description: "Tutorial of RazorPay",
-        image: "https://avatars.githubusercontent.com/u/25058652?v=4",
+        name: buyer?.Name || "",
+        description: "Purchasing of Some Products",
         order_id: order.id,
         handler: function(response){
           paymentDoneHandler(response,order.amount)
         },
         prefill: {
-            name: "Gaurav Kumar",
-            email: "gaurav.kumar@example.com",
+            name: buyer?.Name || "",
+            email: Cookies.get("email"),
             contact: "9999999999"
         },
         notes: {

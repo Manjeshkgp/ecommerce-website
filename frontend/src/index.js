@@ -22,12 +22,12 @@ import DeleteProduct from "./pages/DeleteProduct.jsx";
 import EditProduct from "./pages/EditProduct.jsx";
 import AdminUsers from "./pages/AdminUsers.jsx";
 import SingleProduct from "./pages/SingleProduct.jsx";
-import About from "./pages/About.jsx";
 import MyAddresses from "./pages/MyAddresses.jsx";
 import Admin from "./pages/Admin.jsx";
 import AddProduct from "./pages/AddProduct.jsx";
 import Wishlist from "./pages/Wishlist.jsx";
 import Brandedproducts from "./pages/Brandedproducts.jsx";
+import MyOrders from "./pages/MyOrders.jsx";
 
 const router = createBrowserRouter([
   {
@@ -43,8 +43,8 @@ const router = createBrowserRouter([
         element: <Products />,
       },
       {
-        path: "/about",
-        element: <About />,
+        path: "/orders",
+        element: <MyOrders />,
       },
       {
         path: "/cart",

@@ -282,3 +282,26 @@ export const paymentVerification = async (req, res) => {
     });
   }
 };
+
+export const getMyOrders = async(req,res) => {
+  const email = await req.user.email.toLowerCase();
+  try {
+    const user = await userSchema.findOne({email:email});
+    const OrderIDs = user.orders;
+    if(OrderIDs.length<1){
+      res.status(409).json("No Orders");
+      return;
+    }else{
+      try {
+        const Orders = await orderSchema.find({_id:{$in:OrderIDs}});
+        res.status(200).json(Orders);
+      } catch (err2) {
+        console.log(err2);
+        res.status(500).json("Error Occured during finding Orders")
+      }
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(400).json("Some Error occured during finding OrdersIDs")    
+  }
+}

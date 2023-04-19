@@ -67,31 +67,6 @@ const SingleProduct = () => {
     setImgArray([data?.primaryImage, ...data?.images]);
     setProductData(data);
   };
-  const buyProduct1 = async () => {
-    const res = await fetch(
-      `${process.env.REACT_APP_API_URL}/users/buy-product`,
-      {
-        method: "POST",
-        body: JSON.stringify({
-          buyer: buyer,
-          products: [{ ...productData, numberOfProducts: 1 }],
-          totalPrice: productData?.price,
-        }),
-        headers: {
-          Authorization: `Bearer ${Cookies.get("jwt")}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    await res.json();
-    if (res.status === 200) {
-      productPurchased();
-    }
-    if (res.status === 401) {
-      alert("Login First Then Purchase");
-    }
-  };
-  
   const buyProduct = async () => {
     const res1 = await fetch(`${process.env.REACT_APP_API_URL}/razorpay/key`);
     const {key} = await res1.json();
@@ -156,7 +131,7 @@ const SingleProduct = () => {
         razorpay_signature:payment.razorpay_signature,
         buyer:{...buyer,email:Cookies.get("email")},
         products:[{...productData,numberOfProducts:1}],
-        totalPrice:productData?.price
+        totalPrice:amount
       })
     })
     await res.json();

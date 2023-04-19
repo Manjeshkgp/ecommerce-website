@@ -8,7 +8,7 @@ const SmallProductComp = ({ productDetails }) => {
   const navigate = useNavigate();
   return (
     <>
-      <div className="flex items-center justify-between my-2 w-[22rem] bg-[rgba(129,141,248,0.08)] shadow-lg hover:shadow-gray-600 hover:m-2 transition-all rounded">
+      <div className="flex items-center justify-between my-2 w-[312px] md:w-[22rem] bg-[rgba(129,141,248,0.08)] shadow-lg hover:shadow-gray-600 hover:m-2 transition-all rounded">
         <div className="w-24 flex justify-center items-center">
           <img
             onClick={() => {

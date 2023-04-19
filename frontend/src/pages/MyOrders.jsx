@@ -40,7 +40,7 @@ const MyOrders = () => {
             <div className="flex flex-col ml-2">
                 <p>{product?.numberOfProducts} Item Purchased</p>
                 <p>{product?.title}</p>
-                <div className="flex justify-start gap-x-4">
+                <div className="flex justify-start flex-wrap gap-y-2 gap-x-4">
                     <Link to={`/products/${product?._id}`}>
                         <Button buttonContent={"Buy Again"}/>
                     </Link>

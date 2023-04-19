@@ -29,7 +29,7 @@ const Wishlist = () => {
             <h2 className="title-font font-medium text-lg text-white">{product?.brand}</h2>
             <h3 className="text-gray-500 mb-3">${product?.price}</h3>
             <p className="mb-4">{product?.shortDescription}</p>
-            <div className='flex flex-wrap gap-4 items-center'>
+            <div className='flex flex-wrap gap-4 items-center justify-around md:justify-start'>
             <div onClick={()=>{dispatch(addOrRemove(product))}}><Button buttonContent={"Remove"}/></div>
             <button
                   onClick={() => {
